@@ -16,15 +16,15 @@
 		D02618002975F50500E21053 /* Hear_YinzTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02617FF2975F50500E21053 /* Hear_YinzTests.swift */; };
 		D026180A2975F50500E21053 /* Hear_YinzUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02618092975F50500E21053 /* Hear_YinzUITests.swift */; };
 		D026180C2975F50500E21053 /* Hear_YinzUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D026180B2975F50500E21053 /* Hear_YinzUITestsLaunchTests.swift */; };
+		D03BA31E2981B82A008E3C22 /* FirebaseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03BA31D2981B82A008E3C22 /* FirebaseDisplayView.swift */; };
+		D03BA31F2981B82A008E3C22 /* FirebaseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03BA31D2981B82A008E3C22 /* FirebaseDisplayView.swift */; };
+		D03BA3202981B82A008E3C22 /* FirebaseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03BA31D2981B82A008E3C22 /* FirebaseDisplayView.swift */; };
+		D03BA3222982289B008E3C22 /* LoginFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03BA3212982289B008E3C22 /* LoginFunctions.swift */; };
+		D03BA3232982289B008E3C22 /* LoginFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03BA3212982289B008E3C22 /* LoginFunctions.swift */; };
+		D03BA3242982289B008E3C22 /* LoginFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03BA3212982289B008E3C22 /* LoginFunctions.swift */; };
 		D081A665297C6E1400541AC1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D081A664297C6E1400541AC1 /* GoogleService-Info.plist */; };
 		D081A666297C6E1400541AC1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D081A664297C6E1400541AC1 /* GoogleService-Info.plist */; };
 		D081A667297C6E1400541AC1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D081A664297C6E1400541AC1 /* GoogleService-Info.plist */; };
-		D081A66A297C716C00541AC1 /* FirebaseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D081A669297C716C00541AC1 /* FirebaseDisplayView.swift */; };
-		D081A66B297C716C00541AC1 /* FirebaseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D081A669297C716C00541AC1 /* FirebaseDisplayView.swift */; };
-		D081A66C297C716C00541AC1 /* FirebaseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D081A669297C716C00541AC1 /* FirebaseDisplayView.swift */; };
-		D081A670297C74B900541AC1 /* FirebaseConnectTestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D081A66F297C74B900541AC1 /* FirebaseConnectTestViewModel.swift */; };
-		D081A671297C74B900541AC1 /* FirebaseConnectTestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D081A66F297C74B900541AC1 /* FirebaseConnectTestViewModel.swift */; };
-		D081A672297C74B900541AC1 /* FirebaseConnectTestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D081A66F297C74B900541AC1 /* FirebaseConnectTestViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,9 +61,9 @@
 		D02618052975F50500E21053 /* Hear-YinzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Hear-YinzUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D02618092975F50500E21053 /* Hear_YinzUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hear_YinzUITests.swift; sourceTree = "<group>"; };
 		D026180B2975F50500E21053 /* Hear_YinzUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hear_YinzUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D03BA31D2981B82A008E3C22 /* FirebaseDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDisplayView.swift; sourceTree = "<group>"; };
+		D03BA3212982289B008E3C22 /* LoginFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFunctions.swift; sourceTree = "<group>"; };
 		D081A664297C6E1400541AC1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		D081A669297C716C00541AC1 /* FirebaseDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDisplayView.swift; sourceTree = "<group>"; };
-		D081A66F297C74B900541AC1 /* FirebaseConnectTestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConnectTestViewModel.swift; sourceTree = "<group>"; };
 		D1778806EAA3C22354C6BC99 /* Pods-Hear-Yinz-Hear-YinzUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-Yinz-Hear-YinzUITests.debug.xcconfig"; path = "Target Support Files/Pods-Hear-Yinz-Hear-YinzUITests/Pods-Hear-Yinz-Hear-YinzUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		F5D796AEC5AF350C135A43A3 /* Pods_Hear_YinzTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Hear_YinzTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -183,7 +183,7 @@
 		D081A668297C712B00541AC1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D081A669297C716C00541AC1 /* FirebaseDisplayView.swift */,
+				D03BA31D2981B82A008E3C22 /* FirebaseDisplayView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -191,6 +191,7 @@
 		D081A66D297C737800541AC1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D03BA3212982289B008E3C22 /* LoginFunctions.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -198,7 +199,6 @@
 		D081A66E297C73D300541AC1 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				D081A66F297C74B900541AC1 /* FirebaseConnectTestViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -444,9 +444,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D081A670297C74B900541AC1 /* FirebaseConnectTestViewModel.swift in Sources */,
-				D081A66A297C716C00541AC1 /* FirebaseDisplayView.swift in Sources */,
+				D03BA31E2981B82A008E3C22 /* FirebaseDisplayView.swift in Sources */,
 				D02617EF2975F50400E21053 /* Hear_YinzApp.swift in Sources */,
+				D03BA3222982289B008E3C22 /* LoginFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,9 +454,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D081A66B297C716C00541AC1 /* FirebaseDisplayView.swift in Sources */,
-				D081A671297C74B900541AC1 /* FirebaseConnectTestViewModel.swift in Sources */,
+				D03BA31F2981B82A008E3C22 /* FirebaseDisplayView.swift in Sources */,
 				D02618002975F50500E21053 /* Hear_YinzTests.swift in Sources */,
+				D03BA3232982289B008E3C22 /* LoginFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,8 +464,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D081A672297C74B900541AC1 /* FirebaseConnectTestViewModel.swift in Sources */,
-				D081A66C297C716C00541AC1 /* FirebaseDisplayView.swift in Sources */,
+				D03BA3202981B82A008E3C22 /* FirebaseDisplayView.swift in Sources */,
+				D03BA3242982289B008E3C22 /* LoginFunctions.swift in Sources */,
 				D026180C2975F50500E21053 /* Hear_YinzUITestsLaunchTests.swift in Sources */,
 				D026180A2975F50500E21053 /* Hear_YinzUITests.swift in Sources */,
 			);
