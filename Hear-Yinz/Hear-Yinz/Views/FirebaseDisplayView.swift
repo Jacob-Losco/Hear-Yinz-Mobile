@@ -17,6 +17,7 @@ import FirebaseAuth
 
 struct FirebaseDisplayView: View {
     @ObservedObject var oLoginFunctions = LoginFunctions()
+    @ObservedObject var oDBFunctions = DBFunctions()
     
     var body: some View {
         VStack (spacing: 50){
@@ -26,10 +27,14 @@ struct FirebaseDisplayView: View {
             Button ("Logout") {
                 oLoginFunctions.logout()
             }
-            Button("Is Someone Logged In?") {
-                print("\(Auth.auth().currentUser?.email)")
+            Button("Get Events") {
+                print(oDBFunctions.testGetEventData())
             }
         }
+    }
+    
+    init() {
+        oDBFunctions.fnInitEventMapData()
     }
 }
 
