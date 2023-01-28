@@ -8,24 +8,33 @@ Exported Data Structures: FirebaseDisplayView - View containing buttons and call
 Exported Functions: None
 
 Contributors:
-    Jacob Losco - 1/22/2022 - SP-316
+    Jacob Losco - 1/26/2022 - SP-365
 
 ===================================================================+*/
 
 import SwiftUI
+import FirebaseAuth
 
 struct FirebaseDisplayView: View {
-    
-    @ObservedObject var oConnectionTestModel = FirebaseConnectTestViewModel()
+    @ObservedObject var oLoginFunctions = LoginFunctions()
     
     var body: some View {
-        Button("Test Connection", action: {
-            print(oConnectionTestModel.asm_List[0])
-        })
-    }
-    
-    init() {
-        oConnectionTestModel.fnGetData()
+        VStack (spacing: 50){
+            Button("Login") {
+                oLoginFunctions.fnLogin(sEmail: "test@stvincent.edu", sPassword: "test123"
+                )}
+            Button ("Logout") {
+                oLoginFunctions.logout()
+            }
+            Button("Is Someone Logged In?") {
+                print("\(Auth.auth().currentUser?.email)")
+            }
+        }
     }
 }
 
+struct FirebaseDisplayView_Previews: PreviewProvider {
+    static var previews: some View {
+        FirebaseDisplayView()
+    }
+}
