@@ -6,9 +6,10 @@ Summary: Contains functions and vars for retrieving and formatting data for fire
 Exported Data Structures: aoEventList [EventModel] - a list of all the events to be displayed to the map based on user filtering
 
 Exported Functions: fnInitEventMapData - sets necessary variables to display event information
+                    fnGetEventList - sets the users viewable events to be filtered by a selected date
 
 Contributors:
-    Jacob Losco - 1/27/2022 - SP-349
+    Jacob Losco - 1/29/2022 - SP-349
 
 ===================================================================+*/
 
@@ -17,13 +18,13 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class DBFunctions: ObservableObject {
-    
-    let oDatabase = Firestore.firestore()
+    let oDatabase = Firestore.firestore() //object representing the firestore database
     var sInstitutionId : String = "" //the id of the institution currently logged in
     var sAccountId : String = "" //the id of the account currently logged in
     var aoEventCache : [EventModel] = [] //if on eventmap, all approved events in db occuring after Date.now(), sorted by timestamp
-    @Published var aoEventList : [EventModel] = [] //if on eventmap, all filtered events to be displayed to the map view
+    @Published var aoEventList : ArraySlice<EventModel> = ArraySlice<EventModel>() //if on eventmap, all filtered events to be displayed to the map view
     
+    //test function for verifying it works. Will be phased out after approval
     func testGetEventData() {
         print(aoEventCache)
     }
@@ -37,12 +38,13 @@ class DBFunctions: ObservableObject {
 
       Returns: None
     -------------------------------------------------------------------F*/
-    func fnInitEventMapData() {
-        fnGetInstitution(hCompletionHandler: {(institution) -> Void in
-            self.sInstitutionId = institution
-            self.fnGetUserAccount(sInstitutionId: institution, hCompletionHandler: {(account) -> Void in
-                self.sAccountId = account
-                self.fnGetInstitutionEvents(sInstitutionId: institution, sAccountId: account)
+    func fnInitEventMapData(hCompletionHandler: @escaping () -> Void) {
+        fnGetInstitution(hCompletionHandler: {(sInstitution) -> Void in
+            self.sInstitutionId = sInstitution
+            self.fnGetUserAccount(hCompletionHandler: {(sAccount) -> Void in
+                self.sAccountId = sAccount
+                self.fnGetInstitutionEvents()
+                hCompletionHandler()
             })
         })
     }
@@ -58,17 +60,13 @@ class DBFunctions: ObservableObject {
     -------------------------------------------------------------------F*/
     private func fnGetInstitution(hCompletionHandler: @escaping (String) -> Void) {
         let sUserEmail = Auth.auth().currentUser?.email ?? "N/A"
-        if(sUserEmail != "N/A") {
-            let sUserHandle = "@" + sUserEmail.components(separatedBy: "@")[1]
-            oDatabase.collection("Institutions").whereField("institution_handle", isEqualTo: sUserHandle).getDocuments { snapshot, error in
-                guard let oDocuments = snapshot?.documents else {
-                    hCompletionHandler("No Documents")
-                    return
-                }
-                hCompletionHandler(oDocuments[0].documentID)
+        let sUserHandle = "@" + sUserEmail.components(separatedBy: "@")[1]
+        oDatabase.collection("Institutions").whereField("institution_handle", isEqualTo: sUserHandle).getDocuments { snapshot, error in
+            guard let oDocuments = snapshot?.documents else {
+                hCompletionHandler("No Documents")
+                return
             }
-        } else {
-            hCompletionHandler("No Email")
+            hCompletionHandler(oDocuments[0].documentID)
         }
     }
     
@@ -82,7 +80,7 @@ class DBFunctions: ObservableObject {
 
       Returns: None technically, but handler contains string containing document Id
     -------------------------------------------------------------------F*/
-    private func fnGetUserAccount(sInstitutionId: String, hCompletionHandler: @escaping (String) -> Void) {
+    private func fnGetUserAccount(hCompletionHandler: @escaping (String) -> Void) {
         let sUserEmail = Auth.auth().currentUser?.email ?? "N/A"
         if(sUserEmail != "N/A") {
             oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").whereField("account_email", isEqualTo: sUserEmail).getDocuments { snapshot, error in
@@ -106,14 +104,15 @@ class DBFunctions: ObservableObject {
 
       Returns: None technically, but handler contains string containing document Id
     -------------------------------------------------------------------F*/
-    private func fnGetInstitutionEvents(sInstitutionId: String, sAccountId: String) {
+    private func fnGetInstitutionEvents() {
         oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments { snapshot, error in
             guard let oOrganizationDocuments = snapshot?.documents else {
                 return
             }
             for oOrganizationDocument in oOrganizationDocuments {
-                self.fnGetOrganizationEvents(sInstituionId: sInstitutionId, sAccountId: sAccountId, sOrganizationId: oOrganizationDocument.documentID, hCompletionHandler: {(orgEventList) -> Void in
-                    self.aoEventCache.append(contentsOf: orgEventList)
+                let oOrganizationData = oOrganizationDocument.data()
+                self.fnGetOrganizationEvents(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String, hCompletionHandler: {(aoOrgEventList) -> Void in
+                    self.aoEventCache.append(contentsOf: aoOrgEventList)
                 })
             }
         }
@@ -131,19 +130,63 @@ class DBFunctions: ObservableObject {
 
       Returns: None technically, but handler contains event list
     -------------------------------------------------------------------F*/
-    private func fnGetOrganizationEvents(sInstituionId: String, sAccountId: String, sOrganizationId: String, hCompletionHandler: @escaping ([EventModel]) -> Void) {
+    private func fnGetOrganizationEvents(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String, hCompletionHandler: @escaping ([EventModel]) -> Void) {
         var aoOrganizationEventList: [EventModel] = []
-        oDatabase.collection("Institutions").document(sInstituionId).collection("Organizations").document(sOrganizationId).collection("Events").order(by: "event_timestamp").getDocuments { snapshot, error in
+        oOrganization.collection("Events").whereField("event_status", isEqualTo: 2).order(by: "event_timestamp").getDocuments { snapshot, error in
             guard let oOrganizationEventsDocuments = snapshot?.documents else {
                 hCompletionHandler(aoOrganizationEventList)
                 return
             }
-            for oOrganzationEventDocument in oOrganizationEventsDocuments {
-                let eventData = oOrganzationEventDocument.data()
-                let tempFollowed = false
-                aoOrganizationEventList.append(EventModel(id: oOrganzationEventDocument.documentID, name: eventData["event_name"] as! String, description: eventData["event_description"] as! String, location: eventData["event_location"] as! String, likes: eventData["event_likes"] as! Int, reports: eventData["event_reports"] as! Int, status: eventData["event_status"] as! Int, followed: tempFollowed, dateEvent: eventData["event_timestamp"] as! Timestamp))
+            self.fnGetLocationData(hCompletionHandler: {(aoLocationDictionary) -> Void in
+                for oOrganizationEventDocument in oOrganizationEventsDocuments {
+                    let oEventData = oOrganizationEventDocument.data()
+                    let oLocationData = aoLocationDictionary[oEventData["event_location"] as! DocumentReference]
+                    aoOrganizationEventList.append(EventModel(sId: oOrganizationEventDocument.documentID, sName: oEventData["event_name"] as! String, sDescription: oEventData["event_description"] as! String, oLocationCoordinate: oLocationData!["location_coordinate"] as! GeoPoint, sLocationName: oLocationData!["location_name"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, iLikes: oEventData["event_likes"] as! Int, iReports: oEventData["event_reports"] as! Int, bFollowed: false, oDateEvent: oEventData["event_timestamp"] as! Timestamp))
+                }
+                hCompletionHandler(aoOrganizationEventList)
+            })
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Function: fnGetLocationData
+
+      Summary: returns a dictionary that links a location reference to the data associated with that location
+
+      Args: hCompletionHander - the handler that holds async return value
+
+      Returns: None technically, but event handler contains dictionary
+    -------------------------------------------------------------------F*/
+    private func fnGetLocationData(hCompletionHandler: @escaping ([DocumentReference : [String : Any]]) -> Void) {
+        var aoLocationDictionary: [DocumentReference : [String : Any]] = [DocumentReference : [String : Any]]()
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Locations").getDocuments { snapshot, error in
+            guard let oLocationDocuments = snapshot?.documents else {
+                hCompletionHandler(aoLocationDictionary)
+                return
             }
-            hCompletionHandler(aoOrganizationEventList)
+            for oLocationDocument in oLocationDocuments {
+                let oLocationData = oLocationDocument.data()
+                aoLocationDictionary[oLocationDocument.reference] = oLocationData
+            }
+            hCompletionHandler(aoLocationDictionary)
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Function: fnGetEventList
+
+      Summary: Sets the aoEventList variable to contain all the events the user should see given the date slider filter
+
+      Args: endDate
+
+      Returns: None technically, but event handler contains dictionary
+    -------------------------------------------------------------------F*/
+    func fnGetEventList(oEndTime: Date) {
+        aoEventCache.indices.forEach { i in
+            print(oEndTime.compare(aoEventCache[i].dateEvent))
+            if(oEndTime.compare(aoEventCache[i].dateEvent) == .orderedAscending) {
+                aoEventList = aoEventCache[0...i]
+            }
         }
     }
 }

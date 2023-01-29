@@ -34,7 +34,9 @@ struct FirebaseDisplayView: View {
     }
     
     init() {
-        oDBFunctions.fnInitEventMapData()
+        oDBFunctions.fnInitEventMapData(hCompletionHandler: {() -> Void in
+            
+        })
     }
 }
 
