@@ -183,8 +183,8 @@ class DBFunctions: ObservableObject {
     -------------------------------------------------------------------F*/
     func fnGetEventList(oEndTime: Date) {
         aoEventCache.indices.forEach { i in
-            print(oEndTime.compare(aoEventCache[i].dateEvent))
-            if(oEndTime.compare(aoEventCache[i].dateEvent) == .orderedAscending) {
+            print(oEndTime.compare(aoEventCache[i].oDateEvent))
+            if(oEndTime.compare(aoEventCache[i].oDateEvent) == .orderedAscending) {
                 aoEventList = aoEventCache[0...i]
             }
         }
