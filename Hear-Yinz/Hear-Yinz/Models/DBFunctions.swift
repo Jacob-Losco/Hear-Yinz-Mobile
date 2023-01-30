@@ -9,7 +9,7 @@ Exported Functions: fnInitEventMapData - sets necessary variables to display eve
                     fnGetEventList - sets the users viewable events to be filtered by a selected date
 
 Contributors:
-    Jacob Losco - 1/29/2022 - SP-349
+    Jacob Losco - 1/29/2022 - SP-354
 
 ===================================================================+*/
 
@@ -22,9 +22,10 @@ class DBFunctions: ObservableObject {
     var sInstitutionId : String = "" //the id of the institution currently logged in
     var sAccountId : String = "" //the id of the account currently logged in
     var aoEventCache : [EventModel] = [] //if on eventmap, all approved events in db occuring after Date.now(), sorted by timestamp
+    @Published var aoAnnouncementList: [AnnouncementModel] = []
     @Published var aoEventList : ArraySlice<EventModel> = ArraySlice<EventModel>() //if on eventmap, all filtered events to be displayed to the map view
     
-    //test function for verifying it works. Will be phased out after approval
+    //test functions for sample firebase view
     func testGetEventData() {
         print(aoEventCache)
     }
@@ -35,6 +36,10 @@ class DBFunctions: ObservableObject {
     
     func testUpdateEventReports() {
         fnUpdateEventReports(sEvent: aoEventCache[0])
+    }
+    
+    func testGetAnnouncementData() {
+        print(aoAnnouncementList)
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -52,6 +57,17 @@ class DBFunctions: ObservableObject {
             self.fnGetUserAccount(hCompletionHandler: {(sAccount) -> Void in
                 self.sAccountId = sAccount
                 self.fnGetInstitutionEvents()
+                hCompletionHandler()
+            })
+        })
+    }
+    
+    func fnInitEventAnnouncementData(hCompletionHandler: @escaping () -> Void) {
+        fnGetInstitution(hCompletionHandler: {(sInstitution) -> Void in
+            self.sInstitutionId = sInstitution
+            self.fnGetUserAccount(hCompletionHandler: {(sAccount) -> Void in
+                self.sAccountId = sAccount
+                self.fnGetInstitutionAnnouncements()
                 hCompletionHandler()
             })
         })
@@ -127,7 +143,7 @@ class DBFunctions: ObservableObject {
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-     Function: fnGetOrganizationevents
+     Function: fnGetOrganizationEvents
      
      Summary: Retrives list of all events after Date.now() for specific organization
      
@@ -235,6 +251,56 @@ class DBFunctions: ObservableObject {
             let iNumReports = oEventData["event_reports"] as! Int
             oEventData["event_reports"] = iNumReports + 1
             self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).updateData(oEventData)
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnGetInstitutionAnnouncements
+     
+     Summary: Retrives list of all announcements
+     
+     Args: None
+     
+     Returns: None technically, but handler contains string containing document Id
+     -------------------------------------------------------------------F*/
+    func fnGetInstitutionAnnouncements() {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments { snapshot, error in
+            guard let oOrganizationDocuments = snapshot?.documents else {
+                return
+            }
+            for oOrganizationDocument in oOrganizationDocuments {
+                let oOrganizationData = oOrganizationDocument.data()
+                self.fnGetOrganizationAnnouncements(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String, hCompletionHandler: {(aoOrgAnnouncementList) -> Void in
+                    self.aoAnnouncementList.append(contentsOf: aoOrgAnnouncementList)
+                })
+            }
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnGetOrganizationAnnouncements
+     
+     Summary: Retrieves list of announcements sorted by date ascending for a specific organizaiton
+     
+     Args: oOrganization - reference to the document of the host organization
+     sOrganizationName - the name of the host organization
+     sOrganizationDescription - the description of the host organization
+     hCompletionHandler - the handler that holds async return value
+     
+     Returns: None technically, but handler contains announcement list
+     -------------------------------------------------------------------F*/
+    func fnGetOrganizationAnnouncements(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String, hCompletionHandler: @escaping ([AnnouncementModel]) -> Void) {
+        var aoOrganizationAnnouncementList: [AnnouncementModel] = []
+        oOrganization.collection("Announcements").order(by: "announcement_timestamp").getDocuments { snapshot, error in
+            guard let oOrganizationAnnouncementDocuments = snapshot?.documents else {
+                hCompletionHandler(aoOrganizationAnnouncementList)
+                return
+            }
+            for oOrganizationAnnouncementDocument in oOrganizationAnnouncementDocuments {
+                let oAnnouncementData = oOrganizationAnnouncementDocument.data()
+                aoOrganizationAnnouncementList.append(AnnouncementModel(sId: oOrganizationAnnouncementDocument.documentID, sDescription: oAnnouncementData["announcement_message"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, bFollowed: false, oDateEvent: oAnnouncementData["announcement_timestamp"] as! Timestamp))
+            }
+            hCompletionHandler(aoOrganizationAnnouncementList)
         }
     }
 }

@@ -36,13 +36,21 @@ struct FirebaseDisplayView: View {
             Button("Report Chess Meeting Event") {
                 print(oDBFunctions.testUpdateEventReports())
             }
+            Button("Get Announcements") {
+                print(oDBFunctions.testUpdateEventReports())
+            }
         }
     }
     
     init() {
+        
         oDBFunctions.fnInitEventMapData(hCompletionHandler: {() -> Void in
+    
+        })
+        oDBFunctions.fnInitEventAnnouncementData(hCompletionHandler: {() -> Void in
             
         })
+        
     }
 }
 
