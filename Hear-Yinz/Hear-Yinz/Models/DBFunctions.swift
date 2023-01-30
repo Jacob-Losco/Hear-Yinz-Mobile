@@ -29,6 +29,10 @@ class DBFunctions: ObservableObject {
         print(aoEventCache)
     }
     
+    func testUpdateEventLikes() {
+        fnUpdateEventLikes(sEvent: aoEventCache[0])
+    }
+    
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnInitEventMapData
 
@@ -132,7 +136,7 @@ class DBFunctions: ObservableObject {
     -------------------------------------------------------------------F*/
     private func fnGetOrganizationEvents(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String, hCompletionHandler: @escaping ([EventModel]) -> Void) {
         var aoOrganizationEventList: [EventModel] = []
-        oOrganization.collection("Events").whereField("event_status", isEqualTo: 2).order(by: "event_timestamp").getDocuments { snapshot, error in
+        oOrganization.collection("Events").order(by: "event_timestamp").getDocuments { snapshot, error in
             guard let oOrganizationEventsDocuments = snapshot?.documents else {
                 hCompletionHandler(aoOrganizationEventList)
                 return
@@ -141,7 +145,7 @@ class DBFunctions: ObservableObject {
                 for oOrganizationEventDocument in oOrganizationEventsDocuments {
                     let oEventData = oOrganizationEventDocument.data()
                     let oLocationData = aoLocationDictionary[oEventData["event_location"] as! DocumentReference]
-                    aoOrganizationEventList.append(EventModel(sId: oOrganizationEventDocument.documentID, sName: oEventData["event_name"] as! String, sDescription: oEventData["event_description"] as! String, oLocationCoordinate: oLocationData!["location_coordinate"] as! GeoPoint, sLocationName: oLocationData!["location_name"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, iLikes: oEventData["event_likes"] as! Int, iReports: oEventData["event_reports"] as! Int, bFollowed: false, oDateEvent: oEventData["event_timestamp"] as! Timestamp))
+                    aoOrganizationEventList.append(EventModel(sId: oOrganizationEventDocument.documentID, sName: oEventData["event_name"] as! String, sDescription: oEventData["event_description"] as! String, oLocationCoordinate: oLocationData!["location_coordinate"] as! GeoPoint, sLocationName: oLocationData!["location_name"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, iLikes: oEventData["event_likes"] as! Int, bFollowed: false, oDateEvent: oEventData["event_timestamp"] as! Timestamp))
                 }
                 hCompletionHandler(aoOrganizationEventList)
             })
@@ -187,6 +191,26 @@ class DBFunctions: ObservableObject {
             if(oEndTime.compare(aoEventCache[i].oDateEvent) == .orderedAscending) {
                 aoEventList = aoEventCache[0...i]
             }
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Function: fnUpdateEventLikes
+
+      Summary: Updates the database so that the event passed in has it's likes raised by one
+
+      Args: sEvent - the event that has been liked
+
+      Returns: None
+    -------------------------------------------------------------------F*/
+    func fnUpdateEventLikes(sEvent: EventModel) {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).getDocument { snapshot, error in
+            guard var oEventData = snapshot?.data() else {
+                return
+            }
+            sEvent.iLikes += 1
+            oEventData["event_likes"] = sEvent.iLikes
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).updateData(oEventData)
         }
     }
 }

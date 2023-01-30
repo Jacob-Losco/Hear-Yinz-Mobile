@@ -24,8 +24,7 @@ class EventModel {
     let sHostId: String //the document id of the organization that is hosting the event
     var sHostName: String = "" //the name of the organization that is hosting the event
     var sHostDescription: String = "" //the description of the organization that is hosting the event
-    let iLikes: Int //the number of likes of the event
-    let iReports: Int //the number of reports of the event
+    var iLikes: Int //the number of likes of the event
     let bFollowed: Bool //whether or not this event is followed by the user
     let oDateEvent: Date //the timestamp of the event
     
@@ -49,7 +48,7 @@ class EventModel {
 
       Returns: None
     -------------------------------------------------------------------F*/
-    init(sId: String, sName: String, sDescription: String, oLocationCoordinate: GeoPoint, sLocationName: String, sHostId: String, sHostName: String, sHostDescription: String, iLikes: Int, iReports: Int, bFollowed: Bool, oDateEvent: Timestamp) {
+    init(sId: String, sName: String, sDescription: String, oLocationCoordinate: GeoPoint, sLocationName: String, sHostId: String, sHostName: String, sHostDescription: String, iLikes: Int, bFollowed: Bool, oDateEvent: Timestamp) {
         self.sId = sId
         self.sName = sName
         self.sDescription = sDescription
@@ -59,7 +58,6 @@ class EventModel {
         self.sHostName = sHostName
         self.sHostDescription = sHostDescription
         self.iLikes = iLikes
-        self.iReports = iReports
         self.bFollowed = bFollowed
         self.oDateEvent = oDateEvent.dateValue()
     }
