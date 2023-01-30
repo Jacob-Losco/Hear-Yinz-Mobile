@@ -33,6 +33,9 @@ struct FirebaseDisplayView: View {
             Button("Like Chess Meeting Event") {
                 print(oDBFunctions.testUpdateEventLikes())
             }
+            Button("Report Chess Meeting Event") {
+                print(oDBFunctions.testUpdateEventReports())
+            }
         }
     }
     

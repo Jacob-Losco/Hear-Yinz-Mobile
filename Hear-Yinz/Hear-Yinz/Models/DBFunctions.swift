@@ -33,15 +33,19 @@ class DBFunctions: ObservableObject {
         fnUpdateEventLikes(sEvent: aoEventCache[0])
     }
     
+    func testUpdateEventReports() {
+        fnUpdateEventReports(sEvent: aoEventCache[0])
+    }
+    
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnInitEventMapData
-
-      Summary: used on init of the map view. Setups up variables necessary to get event data
-
-      Args: None
-
-      Returns: None
-    -------------------------------------------------------------------F*/
+     Function: fnInitEventMapData
+     
+     Summary: used on init of the map view. Setups up variables necessary to get event data
+     
+     Args: None
+     
+     Returns: None
+     -------------------------------------------------------------------F*/
     func fnInitEventMapData(hCompletionHandler: @escaping () -> Void) {
         fnGetInstitution(hCompletionHandler: {(sInstitution) -> Void in
             self.sInstitutionId = sInstitution
@@ -54,14 +58,14 @@ class DBFunctions: ObservableObject {
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnGetInstitution
-
-      Summary: Retrives user Institution document id from the database. Returns failure message if retrieval fails
-
-      Args: hCompletionHandler - the handler that holds async return value
-
-      Returns: None technically, but handler contains string return
-    -------------------------------------------------------------------F*/
+     Function: fnGetInstitution
+     
+     Summary: Retrives user Institution document id from the database. Returns failure message if retrieval fails
+     
+     Args: hCompletionHandler - the handler that holds async return value
+     
+     Returns: None technically, but handler contains string return
+     -------------------------------------------------------------------F*/
     private func fnGetInstitution(hCompletionHandler: @escaping (String) -> Void) {
         let sUserEmail = Auth.auth().currentUser?.email ?? "N/A"
         let sUserHandle = "@" + sUserEmail.components(separatedBy: "@")[1]
@@ -75,15 +79,15 @@ class DBFunctions: ObservableObject {
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnGetUserAccount
-
-      Summary: Retrives user Account document id from the database. Returns failure message if retrieval fails
-
-      Args: sInstitutionId - the document id of the user institution
-        hCompletionHandler - the handler that holds async return value
-
-      Returns: None technically, but handler contains string containing document Id
-    -------------------------------------------------------------------F*/
+     Function: fnGetUserAccount
+     
+     Summary: Retrives user Account document id from the database. Returns failure message if retrieval fails
+     
+     Args: sInstitutionId - the document id of the user institution
+     hCompletionHandler - the handler that holds async return value
+     
+     Returns: None technically, but handler contains string containing document Id
+     -------------------------------------------------------------------F*/
     private func fnGetUserAccount(hCompletionHandler: @escaping (String) -> Void) {
         let sUserEmail = Auth.auth().currentUser?.email ?? "N/A"
         if(sUserEmail != "N/A") {
@@ -96,18 +100,18 @@ class DBFunctions: ObservableObject {
             }
         }
     }
-
+    
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnGetInstitutionEvents
-
-      Summary: Retrives list of events sorted by timestamp occuring from the database
-
-      Args: sInstitutionId - the document id of the user institution
-        sAccountId - the document id of the user account
-        hCompletionHandler - the handler that holds async return value
-
-      Returns: None technically, but handler contains string containing document Id
-    -------------------------------------------------------------------F*/
+     Function: fnGetInstitutionEvents
+     
+     Summary: Retrives list of events sorted by timestamp occuring from the database
+     
+     Args: sInstitutionId - the document id of the user institution
+     sAccountId - the document id of the user account
+     hCompletionHandler - the handler that holds async return value
+     
+     Returns: None technically, but handler contains string containing document Id
+     -------------------------------------------------------------------F*/
     private func fnGetInstitutionEvents() {
         oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments { snapshot, error in
             guard let oOrganizationDocuments = snapshot?.documents else {
@@ -123,17 +127,17 @@ class DBFunctions: ObservableObject {
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnGetOrganizationevents
-
-      Summary: Retrives list of all events after Date.now() for specific organization
-
-      Args: sInstitutionId - the document id of the user institution
-        sAccountId - the document id of the user account
-        sOrganizationId - the document id of the organization
-        hCompletionHandler - the handler that holds async return value
-
-      Returns: None technically, but handler contains event list
-    -------------------------------------------------------------------F*/
+     Function: fnGetOrganizationevents
+     
+     Summary: Retrives list of all events after Date.now() for specific organization
+     
+     Args: sInstitutionId - the document id of the user institution
+     sAccountId - the document id of the user account
+     sOrganizationId - the document id of the organization
+     hCompletionHandler - the handler that holds async return value
+     
+     Returns: None technically, but handler contains event list
+     -------------------------------------------------------------------F*/
     private func fnGetOrganizationEvents(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String, hCompletionHandler: @escaping ([EventModel]) -> Void) {
         var aoOrganizationEventList: [EventModel] = []
         oOrganization.collection("Events").order(by: "event_timestamp").getDocuments { snapshot, error in
@@ -153,14 +157,14 @@ class DBFunctions: ObservableObject {
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnGetLocationData
-
-      Summary: returns a dictionary that links a location reference to the data associated with that location
-
-      Args: hCompletionHander - the handler that holds async return value
-
-      Returns: None technically, but event handler contains dictionary
-    -------------------------------------------------------------------F*/
+     Function: fnGetLocationData
+     
+     Summary: returns a dictionary that links a location reference to the data associated with that location
+     
+     Args: hCompletionHander - the handler that holds async return value
+     
+     Returns: None technically, but event handler contains dictionary
+     -------------------------------------------------------------------F*/
     private func fnGetLocationData(hCompletionHandler: @escaping ([DocumentReference : [String : Any]]) -> Void) {
         var aoLocationDictionary: [DocumentReference : [String : Any]] = [DocumentReference : [String : Any]]()
         oDatabase.collection("Institutions").document(sInstitutionId).collection("Locations").getDocuments { snapshot, error in
@@ -177,14 +181,14 @@ class DBFunctions: ObservableObject {
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnGetEventList
-
-      Summary: Sets the aoEventList variable to contain all the events the user should see given the date slider filter
-
-      Args: endDate
-
-      Returns: None technically, but event handler contains dictionary
-    -------------------------------------------------------------------F*/
+     Function: fnGetEventList
+     
+     Summary: Sets the aoEventList variable to contain all the events the user should see given the date slider filter
+     
+     Args: endDate
+     
+     Returns: None technically, but event handler contains dictionary
+     -------------------------------------------------------------------F*/
     func fnGetEventList(oEndTime: Date) {
         aoEventCache.indices.forEach { i in
             print(oEndTime.compare(aoEventCache[i].oDateEvent))
@@ -195,14 +199,14 @@ class DBFunctions: ObservableObject {
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnUpdateEventLikes
-
-      Summary: Updates the database so that the event passed in has it's likes raised by one
-
-      Args: sEvent - the event that has been liked
-
-      Returns: None
-    -------------------------------------------------------------------F*/
+     Function: fnUpdateEventLikes
+     
+     Summary: Updates the database so that the event passed in has it's likes raised by one
+     
+     Args: sEvent - the event that has been liked
+     
+     Returns: None
+     -------------------------------------------------------------------F*/
     func fnUpdateEventLikes(sEvent: EventModel) {
         oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).getDocument { snapshot, error in
             guard var oEventData = snapshot?.data() else {
@@ -210,6 +214,26 @@ class DBFunctions: ObservableObject {
             }
             sEvent.iLikes += 1
             oEventData["event_likes"] = sEvent.iLikes
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).updateData(oEventData)
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnUpdateEventReports
+     
+     Summary: Updates the database so that the event passed in has it's reports raised by 1
+     
+     Args: sEvent - the event that has been liked
+     
+     Returns: None
+     -------------------------------------------------------------------F*/
+    func fnUpdateEventReports(sEvent: EventModel) {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).getDocument { snapshot, error in
+            guard var oEventData = snapshot?.data() else {
+                return
+            }
+            let iNumReports = oEventData["event_reports"] as! Int
+            oEventData["event_reports"] = iNumReports + 1
             self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).updateData(oEventData)
         }
     }
