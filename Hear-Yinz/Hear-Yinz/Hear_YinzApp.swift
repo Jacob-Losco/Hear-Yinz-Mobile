@@ -24,7 +24,7 @@ struct Hear_YinzApp: App {
     
     var body: some Scene {
         WindowGroup {
-            FirebaseDisplayView()
+            Login()
         }
     }
 }
