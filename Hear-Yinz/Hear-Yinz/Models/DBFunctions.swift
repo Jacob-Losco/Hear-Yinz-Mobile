@@ -21,27 +21,21 @@ class DBFunctions: ObservableObject {
     let oDatabase = Firestore.firestore() //object representing the firestore database
     var sInstitutionId : String = "" //the id of the institution currently logged in
     var sAccountId : String = "" //the id of the account currently logged in
-    var aoEventCache : [EventModel] = [] //if on eventmap, all approved events in db occuring after Date.now(), sorted by timestamp
-    @Published var aoEventList : ArraySlice<EventModel> = ArraySlice<EventModel>() //if on eventmap, all filtered events to be displayed to the map view
-    
-    //test function for verifying it works. Will be phased out after approval
-    func testGetEventData() {
-        print(aoEventCache)
-    }
+    @Published var aoEventCache : [EventModel] = [] //if on eventmap, all approved events in db occuring after Date.now(), sorted by timestamp
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnInitEventMapData
 
       Summary: used on init of the map view. Setups up variables necessary to get event data
 
-      Args: None
+      Args: hCompletionHandler - completion handler that runs after asynchronous functions are completed
 
       Returns: None
     -------------------------------------------------------------------F*/
     func fnInitEventMapData(hCompletionHandler: @escaping () -> Void) {
-        fnGetInstitution(hCompletionHandler: {(sInstitution) -> Void in
+        fnGetInstitution(sUserEmail: Auth.auth().currentUser?.email ?? "N/A", hCompletionHandler: {(sInstitution) -> Void in
             self.sInstitutionId = sInstitution
-            self.fnGetUserAccount(hCompletionHandler: {(sAccount) -> Void in
+            self.fnGetUserAccount(sUserEmail: Auth.auth().currentUser?.email ?? "N/A", hCompletionHandler: {(sAccount) -> Void in
                 self.sAccountId = sAccount
                 self.fnGetInstitutionEvents()
                 hCompletionHandler()
@@ -54,19 +48,22 @@ class DBFunctions: ObservableObject {
 
       Summary: Retrives user Institution document id from the database. Returns failure message if retrieval fails
 
-      Args: hCompletionHandler - the handler that holds async return value
+      Args: hCompletionHandler - completion handler that runs after asynchronous functions are completed
 
       Returns: None technically, but handler contains string return
     -------------------------------------------------------------------F*/
-    private func fnGetInstitution(hCompletionHandler: @escaping (String) -> Void) {
-        let sUserEmail = Auth.auth().currentUser?.email ?? "N/A"
-        let sUserHandle = "@" + sUserEmail.components(separatedBy: "@")[1]
-        oDatabase.collection("Institutions").whereField("institution_handle", isEqualTo: sUserHandle).getDocuments { snapshot, error in
-            guard let oDocuments = snapshot?.documents else {
-                hCompletionHandler("No Documents")
-                return
+    private func fnGetInstitution(sUserEmail: String, hCompletionHandler: @escaping (String) -> Void) {
+        if(sUserEmail != "N/A"){
+            let sUserHandle = "@" + sUserEmail.components(separatedBy: "@")[1]
+            oDatabase.collection("Institutions").whereField("institution_handle", isEqualTo: sUserHandle).getDocuments { snapshot, error in
+                guard let oDocuments = snapshot?.documents else {
+                    hCompletionHandler("No Documents")
+                    return
+                }
+                hCompletionHandler(oDocuments[0].documentID)
             }
-            hCompletionHandler(oDocuments[0].documentID)
+        } else {
+            hCompletionHandler("Error: No logged in user")
         }
     }
     
@@ -80,8 +77,7 @@ class DBFunctions: ObservableObject {
 
       Returns: None technically, but handler contains string containing document Id
     -------------------------------------------------------------------F*/
-    private func fnGetUserAccount(hCompletionHandler: @escaping (String) -> Void) {
-        let sUserEmail = Auth.auth().currentUser?.email ?? "N/A"
+    private func fnGetUserAccount(sUserEmail: String, hCompletionHandler: @escaping (String) -> Void) {
         if(sUserEmail != "N/A") {
             oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").whereField("account_email", isEqualTo: sUserEmail).getDocuments { snapshot, error in
                 guard let oDocuments = snapshot?.documents else {
@@ -169,24 +165,6 @@ class DBFunctions: ObservableObject {
                 aoLocationDictionary[oLocationDocument.reference] = oLocationData
             }
             hCompletionHandler(aoLocationDictionary)
-        }
-    }
-    
-    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnGetEventList
-
-      Summary: Sets the aoEventList variable to contain all the events the user should see given the date slider filter
-
-      Args: endDate
-
-      Returns: None technically, but event handler contains dictionary
-    -------------------------------------------------------------------F*/
-    func fnGetEventList(oEndTime: Date) {
-        aoEventCache.indices.forEach { i in
-            print(oEndTime.compare(aoEventCache[i].oDateEvent))
-            if(oEndTime.compare(aoEventCache[i].oDateEvent) == .orderedAscending) {
-                aoEventList = aoEventCache[0...i]
-            }
         }
     }
 }

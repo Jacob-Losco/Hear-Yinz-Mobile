@@ -17,10 +17,26 @@ import Foundation
 import FirebaseAuth
 class LoginFunctions: ObservableObject {
     
-    @Published var vm_SignedIn = false;
+    var handle: AuthStateDidChangeListenerHandle?
+    @Published var vm_SignedIn = false
     
-    var isSignedIn: Bool {
-        return Auth.auth().currentUser != nil
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Function: fnListenAuthenticationState
+
+      Summary: Sets vm_SignedIn variable to be equal to the current login state
+
+      Args: None
+
+      Returns: None
+    -------------------------------------------------------------------F*/
+    func fnListenAuthenticationState() {
+        handle = Auth.auth().addStateDidChangeListener({ [weak self]  (auth, user) in
+            if user != nil {
+                self!.vm_SignedIn = true
+            } else {
+                self!.vm_SignedIn = false
+            }
+        })
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -55,7 +71,7 @@ class LoginFunctions: ObservableObject {
 
       Returns: None
     -------------------------------------------------------------------F*/
-    func logout() {
+    func fnLogout() {
         try? Auth.auth().signOut()
         
         self.vm_SignedIn = false
