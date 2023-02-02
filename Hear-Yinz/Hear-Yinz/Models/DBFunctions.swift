@@ -187,4 +187,24 @@ class DBFunctions: ObservableObject {
             self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).updateData(oEventData)
         }
     }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Function: fnUpdateEventReports
+         
+      Summary: Updates the database so that the event passed in has it's reports raised by 1
+         
+      Args: sEvent - the event that has been liked
+         
+      Returns: None
+    -------------------------------------------------------------------F*/
+    func fnUpdateEventReports(sEvent: EventModel) {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).getDocument { snapshot, error in
+            guard var oEventData = snapshot?.data() else {
+                return
+            }
+            let iNumReports = oEventData["event_reports"] as! Int
+            oEventData["event_reports"] = iNumReports + 1
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).updateData(oEventData)
+        }
+    }
 }
