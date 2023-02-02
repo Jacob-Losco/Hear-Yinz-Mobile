@@ -22,8 +22,8 @@ class EventModel {
     let oLocationCoordinate: GeoPoint //the coordinate of the location of the event
     let sLocationName: String //the name of the location of the event
     let sHostId: String //the document id of the organization that is hosting the event
-    let sHostName: String = "" //the name of the organization that is hosting the event
-    let sHostDescription: String = "" //the description of the organization that is hosting the event
+    var sHostName: String = "" //the name of the organization that is hosting the event
+    var sHostDescription: String = "" //the description of the organization that is hosting the event
     var iLikes: Int //the number of likes of the event
     let bFollowed: Bool //whether or not this event is followed by the user
     let oDateEvent: Date //the timestamp of the event
