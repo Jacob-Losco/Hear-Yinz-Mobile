@@ -167,4 +167,24 @@ class DBFunctions: ObservableObject {
             hCompletionHandler(aoLocationDictionary)
         }
     }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Function: fnUpdateEventLikes
+      
+      Summary: Updates the database so that the event passed in has it's likes raised by one
+        
+      Args: sEvent - the event that has been liked
+        
+      Returns: None
+    -------------------------------------------------------------------F*/
+    func fnUpdateEventLikes(sEvent: EventModel) {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).getDocument { snapshot, error in
+            guard var oEventData = snapshot?.data() else {
+                return
+            }
+            sEvent.iLikes += 1
+            oEventData["event_likes"] = sEvent.iLikes
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).updateData(oEventData)
+        }
+    }
 }
