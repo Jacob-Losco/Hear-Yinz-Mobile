@@ -22,6 +22,7 @@ class DBFunctions: ObservableObject {
     var sInstitutionId : String = "" //the id of the institution currently logged in
     var sAccountId : String = "" //the id of the account currently logged in
     @Published var aoEventCache : [EventModel] = [] //if on eventmap, all approved events in db occuring after Date.now(), sorted by timestamp
+    @Published var aoAnnouncementList: [AnnouncementModel] = []
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnInitEventMapData
@@ -205,6 +206,56 @@ class DBFunctions: ObservableObject {
             let iNumReports = oEventData["event_reports"] as! Int
             oEventData["event_reports"] = iNumReports + 1
             self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sHostId).collection("Events").document(sEvent.sId).updateData(oEventData)
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+         Function: fnGetInstitutionAnnouncements
+         
+         Summary: Retrives list of all announcements
+         
+         Args: None
+         
+         Returns: None technically, but handler contains string containing document Id
+     -------------------------------------------------------------------F*/
+    func fnGetInstitutionAnnouncements() {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments { snapshot, error in
+            guard let oOrganizationDocuments = snapshot?.documents else {
+                return
+            }
+            for oOrganizationDocument in oOrganizationDocuments {
+                let oOrganizationData = oOrganizationDocument.data()
+                self.fnGetOrganizationAnnouncements(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String, hCompletionHandler: {(aoOrgAnnouncementList) -> Void in
+                    self.aoAnnouncementList.append(contentsOf: aoOrgAnnouncementList)
+                })
+            }
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnGetOrganizationAnnouncements
+     
+     Summary: Retrieves list of announcements sorted by date ascending for a specific organizaiton
+     
+     Args: oOrganization - reference to the document of the host organization
+     sOrganizationName - the name of the host organization
+     sOrganizationDescription - the description of the host organization
+     hCompletionHandler - the handler that holds async return value
+     
+     Returns: None technically, but handler contains announcement list
+     -------------------------------------------------------------------F*/
+    func fnGetOrganizationAnnouncements(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String, hCompletionHandler: @escaping ([AnnouncementModel]) -> Void) {
+        var aoOrganizationAnnouncementList: [AnnouncementModel] = []
+        oOrganization.collection("Announcements").order(by: "announcement_timestamp").getDocuments { snapshot, error in
+            guard let oOrganizationAnnouncementDocuments = snapshot?.documents else {
+                hCompletionHandler(aoOrganizationAnnouncementList)
+                return
+            }
+            for oOrganizationAnnouncementDocument in oOrganizationAnnouncementDocuments {
+                let oAnnouncementData = oOrganizationAnnouncementDocument.data()
+                aoOrganizationAnnouncementList.append(AnnouncementModel(sId: oOrganizationAnnouncementDocument.documentID, sDescription: oAnnouncementData["announcement_message"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, bFollowed: false, oDateEvent: oAnnouncementData["announcement_timestamp"] as! Timestamp))
+            }
+            hCompletionHandler(aoOrganizationAnnouncementList)
         }
     }
 }
