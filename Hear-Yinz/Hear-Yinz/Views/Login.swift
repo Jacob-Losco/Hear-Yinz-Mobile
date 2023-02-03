@@ -29,7 +29,7 @@ struct Login: View {
                         oLoginFunctions.fnLogin(sEmail: "test@stvincent.edu", sPassword: "test123"
                     )}
                 } else {
-                    ContentView()
+                    MapView()
                 }
             }
         }.onAppear(perform: fnListen)
