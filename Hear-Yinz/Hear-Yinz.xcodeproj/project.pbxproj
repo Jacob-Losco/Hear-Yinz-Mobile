@@ -19,6 +19,9 @@
 		9A631704298D943700173C09 /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A631703298D943700173C09 /* AnnouncementsView.swift */; };
 		9A631705298D943700173C09 /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A631703298D943700173C09 /* AnnouncementsView.swift */; };
 		9A631706298D943700173C09 /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A631703298D943700173C09 /* AnnouncementsView.swift */; };
+		D0151048298D670000BB9C80 /* AnnouncementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0151047298D670000BB9C80 /* AnnouncementModel.swift */; };
+		D0151049298D670000BB9C80 /* AnnouncementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0151047298D670000BB9C80 /* AnnouncementModel.swift */; };
+		D015104A298D670000BB9C80 /* AnnouncementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0151047298D670000BB9C80 /* AnnouncementModel.swift */; };
 		D02617EF2975F50400E21053 /* Hear_YinzApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02617EE2975F50400E21053 /* Hear_YinzApp.swift */; };
 		D02617F32975F50500E21053 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D02617F22975F50500E21053 /* Assets.xcassets */; };
 		D02617F62975F50500E21053 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D02617F52975F50500E21053 /* Preview Assets.xcassets */; };
@@ -73,6 +76,8 @@
 		9F87BA6EE7968AD0FAA1A4FA /* Pods-Hear-Yinz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-Yinz.release.xcconfig"; path = "Target Support Files/Pods-Hear-Yinz/Pods-Hear-Yinz.release.xcconfig"; sourceTree = "<group>"; };
 		AA25A96171C5AF0FCF07D83B /* Pods-Hear-Yinz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-Yinz.debug.xcconfig"; path = "Target Support Files/Pods-Hear-Yinz/Pods-Hear-Yinz.debug.xcconfig"; sourceTree = "<group>"; };
 		CE10A65A0CE3A0379490B360 /* Pods-Hear-Yinz-Hear-YinzUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-Yinz-Hear-YinzUITests.release.xcconfig"; path = "Target Support Files/Pods-Hear-Yinz-Hear-YinzUITests/Pods-Hear-Yinz-Hear-YinzUITests.release.xcconfig"; sourceTree = "<group>"; };
+		D0151043298D658E00BB9C80 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D0151047298D670000BB9C80 /* AnnouncementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementModel.swift; sourceTree = "<group>"; };
 		D02617EB2975F50400E21053 /* Hear-Yinz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hear-Yinz.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D02617EE2975F50400E21053 /* Hear_YinzApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hear_YinzApp.swift; sourceTree = "<group>"; };
 		D02617F22975F50500E21053 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -222,6 +227,7 @@
 				D03BA32E29847882008E3C22 /* DBFunctions.swift */,
 				D03BA332298478A7008E3C22 /* EventModel.swift */,
 				D03BA33629847A71008E3C22 /* LoginFunctions.swift */,
+				D0151047298D670000BB9C80 /* AnnouncementModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
