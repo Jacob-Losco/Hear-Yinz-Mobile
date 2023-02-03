@@ -29,7 +29,9 @@ struct Login: View {
                         oLoginFunctions.fnLogin(sEmail: "test@stvincent.edu", sPassword: "test123"
                     )}
                 } else {
-                    MapView()
+                    ContentView()
+                    //Changed this from MapView to ContentView because
+                    //ContentView now calls MapView
                 }
             }
         }.onAppear(perform: fnListen)

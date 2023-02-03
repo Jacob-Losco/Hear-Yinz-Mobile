@@ -10,8 +10,15 @@
 		43A0AC648334B13490F0E1D8 /* Pods_Hear_Yinz_Hear_YinzUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 608FE10F390E6B8B652B4435 /* Pods_Hear_Yinz_Hear_YinzUITests.framework */; };
 		641054B40098DC4327E345EF /* Pods_Hear_Yinz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13CC1367C30EBB46D8266CAD /* Pods_Hear_Yinz.framework */; };
 		8A30D676F2123791BEBAFA62 /* Pods_Hear_YinzTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D796AEC5AF350C135A43A3 /* Pods_Hear_YinzTests.framework */; };
-		D0151045298D658E00BB9C80 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0151043298D658E00BB9C80 /* GoogleService-Info.plist */; };
-		D0151046298D658E00BB9C80 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0151043298D658E00BB9C80 /* GoogleService-Info.plist */; };
+		9A6316F6298D630100173C09 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9A6316F5298D630100173C09 /* GoogleService-Info.plist */; };
+		9A6316F7298D630100173C09 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9A6316F5298D630100173C09 /* GoogleService-Info.plist */; };
+		9A6316F8298D630100173C09 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9A6316F5298D630100173C09 /* GoogleService-Info.plist */; };
+		9A631700298D942800173C09 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6316FF298D942800173C09 /* SettingsView.swift */; };
+		9A631701298D942800173C09 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6316FF298D942800173C09 /* SettingsView.swift */; };
+		9A631702298D942800173C09 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6316FF298D942800173C09 /* SettingsView.swift */; };
+		9A631704298D943700173C09 /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A631703298D943700173C09 /* AnnouncementsView.swift */; };
+		9A631705298D943700173C09 /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A631703298D943700173C09 /* AnnouncementsView.swift */; };
+		9A631706298D943700173C09 /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A631703298D943700173C09 /* AnnouncementsView.swift */; };
 		D0151048298D670000BB9C80 /* AnnouncementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0151047298D670000BB9C80 /* AnnouncementModel.swift */; };
 		D0151049298D670000BB9C80 /* AnnouncementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0151047298D670000BB9C80 /* AnnouncementModel.swift */; };
 		D015104A298D670000BB9C80 /* AnnouncementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0151047298D670000BB9C80 /* AnnouncementModel.swift */; };
@@ -63,6 +70,9 @@
 		31E20D636C3EB58BB6248341 /* Pods-Hear-YinzTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-YinzTests.debug.xcconfig"; path = "Target Support Files/Pods-Hear-YinzTests/Pods-Hear-YinzTests.debug.xcconfig"; sourceTree = "<group>"; };
 		326DB2F4D82D89290F8F7141 /* Pods-Hear-YinzTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-YinzTests.release.xcconfig"; path = "Target Support Files/Pods-Hear-YinzTests/Pods-Hear-YinzTests.release.xcconfig"; sourceTree = "<group>"; };
 		608FE10F390E6B8B652B4435 /* Pods_Hear_Yinz_Hear_YinzUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Hear_Yinz_Hear_YinzUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A6316F5298D630100173C09 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9A6316FF298D942800173C09 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		9A631703298D943700173C09 /* AnnouncementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementsView.swift; sourceTree = "<group>"; };
 		9F87BA6EE7968AD0FAA1A4FA /* Pods-Hear-Yinz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-Yinz.release.xcconfig"; path = "Target Support Files/Pods-Hear-Yinz/Pods-Hear-Yinz.release.xcconfig"; sourceTree = "<group>"; };
 		AA25A96171C5AF0FCF07D83B /* Pods-Hear-Yinz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-Yinz.debug.xcconfig"; path = "Target Support Files/Pods-Hear-Yinz/Pods-Hear-Yinz.debug.xcconfig"; sourceTree = "<group>"; };
 		CE10A65A0CE3A0379490B360 /* Pods-Hear-Yinz-Hear-YinzUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-Yinz-Hear-YinzUITests.release.xcconfig"; path = "Target Support Files/Pods-Hear-Yinz-Hear-YinzUITests/Pods-Hear-Yinz-Hear-YinzUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -141,7 +151,7 @@
 		D02617E22975F50300E21053 = {
 			isa = PBXGroup;
 			children = (
-				D0151043298D658E00BB9C80 /* GoogleService-Info.plist */,
+				9A6316F5298D630100173C09 /* GoogleService-Info.plist */,
 				D02617ED2975F50400E21053 /* Hear-Yinz */,
 				D02617FE2975F50500E21053 /* Hear-YinzTests */,
 				D02618082975F50500E21053 /* Hear-YinzUITests */,
@@ -204,6 +214,8 @@
 			children = (
 				D03BA342298A1241008E3C22 /* Login.swift */,
 				D03BA346298A125C008E3C22 /* ContentView.swift */,
+				9A6316FF298D942800173C09 /* SettingsView.swift */,
+				9A631703298D943700173C09 /* AnnouncementsView.swift */,
 				F96DDD65298C3C2800D2F13D /* MapOverview.swift */,
 			);
 			path = Views;
@@ -338,6 +350,7 @@
 			files = (
 				D02617F62975F50500E21053 /* Preview Assets.xcassets in Resources */,
 				D02617F32975F50500E21053 /* Assets.xcassets in Resources */,
+				9A6316F6298D630100173C09 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,7 +358,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0151045298D658E00BB9C80 /* GoogleService-Info.plist in Resources */,
+				9A6316F7298D630100173C09 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,7 +366,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0151046298D658E00BB9C80 /* GoogleService-Info.plist in Resources */,
+				9A6316F8298D630100173C09 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,12 +481,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				D02617EF2975F50400E21053 /* Hear_YinzApp.swift in Sources */,
+				9A631700298D942800173C09 /* SettingsView.swift in Sources */,
 				D03BA343298A1241008E3C22 /* Login.swift in Sources */,
 				D03BA347298A125C008E3C22 /* ContentView.swift in Sources */,
 				F96DDD66298C3C2800D2F13D /* MapOverview.swift in Sources */,
 				D03BA333298478A7008E3C22 /* EventModel.swift in Sources */,
 				D03BA32F29847882008E3C22 /* DBFunctions.swift in Sources */,
-				D0151048298D670000BB9C80 /* AnnouncementModel.swift in Sources */,
+				9A631704298D943700173C09 /* AnnouncementsView.swift in Sources */,
 				D03BA33729847A71008E3C22 /* LoginFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -483,12 +497,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				D02618002975F50500E21053 /* Hear_YinzTests.swift in Sources */,
+				9A631701298D942800173C09 /* SettingsView.swift in Sources */,
 				D03BA344298A1241008E3C22 /* Login.swift in Sources */,
 				D03BA348298A125C008E3C22 /* ContentView.swift in Sources */,
 				F96DDD67298C3C2800D2F13D /* MapOverview.swift in Sources */,
 				D03BA334298478A7008E3C22 /* EventModel.swift in Sources */,
 				D03BA33029847882008E3C22 /* DBFunctions.swift in Sources */,
-				D0151049298D670000BB9C80 /* AnnouncementModel.swift in Sources */,
+				9A631705298D943700173C09 /* AnnouncementsView.swift in Sources */,
 				D03BA33829847A71008E3C22 /* LoginFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -500,12 +515,13 @@
 				D03BA33129847882008E3C22 /* DBFunctions.swift in Sources */,
 				F96DDD68298C3C2800D2F13D /* MapOverview.swift in Sources */,
 				D026180C2975F50500E21053 /* Hear_YinzUITestsLaunchTests.swift in Sources */,
+				9A631702298D942800173C09 /* SettingsView.swift in Sources */,
 				D03BA349298A125C008E3C22 /* ContentView.swift in Sources */,
 				D03BA335298478A7008E3C22 /* EventModel.swift in Sources */,
 				D03BA345298A1241008E3C22 /* Login.swift in Sources */,
 				D026180A2975F50500E21053 /* Hear_YinzUITests.swift in Sources */,
 				D03BA33929847A71008E3C22 /* LoginFunctions.swift in Sources */,
-				D015104A298D670000BB9C80 /* AnnouncementModel.swift in Sources */,
+				9A631706298D943700173C09 /* AnnouncementsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
