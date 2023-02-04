@@ -29,6 +29,44 @@ final class Hear_YinzUITests: XCTestCase {
 
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
+    func testNavToAnnouncements(){
+        
+        let app = XCUIApplication()
+        app.launch()
+        app.tabBars["Tab Bar"].buttons["megaphone.fill"].tap()
+        
+        let announcementsPageStaticText = app.staticTexts["Announcements Page"]
+        
+        XCTAssert(announcementsPageStaticText.exists)
+    }
+    func testNavToSettings(){
+        
+        let app = XCUIApplication()
+        app.launch()
+
+        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        
+        
+        let settingsPageStaticText = app.staticTexts["Settings Page"]
+        
+        XCTAssert(settingsPageStaticText.exists)
+    }
+    func testNavToMap(){
+        
+        let app = XCUIApplication()
+        app.launch()
+
+        let tabBar = app.tabBars["Tab Bar"]
+        tabBar.buttons["gearshape.fill"].tap()
+        tabBar.buttons["Map Pin"].tap()
+        
+        let vkpointfeatureMap = app/*@START_MENU_TOKEN@*/.maps.containing(.other, identifier:"VKPointFeature").element/*[[".maps.containing(.other, identifier:\"Fred Rogers Center\").element",".maps.containing(.other, identifier:\"Saint Vincent College\").element",".maps.containing(.other, identifier:\"St Vincent\").element",".maps.containing(.other, identifier:\"Saint Vincent Cemetery\").element",".maps.containing(.other, identifier:\"VKPointFeature\").element"],[[[-1,4],[-1,3],[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        
+        let map = app.windows.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .map).element
+        
+        XCTAssert(map.exists)
+
+    }
 
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
