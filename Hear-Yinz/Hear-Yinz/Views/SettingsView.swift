@@ -7,7 +7,6 @@
 //
 //  Created by Sarah Kudrick on 2/3/23.
 //
-
 import SwiftUI
 
 struct SettingsView: View {
