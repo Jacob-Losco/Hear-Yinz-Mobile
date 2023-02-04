@@ -1,12 +1,17 @@
-//
-//  SettingsView.swift
-//  Hear-Yinz
-//
-//  empty file added to support setup of tab view.
-//  Add header upon beginning work on this file.
-//
-//  Created by Sarah Kudrick on 2/3/23.
-//
+/*+===================================================================
+File: SettingsView
+
+Summary: View for settings screen
+
+Exported Data Structures: None
+
+Exported Functions: None
+
+Contributors:
+    Jacob Losco - 2/4/2022 - SP-220
+
+===================================================================+*/
+
 import SwiftUI
 
 struct SettingsView: View {

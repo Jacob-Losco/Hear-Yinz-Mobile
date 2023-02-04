@@ -1,9 +1,16 @@
-//
-//  AnnouncementsView.swift
-//  Hear-Yinz
-//
-//  Created by Sarah Kudrick on 2/4/23.
-//
+/*+===================================================================
+File: AnnouncementsView
+
+Summary: View for announcements screen
+
+Exported Data Structures: None
+
+Exported Functions: None
+
+Contributors:
+    Jacob Losco - 2/4/2022 - SP-220
+
+===================================================================+*/
 
 import SwiftUI
 

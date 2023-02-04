@@ -9,6 +9,7 @@ Exported Functions: none
 
 Contributors:
     Keaton Hollobaugh - 02/02/2022 - SP-216
+    Jacob Losco - 2/4/2022 - SP-220
 ===================================================================+*/
 
 
@@ -21,7 +22,8 @@ struct MapView: View {
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 40.2928, longitude: -79.4021), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
         
     var body: some View {
-        ZStack {
+        Group{
+            ZStack {
             Map(coordinateRegion: $region)
                 .edgesIgnoringSafeArea(.all)
             VStack{
@@ -31,12 +33,18 @@ struct MapView: View {
                     .frame(height: 10)
                     .background(Color("highlight"))
             }
+        }.onAppear {
+            AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight
+            UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+            UINavigationController.attemptRotationToDeviceOrientation()
         }
-    }
-    
-    init() {
-        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-           windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+        .onDisappear {
+            DispatchQueue.main.async {
+                AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
+                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+                UINavigationController.attemptRotationToDeviceOrientation()
+            }
+        }
     }
 }
 

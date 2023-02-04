@@ -16,6 +16,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct Login: View {
+    @ObservedObject var networkManager = NetworkManager()
     @ObservedObject var oLoginFunctions = LoginFunctions()
     func fnListen() {
         oLoginFunctions.fnListenAuthenticationState()
@@ -23,15 +24,19 @@ struct Login: View {
     
     var body: some View {
         VStack {
-            Group {
-                if oLoginFunctions.vm_SignedIn {
-                    Button("Login") {
-                        oLoginFunctions.fnLogin(sEmail: "test@stvincent.edu", sPassword: "test123"
-                    )}
-                } else {
-                    ContentView()
-                    //Changed this from MapView to ContentView because
-                    //ContentView now calls MapView
+            if networkManager.isConnected {
+                Group {
+                    if oLoginFunctions.vm_SignedIn {
+                        Button("Login") {
+                            oLoginFunctions.fnLogin(sEmail: "test@stvincent.edu", sPassword: "test123"
+                        )}
+                    } else {
+                        ContentView()
+                    }
+                }
+            } else {
+                VStack {
+                    Text("No Internet Connection...")
                 }
             }
         }.onAppear(perform: fnListen)
