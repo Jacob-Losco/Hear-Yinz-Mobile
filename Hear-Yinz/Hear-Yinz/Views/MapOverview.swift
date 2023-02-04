@@ -21,8 +21,17 @@ struct MapView: View {
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 40.2928, longitude: -79.4021), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
         
     var body: some View {
-        Map(coordinateRegion: $region)
-            .edgesIgnoringSafeArea(.all)
+        ZStack {
+            Map(coordinateRegion: $region)
+                .edgesIgnoringSafeArea(.all)
+            VStack{
+                Spacer()
+                Rectangle() //Adds custom color background to tab bar.
+                    .fill(Color.clear)
+                    .frame(height: 10)
+                    .background(Color("highlight"))
+            }
+        }
     }
     
     init() {
