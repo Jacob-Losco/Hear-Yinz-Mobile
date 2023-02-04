@@ -2,10 +2,7 @@
 //  AnnouncementsView.swift
 //  Hear-Yinz
 //
-//  empty file added to support setup of tab view.
-//  Add header upon beginning work on this file.
-//
-//  Created by Sarah Kudrick on 2/3/23.
+//  Created by Sarah Kudrick on 2/4/23.
 //
 
 import SwiftUI
@@ -15,7 +12,7 @@ struct AnnouncementsView: View {
         VStack{
             Text("Announcements Page")
             Spacer()
-            Rectangle()   //Adds custom color background to tab bar.
+            Rectangle() //Adds custom color background to tab bar.
                 .fill(Color.clear)
                 .frame(height: 10)
                 .background(Color("highlight"))
