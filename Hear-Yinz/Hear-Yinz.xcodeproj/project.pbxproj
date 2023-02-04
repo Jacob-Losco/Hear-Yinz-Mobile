@@ -37,6 +37,12 @@
 		D0B192BB298DCE94002E7B50 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0B192BA298DCE94002E7B50 /* GoogleService-Info.plist */; };
 		D0B192BC298DCE94002E7B50 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0B192BA298DCE94002E7B50 /* GoogleService-Info.plist */; };
 		D0B192BD298DCE94002E7B50 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0B192BA298DCE94002E7B50 /* GoogleService-Info.plist */; };
+		D0B192CF298DE467002E7B50 /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B192CE298DE467002E7B50 /* AnnouncementsView.swift */; };
+		D0B192D0298DE467002E7B50 /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B192CE298DE467002E7B50 /* AnnouncementsView.swift */; };
+		D0B192D1298DE467002E7B50 /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B192CE298DE467002E7B50 /* AnnouncementsView.swift */; };
+		D0B192D3298DE4AF002E7B50 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B192D2298DE4AF002E7B50 /* SettingsView.swift */; };
+		D0B192D4298DE4AF002E7B50 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B192D2298DE4AF002E7B50 /* SettingsView.swift */; };
+		D0B192D5298DE4AF002E7B50 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B192D2298DE4AF002E7B50 /* SettingsView.swift */; };
 		F96DDD66298C3C2800D2F13D /* MapOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96DDD65298C3C2800D2F13D /* MapOverview.swift */; };
 		F96DDD67298C3C2800D2F13D /* MapOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96DDD65298C3C2800D2F13D /* MapOverview.swift */; };
 		F96DDD68298C3C2800D2F13D /* MapOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96DDD65298C3C2800D2F13D /* MapOverview.swift */; };
@@ -83,6 +89,8 @@
 		D03BA342298A1241008E3C22 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		D03BA346298A125C008E3C22 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D0B192BA298DCE94002E7B50 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D0B192CE298DE467002E7B50 /* AnnouncementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AnnouncementsView.swift; path = "../../../../../.Trash/Hear-Yinz-Mobile/Hear-Yinz/Hear-Yinz/Views/AnnouncementsView.swift"; sourceTree = "<group>"; };
+		D0B192D2298DE4AF002E7B50 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D1778806EAA3C22354C6BC99 /* Pods-Hear-Yinz-Hear-YinzUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-Yinz-Hear-YinzUITests.debug.xcconfig"; path = "Target Support Files/Pods-Hear-Yinz-Hear-YinzUITests/Pods-Hear-Yinz-Hear-YinzUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		F5D796AEC5AF350C135A43A3 /* Pods_Hear_YinzTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Hear_YinzTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F96DDD65298C3C2800D2F13D /* MapOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapOverview.swift; sourceTree = "<group>"; };
@@ -206,6 +214,8 @@
 				D03BA342298A1241008E3C22 /* Login.swift */,
 				D03BA346298A125C008E3C22 /* ContentView.swift */,
 				F96DDD65298C3C2800D2F13D /* MapOverview.swift */,
+				D0B192CE298DE467002E7B50 /* AnnouncementsView.swift */,
+				D0B192D2298DE4AF002E7B50 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -474,8 +484,10 @@
 				D03BA347298A125C008E3C22 /* ContentView.swift in Sources */,
 				F96DDD66298C3C2800D2F13D /* MapOverview.swift in Sources */,
 				D03BA333298478A7008E3C22 /* EventModel.swift in Sources */,
+				D0B192D3298DE4AF002E7B50 /* SettingsView.swift in Sources */,
 				D03BA32F29847882008E3C22 /* DBFunctions.swift in Sources */,
 				D0151048298D670000BB9C80 /* AnnouncementModel.swift in Sources */,
+				D0B192CF298DE467002E7B50 /* AnnouncementsView.swift in Sources */,
 				D03BA33729847A71008E3C22 /* LoginFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -489,8 +501,10 @@
 				D03BA348298A125C008E3C22 /* ContentView.swift in Sources */,
 				F96DDD67298C3C2800D2F13D /* MapOverview.swift in Sources */,
 				D03BA334298478A7008E3C22 /* EventModel.swift in Sources */,
+				D0B192D4298DE4AF002E7B50 /* SettingsView.swift in Sources */,
 				D03BA33029847882008E3C22 /* DBFunctions.swift in Sources */,
 				D0151049298D670000BB9C80 /* AnnouncementModel.swift in Sources */,
+				D0B192D0298DE467002E7B50 /* AnnouncementsView.swift in Sources */,
 				D03BA33829847A71008E3C22 /* LoginFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -508,6 +522,8 @@
 				D026180A2975F50500E21053 /* Hear_YinzUITests.swift in Sources */,
 				D03BA33929847A71008E3C22 /* LoginFunctions.swift in Sources */,
 				D015104A298D670000BB9C80 /* AnnouncementModel.swift in Sources */,
+				D0B192D1298DE467002E7B50 /* AnnouncementsView.swift in Sources */,
+				D0B192D5298DE4AF002E7B50 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
