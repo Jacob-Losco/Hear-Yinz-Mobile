@@ -8,7 +8,7 @@ Exported Data Structures: None
 Exported Functions: None
 
 Contributors:
-    Jacob Losco - 1/20/2022 - SP-316
+    Jacob Losco - 2/4/2022 - SP-220
 
 ===================================================================+*/
 
@@ -18,6 +18,8 @@ import FirebaseCore
 
 @main
 struct Hear_YinzApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     init() {
         FirebaseApp.configure()
     }

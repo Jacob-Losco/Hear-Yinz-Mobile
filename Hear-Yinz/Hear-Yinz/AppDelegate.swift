@@ -1,0 +1,26 @@
+/*+===================================================================
+File: AppDelegate
+
+Summary: An app delegate that is used to manage the locking and orientation of screens in the application
+
+Exported Data Structures: None
+
+Exported Functions: None
+
+Contributors:
+    Jacob Losco - 2/4/2022 - SP-220
+
+===================================================================+*/
+
+import UIKit
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    static var orientationLock =
+    UIInterfaceOrientationMask.portrait
+    
+    func application(_ application: UIApplication,
+    supportedInterfaceOrientationsFor window:
+    UIWindow?) -> UIInterfaceOrientationMask {
+    return AppDelegate.orientationLock
+    }
+}
