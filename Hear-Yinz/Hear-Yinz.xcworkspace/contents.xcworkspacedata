@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:AnnouncementsView.swift">
+   </FileRef>
+   <FileRef
       location = "group:Hear-Yinz.xcodeproj">
    </FileRef>
    <FileRef
