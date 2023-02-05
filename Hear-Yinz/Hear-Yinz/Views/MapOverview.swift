@@ -23,8 +23,16 @@ struct MapView: View {
         
     var body: some View {
         Group{
+            ZStack {
             Map(coordinateRegion: $region)
                 .edgesIgnoringSafeArea(.all)
+            VStack{
+                Spacer()
+                Rectangle() //Adds custom color background to tab bar.
+                    .fill(Color.clear)
+                    .frame(height: 10)
+                    .background(Color("highlight"))
+            }
         }.onAppear {
             AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight
             UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
