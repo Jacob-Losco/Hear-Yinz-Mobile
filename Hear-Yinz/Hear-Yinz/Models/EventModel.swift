@@ -1,5 +1,5 @@
 /*+===================================================================
-File: EventModel
+File: EventModel.swift
 
 Summary: A model that contains all information needed for an event in the database
 
@@ -16,17 +16,17 @@ import Foundation
 import FirebaseFirestore
 
 class EventModel {
-    let sId: String //document id of the event
-    let sName: String //name of the event
-    let sDescription: String //description of the event
-    let oLocationCoordinate: GeoPoint //the coordinate of the location of the event
-    let sLocationName: String //the name of the location of the event
-    let sHostId: String //the document id of the organization that is hosting the event
-    var sHostName: String = "" //the name of the organization that is hosting the event
-    var sHostDescription: String = "" //the description of the organization that is hosting the event
-    var iLikes: Int //the number of likes of the event
-    let bFollowed: Bool //whether or not this event is followed by the user
-    let oDateEvent: Date //the timestamp of the event
+    let sm_Id: String //document id of the event
+    let sm_Name: String //name of the event
+    let sm_Description: String //description of the event
+    let om_LocationCoordinate: GeoPoint //the coordinate of the location of the event
+    let sm_LocationName: String //the name of the location of the event
+    let sm_HostId: String //the document id of the organization that is hosting the event
+    var sm_HostName: String = "" //the name of the organization that is hosting the event
+    var sm_HostDescription: String = "" //the description of the organization that is hosting the event
+    var im_Likes: Int //the number of likes of the event
+    let bm_Followed: Bool //whether or not this event is followed by the user
+    let om_DateEvent: Date //the timestamp of the event
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: init
@@ -49,16 +49,16 @@ class EventModel {
       Returns: None
     -------------------------------------------------------------------F*/
     init(sId: String, sName: String, sDescription: String, oLocationCoordinate: GeoPoint, sLocationName: String, sHostId: String, sHostName: String, sHostDescription: String, iLikes: Int, bFollowed: Bool, oDateEvent: Timestamp) {
-        self.sId = sId
-        self.sName = sName
-        self.sDescription = sDescription
-        self.oLocationCoordinate = oLocationCoordinate
-        self.sLocationName = sLocationName
-        self.sHostId = sHostId
-        self.sHostName = sHostName
-        self.sHostDescription = sHostDescription
-        self.iLikes = iLikes
-        self.bFollowed = bFollowed
-        self.oDateEvent = oDateEvent.dateValue()
+        self.sm_Id = sId
+        self.sm_Name = sName
+        self.sm_Description = sDescription
+        self.om_LocationCoordinate = oLocationCoordinate
+        self.sm_LocationName = sLocationName
+        self.sm_HostId = sHostId
+        self.sm_HostName = sHostName
+        self.sm_HostDescription = sHostDescription
+        self.im_Likes = iLikes
+        self.bm_Followed = bFollowed
+        self.om_DateEvent = oDateEvent.dateValue()
     }
 }

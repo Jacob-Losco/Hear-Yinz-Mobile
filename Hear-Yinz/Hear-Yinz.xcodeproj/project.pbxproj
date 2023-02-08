@@ -184,7 +184,6 @@
 				D0B192E0298EFB6B002E7B50 /* AppDelegate.swift */,
 				D02617EE2975F50400E21053 /* Hear_YinzApp.swift */,
 				D081A668297C712B00541AC1 /* Views */,
-				D081A66E297C73D300541AC1 /* ViewModels */,
 				D081A66D297C737800541AC1 /* Models */,
 				D02617F22975F50500E21053 /* Assets.xcassets */,
 				D02617F42975F50500E21053 /* Preview Content */,
@@ -239,13 +238,6 @@
 				D0B192E4298EFF3D002E7B50 /* NetworkManager.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		D081A66E297C73D300541AC1 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

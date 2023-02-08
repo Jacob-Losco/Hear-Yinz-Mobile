@@ -1,16 +1,15 @@
 /*+===================================================================
-File: contentview.swift
+File: ContentView.swift
 
 Summary: landing view after login is completed. includes TabView to facilitate switching of views.
 
-Exported Data Structures: ContentView- the view struct
- MapView, SettingsView, AnnouncementsView- accessed through tabview
+Exported Data Structures: ContentView - the view itself.
 
 Exported Functions: None
 
 Contributors:
     Sarah Kudrick - 2/2/23 - SP-220
-    Jacob Losco - 2/4/2022 - SP-220
+    Jacob Losco - 2/4/2023 - SP-220
 
 ===================================================================+*/
 
@@ -18,7 +17,6 @@ import SwiftUI
 
 struct ContentView: View {
     @State var iCurrentTab: Int = 1
-    //sets default view to the map screen so the map will open upon login
     var body: some View {
             TabView(selection: $iCurrentTab){
                 AnnouncementsView()

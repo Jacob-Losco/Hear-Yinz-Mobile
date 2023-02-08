@@ -1,9 +1,9 @@
-//
-//  Hear_YinzUITests.swift
-//  Hear-YinzUITests
-//
-//  Created by Jacob Losco on 1/16/23.
-//
+/*+===================================================================
+ File: Hear_YinzUITests.swift
+ 
+ Summary: File containing UI Test Suites for application
+
+===================================================================+*/
 
 import XCTest
 
@@ -22,13 +22,15 @@ final class Hear_YinzUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
+    /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Test: testNavToAnnouncements
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
+      Target: Navbar
+
+      Assertions: tapping the announcenments icon nav takes the user to the announcements page
+
+      Writer: Sarah Kudrick
+    -------------------------------------------------------------------T*/
     func testNavToAnnouncements(){
         
         let app = XCUIApplication()
@@ -39,6 +41,16 @@ final class Hear_YinzUITests: XCTestCase {
         
         XCTAssert(announcementsPageStaticText.exists)
     }
+    
+    /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Test: testNavToSettings
+
+      Target: Navbar
+
+      Assertions: tapping the settings icon nav takes the user to the settings page
+
+      Writer: Sarah Kudrick
+    -------------------------------------------------------------------T*/
     func testNavToSettings(){
         
         let app = XCUIApplication()
@@ -51,6 +63,16 @@ final class Hear_YinzUITests: XCTestCase {
         
         XCTAssert(settingsPageStaticText.exists)
     }
+    
+    /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Test: testNavToMap
+
+      Target: Navbar
+
+      Assertions: tapping the map icon nav takes the user to the map page
+
+      Writer: Sarah Kudrick
+    -------------------------------------------------------------------T*/
     func testNavToMap(){
         
         let app = XCUIApplication()

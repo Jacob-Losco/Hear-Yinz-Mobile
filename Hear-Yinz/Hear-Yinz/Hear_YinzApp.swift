@@ -1,5 +1,5 @@
 /*+===================================================================
-File: Hear_YinzApp
+File: Hear_YinzApp.swift
 
 Summary: main function for Hear-Yinz mobile application, including firestore initialization
 
@@ -11,7 +11,6 @@ Contributors:
     Jacob Losco - 2/4/2022 - SP-220
 
 ===================================================================+*/
-
 
 import SwiftUI
 import FirebaseCore

@@ -18,7 +18,7 @@ import FirebaseAuth
 class LoginFunctions: ObservableObject {
     
     var handle: AuthStateDidChangeListenerHandle?
-    @Published var vm_SignedIn = false
+    @Published var bm_SignedIn = false
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnListenAuthenticationState
@@ -32,9 +32,9 @@ class LoginFunctions: ObservableObject {
     func fnListenAuthenticationState() {
         handle = Auth.auth().addStateDidChangeListener({ [weak self]  (auth, user) in
             if user != nil {
-                self!.vm_SignedIn = true
+                self!.bm_SignedIn = true
             } else {
-                self!.vm_SignedIn = false
+                self!.bm_SignedIn = false
             }
         })
     }
@@ -58,7 +58,7 @@ class LoginFunctions: ObservableObject {
             }
         }
         DispatchQueue.main.async {
-            self.vm_SignedIn = true
+            self.bm_SignedIn = true
         }
     }
     
@@ -74,6 +74,6 @@ class LoginFunctions: ObservableObject {
     func fnLogout() {
         try? Auth.auth().signOut()
         
-        self.vm_SignedIn = false
+        self.bm_SignedIn = false
     }
 }

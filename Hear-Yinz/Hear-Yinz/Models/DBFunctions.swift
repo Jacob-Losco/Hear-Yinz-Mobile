@@ -1,15 +1,19 @@
 /*+===================================================================
-File: DBFunctions
+File: DBFunctions.swift
 
 Summary: Contains functions and vars for retrieving and formatting data for firestore for front end
 
-Exported Data Structures: aoEventList [EventModel] - a list of all the events to be displayed to the map based on user filtering
+Exported Data Structures: aoEventCache [EventModel] - a list of all the events to be displayed to the map
+                        aoAnnouncementList [AnnouncementModel] - a list of all announcements to be displayed to the map
 
-Exported Functions: fnInitEventMapData - sets necessary variables to display event information
-                    fnGetEventList - sets the users viewable events to be filtered by a selected date
+Exported Functions: fnInitSessionData - sets necessary variables to display use other database functions
+                    fnGetInstitutionEvents - updates aoEventCache with all event data
+                    fnGetInstitutionAnnouncements - updates aoAnnouncementList with all announcement data
+                    fnUpdateEventLikes - increases an events likes by 1 in database
+                    fnUpdateEventReports - increase an events reports by 1 in database
 
 Contributors:
-    Jacob Losco - 1/29/2022 - SP-349
+    Jacob Losco - 1/29/2023 - SP-349
 
 ===================================================================+*/
 
@@ -25,7 +29,7 @@ class DBFunctions: ObservableObject {
     @Published var aoAnnouncementList: [AnnouncementModel] = []
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnInitEventMapData
+      Function: fnInitSessionData
 
       Summary: used on init of the map view. Setups up variables necessary to get event data
 
@@ -33,12 +37,11 @@ class DBFunctions: ObservableObject {
 
       Returns: None
     -------------------------------------------------------------------F*/
-    func fnInitEventMapData(hCompletionHandler: @escaping () -> Void) {
+    func fnInitSessionData(hCompletionHandler: @escaping () -> Void) {
         fnGetInstitution(sUserEmail: Auth.auth().currentUser?.email ?? "N/A", hCompletionHandler: {(sInstitution) -> Void in
             self.sInstitutionId = sInstitution
             self.fnGetUserAccount(sUserEmail: Auth.auth().currentUser?.email ?? "N/A", hCompletionHandler: {(sAccount) -> Void in
                 self.sAccountId = sAccount
-                self.fnGetInstitutionEvents()
                 hCompletionHandler()
             })
         })
@@ -47,7 +50,7 @@ class DBFunctions: ObservableObject {
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnGetInstitution
 
-      Summary: Retrives user Institution document id from the database. Returns failure message if retrieval fails
+      Summary: Retrieves user Institution document id from the database. Returns failure message if retrieval fails
 
       Args: hCompletionHandler - completion handler that runs after asynchronous functions are completed
 
@@ -93,15 +96,13 @@ class DBFunctions: ObservableObject {
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnGetInstitutionEvents
 
-      Summary: Retrives list of events sorted by timestamp occuring from the database
+      Summary: Updates aoEventCache with all event data.
 
-      Args: sInstitutionId - the document id of the user institution
-        sAccountId - the document id of the user account
-        hCompletionHandler - the handler that holds async return value
+      Args: None
 
-      Returns: None technically, but handler contains string containing document Id
+      Returns: None
     -------------------------------------------------------------------F*/
-    private func fnGetInstitutionEvents() {
+    func fnGetInstitutionEvents() {
         oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments { snapshot, error in
             guard let oOrganizationDocuments = snapshot?.documents else {
                 return
@@ -118,11 +119,11 @@ class DBFunctions: ObservableObject {
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnGetOrganizationevents
 
-      Summary: Retrives list of all events after Date.now() for specific organization
+      Summary: Retrives list of all events for a specific organization sorted by timestamp
 
-      Args: sInstitutionId - the document id of the user institution
-        sAccountId - the document id of the user account
-        sOrganizationId - the document id of the organization
+      Args: oOrganization - the document reference in the database for this organization
+        sOrganizationName - the name of the organization
+        sOrganizationDescription - the description of the organization
         hCompletionHandler - the handler that holds async return value
 
       Returns: None technically, but handler contains event list
@@ -212,11 +213,11 @@ class DBFunctions: ObservableObject {
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
          Function: fnGetInstitutionAnnouncements
          
-         Summary: Retrives list of all announcements
+         Summary: Updates aoAnnouncementList with all announcements in an institution
          
          Args: None
          
-         Returns: None technically, but handler contains string containing document Id
+         Returns: None
      -------------------------------------------------------------------F*/
     func fnGetInstitutionAnnouncements() {
         oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments { snapshot, error in

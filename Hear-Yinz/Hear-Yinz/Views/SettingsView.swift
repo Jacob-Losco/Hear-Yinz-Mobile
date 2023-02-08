@@ -3,12 +3,12 @@ File: SettingsView
 
 Summary: View for settings screen
 
-Exported Data Structures: None
+Exported Data Structures: SettingsView - the view itself
 
 Exported Functions: None
 
 Contributors:
-    Jacob Losco - 2/4/2022 - SP-220
+    Jacob Losco - 2/4/2023 - SP-220
 
 ===================================================================+*/
 
