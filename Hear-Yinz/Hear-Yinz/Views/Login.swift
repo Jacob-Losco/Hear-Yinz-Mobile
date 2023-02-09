@@ -1,14 +1,14 @@
 /*+===================================================================
-File: Login
+File: Login.swift
 
 Summary: View for login access to mobile app. Currently uses button to login, form will be implemented next sprint
 
-Exported Data Structures: Login - the view struct
+Exported Data Structures: Login - the view itself
 
 Exported Functions: None
 
 Contributors:
-    Jacob Losco - 1/31/2022 - SP-365
+    Jacob Losco - 1/31/2023 - SP-365
 
 ===================================================================+*/
 
@@ -16,8 +16,8 @@ import SwiftUI
 import FirebaseAuth
 
 struct Login: View {
-    @ObservedObject var networkManager = NetworkManager()
-    @ObservedObject var oLoginFunctions = LoginFunctions()
+    @ObservedObject var networkManager = NetworkManager() //watches internet connection
+    @ObservedObject var oLoginFunctions = LoginFunctions() //contains login functions
     func fnListen() {
         oLoginFunctions.fnListenAuthenticationState()
     }
@@ -26,7 +26,7 @@ struct Login: View {
         VStack {
             if networkManager.isConnected {
                 Group {
-                    if oLoginFunctions.vm_SignedIn {
+                    if oLoginFunctions.bm_SignedIn {
                         Button("Login") {
                             oLoginFunctions.fnLogin(sEmail: "test@stvincent.edu", sPassword: "test123"
                         )}
