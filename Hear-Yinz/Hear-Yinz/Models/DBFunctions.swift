@@ -324,4 +324,26 @@ import FirebaseStorage
             }
         }
     }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnToggleDarkMode
+     
+     Summary: updates accounts dark mode setting in database
+     
+     Args: None
+     
+     Returns: Completion Handler Bool - true if the update in the db was successful, false otherwise
+     -------------------------------------------------------------------F*/
+    func fnToggleDarkMode(hCompletionHandler: @escaping (Bool) -> Void) {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").document(sAccountId).getDocument { snapshot, error in
+            guard var oAccountData = snapshot?.data() else {
+                hCompletionHandler(false)
+                return
+            }
+            let bDarkMode = oAccountData["account_darkmode"] as! Bool
+            oAccountData["account_darkmode"] = !bDarkMode
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Accounts").document(self.sAccountId).updateData(oAccountData)
+            hCompletionHandler(true)
+        }
+    }
 }
