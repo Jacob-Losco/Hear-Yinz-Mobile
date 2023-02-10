@@ -27,6 +27,7 @@ class EventModel {
     var im_Likes: Int //the number of likes of the event
     let bm_Followed: Bool //whether or not this event is followed by the user
     let om_DateEvent: Date //the timestamp of the event
+    let om_Image: UIImage? //the image of the organization hosting the event
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: init
@@ -48,7 +49,7 @@ class EventModel {
 
       Returns: None
     -------------------------------------------------------------------F*/
-    init(sId: String, sName: String, sDescription: String, oLocationCoordinate: GeoPoint, sLocationName: String, sHostId: String, sHostName: String, sHostDescription: String, iLikes: Int, bFollowed: Bool, oDateEvent: Timestamp) {
+    init(sId: String, sName: String, sDescription: String, oLocationCoordinate: GeoPoint, sLocationName: String, sHostId: String, sHostName: String, sHostDescription: String, iLikes: Int, bFollowed: Bool, oDateEvent: Timestamp, oImage: UIImage?) {
         self.sm_Id = sId
         self.sm_Name = sName
         self.sm_Description = sDescription
@@ -60,5 +61,6 @@ class EventModel {
         self.im_Likes = iLikes
         self.bm_Followed = bFollowed
         self.om_DateEvent = oDateEvent.dateValue()
+        self.om_Image = oImage
     }
 }

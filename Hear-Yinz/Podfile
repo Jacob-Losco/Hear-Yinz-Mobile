@@ -8,6 +8,7 @@ target 'Hear-Yinz' do
   # Pods for Hear-Yinz
   pod 'FirebaseAuth'
   pod 'FirebaseFirestore'
+  pod 'FirebaseStorage'
 
   target 'Hear-YinzTests' do
     inherit! :search_paths

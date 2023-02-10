@@ -12,12 +12,12 @@ Contributors:
     Jacob Losco - 2/4/2023 - SP-220
 ===================================================================+*/
 
-
 import SwiftUI
 import MapKit
 import CoreLocation
 
 struct MapView: View {
+    @ObservedObject var oDBFunctions = DBFunctions()
     @State private var oRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 40.2928, longitude: -79.4021), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
     
     var body: some View {
@@ -44,7 +44,14 @@ struct MapView: View {
                     UINavigationController.attemptRotationToDeviceOrientation()
                 }
             }
+            .task {
+                await oDBFunctions.fnInitSessionData()
+            }
         }
+    }
+    
+    init() {
+        
     }
 }
 
