@@ -11,9 +11,10 @@ Exported Functions: fnInitSessionData - sets necessary variables to use other da
                     fnGetInstitutionAnnouncements - updates aoAnnouncementList with all announcement data
                     fnUpdateEventLikes - increases an events likes by 1 in database
                     fnUpdateEventReports - increase an events reports by 1 in database
+                    fnFollowOrganization - creates a follow relationship between the user and an organization
 
 Contributors:
-    Jacob Losco - 2/9/2023 - SP-358
+    Jacob Losco - 2/10/2023 - SP-358
 
 ===================================================================+*/
 
@@ -148,55 +149,7 @@ import FirebaseStorage
         }
     }
     
-    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnUpdateEventLikes
-      
-      Summary: Updates the database so that the event passed in has it's likes raised by one
-        
-      Args: sEvent - the event that has been liked
-        
-      Returns: None
-    -------------------------------------------------------------------F*/
-    func fnUpdateEventLikes(sEvent: EventModel) async -> Bool {
-        do {
-            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument()
-            guard var oEventData = oSnapshot.data() else {
-                return false
-            }
-            sEvent.im_Likes += 1
-            oEventData["event_likes"] = sEvent.im_Likes
-            try await oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).updateData(oEventData)
-            return true
-        } catch {
-            print(error)
-            return false
-        }
-    }
     
-    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnUpdateEventReports
-         
-      Summary: Updates the database so that the event passed in has it's reports raised by 1
-         
-      Args: sEvent - the event that has been liked
-         
-      Returns: None
-    -------------------------------------------------------------------F*/
-    func fnUpdateEventReports(sEvent: EventModel) async -> Bool {
-        do {
-            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument()
-            guard var oEventData = oSnapshot.data() else {
-                return false
-            }
-            let iNumReports = oEventData["event_reports"] as! Int
-            oEventData["event_reports"] = iNumReports + 1
-            try await oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).updateData(oEventData)
-            return true
-        } catch {
-            print(error)
-            return false
-        }
-    }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
          Function: fnGetInstitutionAnnouncements
@@ -261,6 +214,76 @@ import FirebaseStorage
         } catch {
             print(error)
             return false
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Function: fnUpdateEventLikes
+      
+      Summary: Updates the database so that the event passed in has it's likes raised by one
+        
+      Args: sEvent - the event that has been liked
+        
+      Returns: Competion Handler Bool - true if the update of the database was successful, false otherwise
+    -------------------------------------------------------------------F*/
+    func fnUpdateEventLikes(sEvent: EventModel, hCompletionHandler: @escaping (Bool) -> Void){
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument { snapshot, error in
+                guard var oEventData = snapshot?.data() else {
+                    hCompletionHandler(false)
+                    return
+                }
+                sEvent.im_Likes += 1
+                oEventData["event_likes"] = sEvent.im_Likes
+                self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).updateData(oEventData)
+                hCompletionHandler(true)
+            }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Function: fnUpdateEventReports
+         
+      Summary: Updates the database so that the event passed in has it's reports raised by 1
+         
+      Args: sEvent - the event that has been liked
+         
+      Returns: Completion Handler Bool - true if the update of the databse was successful, false otherwise
+    -------------------------------------------------------------------F*/
+    func fnUpdateEventReports(sEvent: EventModel, hCompletionHandler: @escaping (Bool) -> Void) {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument { snapshot, error in
+            guard var oEventData = snapshot?.data() else {
+                hCompletionHandler(false)
+                return
+            }
+            let iNumReports = oEventData["event_reports"] as! Int
+            oEventData["event_reports"] = iNumReports + 1
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).updateData(oEventData)
+            hCompletionHandler(true)
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnFollowOrganization
+     
+     Summary: creates relationship for account that makes them a follower of this organization
+     
+     Args: sOrganizationId - the doc id of the organization being followed
+     
+     Returns: Completion Handler Bool - true if the creation in the db was successful, false otherwise
+     -------------------------------------------------------------------F*/
+    func fnFollowOrganization(sOrganizationId: String, hCompletionHandler: @escaping (Bool) -> Void) {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sOrganizationId).getDocument { snapshot, error in
+            guard let oOrganizationRef = snapshot?.reference else {
+                hCompletionHandler(false)
+                return
+            }
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Accounts").document(self.sAccountId).collection("Relationships").addDocument(data: ["relationship_org": oOrganizationRef, "relationship_status": 2, "relationship_type": 1]) { error in
+                if error != nil {
+                    hCompletionHandler(false)
+                    return
+                }
+                hCompletionHandler(true)
+                return
+            }
         }
     }
 }
