@@ -286,4 +286,36 @@ import FirebaseStorage
             }
         }
     }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnUnFollowOrganization
+     
+     Summary: deletes relationship from account that makes them a follower of this organization
+     
+     Args: sOrganizationId - the doc id of the organization being unfollowed
+     
+     Returns: Completion Handler Bool - true if the deletion in the db was successful, false otherwise
+     -------------------------------------------------------------------F*/
+    func fnUnfollowOrganization(sOrganizationId: String, hCompletionHandler: @escaping (Bool) -> Void) {
+        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sOrganizationId).getDocument { snapshot, error in
+            guard let oOrganizationRef = snapshot?.reference else {
+                hCompletionHandler(false)
+                return
+            }
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Accounts").document(self.sAccountId).collection("Relationships").whereField("relationship_org", isEqualTo: oOrganizationRef).whereField("relationship_type", isEqualTo: 1).getDocuments { snapshot, error in
+                guard let oRelationshipReference = snapshot?.documents[0].reference else {
+                    hCompletionHandler(false)
+                    return
+                }
+                oRelationshipReference.delete() { error in
+                    if error != nil {
+                        hCompletionHandler(false)
+                        return
+                    } else {
+                        hCompletionHandler(true)
+                    }
+                }
+            }
+        }
+    }
 }
