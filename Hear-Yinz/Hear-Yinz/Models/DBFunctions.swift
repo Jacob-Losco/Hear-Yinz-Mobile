@@ -264,19 +264,22 @@ import FirebaseStorage
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
      Function: fnFollowOrganization
      
-     Summary: creates relationship for account that makes them a follower of this organization
+     Summary: creates relationship for account that links it to an organization based on a parameter
      
      Args: sOrganizationId - the doc id of the organization being followed
+        iRelationshipType - the type of relationship
+            1 - following
+            2 - blocking
      
      Returns: Completion Handler Bool - true if the creation in the db was successful, false otherwise
      -------------------------------------------------------------------F*/
-    func fnFollowOrganization(sOrganizationId: String, hCompletionHandler: @escaping (Bool) -> Void) {
+    func fnCreateRelationshipOrganization(sOrganizationId: String, iRelationshipType: Int, hCompletionHandler: @escaping (Bool) -> Void) {
         oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sOrganizationId).getDocument { snapshot, error in
             guard let oOrganizationRef = snapshot?.reference else {
                 hCompletionHandler(false)
                 return
             }
-            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Accounts").document(self.sAccountId).collection("Relationships").addDocument(data: ["relationship_org": oOrganizationRef, "relationship_status": 2, "relationship_type": 1]) { error in
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Accounts").document(self.sAccountId).collection("Relationships").addDocument(data: ["relationship_org": oOrganizationRef, "relationship_status": 2, "relationship_type": iRelationshipType]) { error in
                 if error != nil {
                     hCompletionHandler(false)
                     return
@@ -293,16 +296,19 @@ import FirebaseStorage
      Summary: deletes relationship from account that makes them a follower of this organization
      
      Args: sOrganizationId - the doc id of the organization being unfollowed
+     iRelationshipType - the type of relationship
+         1 - unfollowing
+         2 - unblocking
      
      Returns: Completion Handler Bool - true if the deletion in the db was successful, false otherwise
      -------------------------------------------------------------------F*/
-    func fnUnfollowOrganization(sOrganizationId: String, hCompletionHandler: @escaping (Bool) -> Void) {
+    func fnUnfollowOrganization(sOrganizationId: String, iRelationshipType: Int, hCompletionHandler: @escaping (Bool) -> Void) {
         oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sOrganizationId).getDocument { snapshot, error in
             guard let oOrganizationRef = snapshot?.reference else {
                 hCompletionHandler(false)
                 return
             }
-            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Accounts").document(self.sAccountId).collection("Relationships").whereField("relationship_org", isEqualTo: oOrganizationRef).whereField("relationship_type", isEqualTo: 1).getDocuments { snapshot, error in
+            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Accounts").document(self.sAccountId).collection("Relationships").whereField("relationship_org", isEqualTo: oOrganizationRef).whereField("relationship_type", isEqualTo: iRelationshipType).getDocuments { snapshot, error in
                 guard let oRelationshipReference = snapshot?.documents[0].reference else {
                     hCompletionHandler(false)
                     return
