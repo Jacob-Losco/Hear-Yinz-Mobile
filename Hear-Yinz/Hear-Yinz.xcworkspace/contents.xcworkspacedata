@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
+   <Group
+      location = "container:"
+      name = "Fonts">
+      <FileRef
+         location = "group:DM_Sans">
+      </FileRef>
+   </Group>
    <FileRef
       location = "group:Hear-Yinz.xcodeproj">
    </FileRef>
