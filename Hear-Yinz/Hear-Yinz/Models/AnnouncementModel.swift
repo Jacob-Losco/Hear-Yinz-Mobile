@@ -22,6 +22,7 @@ class AnnouncementModel {
     var sm_HostDescription: String = "" //the description of the organization that sent the announcement
     let bm_Followed: Bool //whether or not this organization is followed by the user
     let om_DateEvent: Date //the timestamp of the announcement
+    let om_Image: UIImage? //the image of the organization posting the announcement
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: init
@@ -35,7 +36,7 @@ class AnnouncementModel {
         oDateEvent - firebase timestamp for when the announcement was posted
       Returns: None
     -------------------------------------------------------------------F*/
-    init(sId: String, sDescription: String, sHostId: String, sHostName: String, sHostDescription: String, bFollowed: Bool, oDateEvent: Timestamp) {
+    init(sId: String, sDescription: String, sHostId: String, sHostName: String, sHostDescription: String, bFollowed: Bool, oDateEvent: Timestamp, oImage: UIImage?) {
         self.sm_Id = sId
         self.sm_Description = sDescription
         self.sm_HostId = sHostId
@@ -43,5 +44,6 @@ class AnnouncementModel {
         self.sm_HostDescription = sHostDescription
         self.bm_Followed = bFollowed
         self.om_DateEvent = oDateEvent.dateValue()
+        self.om_Image = oImage
     }
 }

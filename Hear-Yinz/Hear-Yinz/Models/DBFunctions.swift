@@ -13,7 +13,7 @@ Exported Functions: fnInitSessionData - sets necessary variables to use other da
                     fnUpdateEventReports - increase an events reports by 1 in database
 
 Contributors:
-    Jacob Losco - 1/29/2023 - SP-349
+    Jacob Losco - 2/9/2023 - SP-358
 
 ===================================================================+*/
 
@@ -58,8 +58,8 @@ import FirebaseStorage
         if(sUserEmail != "N/A"){
             let sUserHandle = "@" + sUserEmail.components(separatedBy: "@")[1]
             do {
-                let snapshot = try await oDatabase.collection("Institutions").whereField("institution_handle", isEqualTo: sUserHandle).getDocuments()
-                return snapshot.documents[0].documentID
+                let oSnapshot = try await oDatabase.collection("Institutions").whereField("institution_handle", isEqualTo: sUserHandle).getDocuments()
+                return oSnapshot.documents[0].documentID
             } catch {
                 print(error)
                 return "Error Retrieving Data"
@@ -75,15 +75,14 @@ import FirebaseStorage
       Summary: Retrives user Account document id from the database. Returns failure message if retrieval fails
 
       Args: sInstitutionId - the document id of the user institution
-        hCompletionHandler - the handler that holds async return value
 
       Returns: String - document id of the account associated with the authed user
     -------------------------------------------------------------------F*/
     private func fnGetUserAccount(sUserEmail: String) async -> String {
         if(sUserEmail != "N/A"){
             do {
-                let snapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").whereField("account_email", isEqualTo: sUserEmail).getDocuments()
-                return snapshot.documents[0].documentID
+                let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").whereField("account_email", isEqualTo: sUserEmail).getDocuments()
+                return oSnapshot.documents[0].documentID
             } catch {
                 print(error)
                 return "Error Retrieving Data"
@@ -104,8 +103,8 @@ import FirebaseStorage
     -------------------------------------------------------------------F*/
     func fnGetInstitutionEvents() async -> Void {
         do {
-            let snapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments()
-            for oOrganizationDocument in snapshot.documents {
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments()
+            for oOrganizationDocument in oSnapshot.documents {
                 let oOrganizationData = oOrganizationDocument.data()
                 await fnGetOrganizationEvents(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String)
             }
@@ -116,35 +115,36 @@ import FirebaseStorage
     }
 
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnGetOrganizationevents
+      Function: fnGetOrganizationEvents
 
-      Summary: Retrives list of all events for a specific organization sorted by timestamp
+      Summary: appends all events in this organization to aoEventCache
 
       Args: oOrganization - the document reference in the database for this organization
         sOrganizationName - the name of the organization
         sOrganizationDescription - the description of the organization
-        hCompletionHandler - the handler that holds async return value
 
-      Returns: None technically, but handler contains event list
+      Returns: None
     -------------------------------------------------------------------F*/
     private func fnGetOrganizationEvents(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String) async -> Void {
         do {
-            let snapshot = try await oOrganization.collection("Events").order(by: "event_timestamp").getDocuments()
-            for oOrganizationEventDocument in snapshot.documents {
+            let oSnapshot = try await oOrganization.collection("Events").order(by: "event_timestamp").getDocuments()
+            for oOrganizationEventDocument in oSnapshot.documents {
                 let oEventData = oOrganizationEventDocument.data()
                 do {
-                    let locationSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Locations").document(oEventData["event_location"] as! String).getDocument()
-                    guard let oLocationData = locationSnapshot.data() else {
+                    let oLocationSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Locations").document(oEventData["event_location"] as! String).getDocument()
+                    guard let oLocationData = oLocationSnapshot.data() else {
                         continue
                     }
                     let bFollowed = await fnGetAccountIsFollowingOrganization(oOrganization: oOrganization)
                     aoEventCache.append(EventModel(sId: oOrganizationEventDocument.documentID, sName: oEventData["event_name"] as! String, sDescription: oEventData["event_description"] as! String, oLocationCoordinate: oLocationData["location_coordinate"] as! GeoPoint, sLocationName: oLocationData["location_name"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, iLikes: oEventData["event_likes"] as! Int, bFollowed: bFollowed, oDateEvent: oEventData["event_timestamp"] as! Timestamp, oImage: nil))
                 } catch {
                     print(error)
+                    return
                 }
             }
         } catch {
             print(error)
+            return
         }
     }
     
@@ -159,8 +159,8 @@ import FirebaseStorage
     -------------------------------------------------------------------F*/
     func fnUpdateEventLikes(sEvent: EventModel) async -> Bool {
         do {
-            let snapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument()
-            guard var oEventData = snapshot.data() else {
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument()
+            guard var oEventData = oSnapshot.data() else {
                 return false
             }
             sEvent.im_Likes += 1
@@ -184,8 +184,8 @@ import FirebaseStorage
     -------------------------------------------------------------------F*/
     func fnUpdateEventReports(sEvent: EventModel) async -> Bool {
         do {
-            let snapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument()
-            guard var oEventData = snapshot.data() else {
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument()
+            guard var oEventData = oSnapshot.data() else {
                 return false
             }
             let iNumReports = oEventData["event_reports"] as! Int
@@ -201,67 +201,63 @@ import FirebaseStorage
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
          Function: fnGetInstitutionAnnouncements
          
-         Summary: Updates aoAnnouncementList with all announcements in an institution
+         Summary: Driver function for adding all institution announcements in aoAnnouncementList
          
          Args: None
          
          Returns: None
      -------------------------------------------------------------------F*/
-    func fnGetInstitutionAnnouncements() {
-        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments { snapshot, error in
-            guard let oOrganizationDocuments = snapshot?.documents else {
-                return
-            }
-            for oOrganizationDocument in oOrganizationDocuments {
+    func fnGetInstitutionAnnouncements() async -> Void {
+        do {
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments()
+            for oOrganizationDocument in oSnapshot.documents {
                 let oOrganizationData = oOrganizationDocument.data()
-                self.fnGetOrganizationAnnouncements(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String, hCompletionHandler: {(aoOrgAnnouncementList) -> Void in
-                    self.aoAnnouncementList.append(contentsOf: aoOrgAnnouncementList)
-                })
+                await fnGetOrganizationAnnouncements(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String)
             }
+        } catch {
+            print(error)
+            return
         }
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
      Function: fnGetOrganizationAnnouncements
      
-     Summary: Retrieves list of announcements sorted by date ascending for a specific organizaiton
+     Summary: update aoAnnouncementList to append all announcements for this organization
      
      Args: oOrganization - reference to the document of the host organization
      sOrganizationName - the name of the host organization
      sOrganizationDescription - the description of the host organization
-     hCompletionHandler - the handler that holds async return value
      
-     Returns: None technically, but handler contains announcement list
+     Returns: None
      -------------------------------------------------------------------F*/
-    func fnGetOrganizationAnnouncements(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String, hCompletionHandler: @escaping ([AnnouncementModel]) -> Void) {
-        var aoOrganizationAnnouncementList: [AnnouncementModel] = []
-        oOrganization.collection("Announcements").order(by: "announcement_timestamp").getDocuments { snapshot, error in
-            guard let oOrganizationAnnouncementDocuments = snapshot?.documents else {
-                hCompletionHandler(aoOrganizationAnnouncementList)
-                return
-            }
-            for oOrganizationAnnouncementDocument in oOrganizationAnnouncementDocuments {
+    func fnGetOrganizationAnnouncements(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String) async -> Void {
+        do {
+            let oSnapshot = try await oOrganization.collection("Announcements").order(by: "announcement_timestamp").getDocuments()
+            for oOrganizationAnnouncementDocument in oSnapshot.documents {
                 let oAnnouncementData = oOrganizationAnnouncementDocument.data()
-                aoOrganizationAnnouncementList.append(AnnouncementModel(sId: oOrganizationAnnouncementDocument.documentID, sDescription: oAnnouncementData["announcement_message"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, bFollowed: false, oDateEvent: oAnnouncementData["announcement_timestamp"] as! Timestamp))
+                let bFollowed = await fnGetAccountIsFollowingOrganization(oOrganization: oOrganization)
+                aoAnnouncementList.append(AnnouncementModel(sId: oOrganizationAnnouncementDocument.documentID, sDescription: oAnnouncementData["announcement_message"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, bFollowed: bFollowed, oDateEvent: oAnnouncementData["announcement_timestamp"] as! Timestamp, oImage: nil))
             }
-            hCompletionHandler(aoOrganizationAnnouncementList)
+        } catch {
+            print(error)
+            return
         }
     }
-    
+
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
      Function: fnGetAccountIsFollowingOrganization
      
-     Summary: Handler returns true if the logged in account is following the organization, false otherwise
+     Summary: returns true if the logged in account is following the organization, false otherwise
      
      Args: oOrganization - the doc reference of the organization being queried
-     hCompletionHandler - the handler that holds async return value
      
-     Returns: None technically, but handler contains Bool
+     Returns: Bool - true if the user follows the organization, false otherwise
      -------------------------------------------------------------------F*/
     func fnGetAccountIsFollowingOrganization(oOrganization: DocumentReference) async -> Bool {
         do {
-            let snapshot = try await oDatabase.collection("Institutions").document(sAccountId).collection("Relationships").whereField("relationship_org", isEqualTo: oOrganization).whereField("relationship_status", isEqualTo: 2).whereField("relationship_type", isEqualTo: 1).getDocuments()
-            return snapshot.documents.count > 0
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sAccountId).collection("Relationships").whereField("relationship_org", isEqualTo: oOrganization).whereField("relationship_status", isEqualTo: 2).whereField("relationship_type", isEqualTo: 1).getDocuments()
+            return oSnapshot.documents.count > 0
         } catch {
             print(error)
             return false
