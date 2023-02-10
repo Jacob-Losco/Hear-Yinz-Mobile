@@ -6,7 +6,7 @@ Summary: Contains functions and vars for retrieving and formatting data for fire
 Exported Data Structures: aoEventCache [EventModel] - a list of all the events to be displayed to the map
                         aoAnnouncementList [AnnouncementModel] - a list of all announcements to be displayed to the map
 
-Exported Functions: fnInitSessionData - sets necessary variables to display use other database functions
+Exported Functions: fnInitSessionData - sets necessary variables to use other database functions
                     fnGetInstitutionEvents - updates aoEventCache with all event data
                     fnGetInstitutionAnnouncements - updates aoAnnouncementList with all announcement data
                     fnUpdateEventLikes - increases an events likes by 1 in database
@@ -20,31 +20,29 @@ Contributors:
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseStorage
 
-class DBFunctions: ObservableObject {
+@MainActor class DBFunctions: ObservableObject {
+    let oStorage = Storage.storage()
     let oDatabase = Firestore.firestore() //object representing the firestore database
     var sInstitutionId : String = "" //the id of the institution currently logged in
     var sAccountId : String = "" //the id of the account currently logged in
+    var oInstitutionImage : UIImage? = nil
     @Published var aoEventCache : [EventModel] = [] //if on eventmap, all approved events in db occuring after Date.now(), sorted by timestamp
     @Published var aoAnnouncementList: [AnnouncementModel] = []
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnInitSessionData
 
-      Summary: used on init of the map view. Setups up variables necessary to get event data
+      Summary: Used to initialize account and institution data for use in other db functions.
 
-      Args: hCompletionHandler - completion handler that runs after asynchronous functions are completed
+      Args: None
 
       Returns: None
     -------------------------------------------------------------------F*/
-    func fnInitSessionData(hCompletionHandler: @escaping () -> Void) {
-        fnGetInstitution(sUserEmail: Auth.auth().currentUser?.email ?? "N/A", hCompletionHandler: {(sInstitution) -> Void in
-            self.sInstitutionId = sInstitution
-            self.fnGetUserAccount(sUserEmail: Auth.auth().currentUser?.email ?? "N/A", hCompletionHandler: {(sAccount) -> Void in
-                self.sAccountId = sAccount
-                hCompletionHandler()
-            })
-        })
+    func fnInitSessionData() async {
+        sInstitutionId = await fnGetInstitution(sUserEmail: Auth.auth().currentUser?.email ?? "N/A")
+        sAccountId = await fnGetUserAccount(sUserEmail: Auth.auth().currentUser?.email ?? "N/A")
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -52,22 +50,22 @@ class DBFunctions: ObservableObject {
 
       Summary: Retrieves user Institution document id from the database. Returns failure message if retrieval fails
 
-      Args: hCompletionHandler - completion handler that runs after asynchronous functions are completed
+      Args: None
 
-      Returns: None technically, but handler contains string return
+      Returns: String - the id of the institution this account is logged into, or an error message
     -------------------------------------------------------------------F*/
-    private func fnGetInstitution(sUserEmail: String, hCompletionHandler: @escaping (String) -> Void) {
+    private func fnGetInstitution(sUserEmail: String) async -> String {
         if(sUserEmail != "N/A"){
             let sUserHandle = "@" + sUserEmail.components(separatedBy: "@")[1]
-            oDatabase.collection("Institutions").whereField("institution_handle", isEqualTo: sUserHandle).getDocuments { snapshot, error in
-                guard let oDocuments = snapshot?.documents else {
-                    hCompletionHandler("No Documents")
-                    return
-                }
-                hCompletionHandler(oDocuments[0].documentID)
+            do {
+                let snapshot = try await oDatabase.collection("Institutions").whereField("institution_handle", isEqualTo: sUserHandle).getDocuments()
+                return snapshot.documents[0].documentID
+            } catch {
+                print(error)
+                return "Error Retrieving Data"
             }
         } else {
-            hCompletionHandler("Error: No logged in user")
+            return "Error Not Signed In"
         }
     }
     
@@ -79,17 +77,19 @@ class DBFunctions: ObservableObject {
       Args: sInstitutionId - the document id of the user institution
         hCompletionHandler - the handler that holds async return value
 
-      Returns: None technically, but handler contains string containing document Id
+      Returns: String - document id of the account associated with the authed user
     -------------------------------------------------------------------F*/
-    private func fnGetUserAccount(sUserEmail: String, hCompletionHandler: @escaping (String) -> Void) {
-        if(sUserEmail != "N/A") {
-            oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").whereField("account_email", isEqualTo: sUserEmail).getDocuments { snapshot, error in
-                guard let oDocuments = snapshot?.documents else {
-                    hCompletionHandler("No Documents")
-                    return
-                }
-                hCompletionHandler(oDocuments[0].documentID)
+    private func fnGetUserAccount(sUserEmail: String) async -> String {
+        if(sUserEmail != "N/A"){
+            do {
+                let snapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").whereField("account_email", isEqualTo: sUserEmail).getDocuments()
+                return snapshot.documents[0].documentID
+            } catch {
+                print(error)
+                return "Error Retrieving Data"
             }
+        } else {
+            return "Error Not Signed In"
         }
     }
 
@@ -102,20 +102,19 @@ class DBFunctions: ObservableObject {
 
       Returns: None
     -------------------------------------------------------------------F*/
-    func fnGetInstitutionEvents() {
-        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments { snapshot, error in
-            guard let oOrganizationDocuments = snapshot?.documents else {
-                return
-            }
-            for oOrganizationDocument in oOrganizationDocuments {
+    func fnGetInstitutionEvents() async -> Void {
+        do {
+            let snapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments()
+            for oOrganizationDocument in snapshot.documents {
                 let oOrganizationData = oOrganizationDocument.data()
-                self.fnGetOrganizationEvents(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String, hCompletionHandler: {(aoOrgEventList) -> Void in
-                    self.aoEventCache.append(contentsOf: aoOrgEventList)
-                })
+                await fnGetOrganizationEvents(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String)
             }
+        } catch {
+            print(error)
+            return
         }
     }
-    
+
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnGetOrganizationevents
 
@@ -128,45 +127,24 @@ class DBFunctions: ObservableObject {
 
       Returns: None technically, but handler contains event list
     -------------------------------------------------------------------F*/
-    private func fnGetOrganizationEvents(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String, hCompletionHandler: @escaping ([EventModel]) -> Void) {
-        var aoOrganizationEventList: [EventModel] = []
-        oOrganization.collection("Events").order(by: "event_timestamp").getDocuments { snapshot, error in
-            guard let oOrganizationEventsDocuments = snapshot?.documents else {
-                hCompletionHandler(aoOrganizationEventList)
-                return
-            }
-            self.fnGetLocationData(hCompletionHandler: {(aoLocationDictionary) -> Void in
-                for oOrganizationEventDocument in oOrganizationEventsDocuments {
-                    let oEventData = oOrganizationEventDocument.data()
-                    let oLocationData = aoLocationDictionary[oEventData["event_location"] as! DocumentReference]
-                    aoOrganizationEventList.append(EventModel(sId: oOrganizationEventDocument.documentID, sName: oEventData["event_name"] as! String, sDescription: oEventData["event_description"] as! String, oLocationCoordinate: oLocationData!["location_coordinate"] as! GeoPoint, sLocationName: oLocationData!["location_name"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, iLikes: oEventData["event_likes"] as! Int, bFollowed: false, oDateEvent: oEventData["event_timestamp"] as! Timestamp))
+    private func fnGetOrganizationEvents(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String) async -> Void {
+        do {
+            let snapshot = try await oOrganization.collection("Events").order(by: "event_timestamp").getDocuments()
+            for oOrganizationEventDocument in snapshot.documents {
+                let oEventData = oOrganizationEventDocument.data()
+                do {
+                    let locationSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Locations").document(oEventData["event_location"] as! String).getDocument()
+                    guard let oLocationData = locationSnapshot.data() else {
+                        continue
+                    }
+                    let bFollowed = await fnGetAccountIsFollowingOrganization(oOrganization: oOrganization)
+                    aoEventCache.append(EventModel(sId: oOrganizationEventDocument.documentID, sName: oEventData["event_name"] as! String, sDescription: oEventData["event_description"] as! String, oLocationCoordinate: oLocationData["location_coordinate"] as! GeoPoint, sLocationName: oLocationData["location_name"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, iLikes: oEventData["event_likes"] as! Int, bFollowed: bFollowed, oDateEvent: oEventData["event_timestamp"] as! Timestamp, oImage: nil))
+                } catch {
+                    print(error)
                 }
-                hCompletionHandler(aoOrganizationEventList)
-            })
-        }
-    }
-    
-    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Function: fnGetLocationData
-
-      Summary: returns a dictionary that links a location reference to the data associated with that location
-
-      Args: hCompletionHander - the handler that holds async return value
-
-      Returns: None technically, but event handler contains dictionary
-    -------------------------------------------------------------------F*/
-    private func fnGetLocationData(hCompletionHandler: @escaping ([DocumentReference : [String : Any]]) -> Void) {
-        var aoLocationDictionary: [DocumentReference : [String : Any]] = [DocumentReference : [String : Any]]()
-        oDatabase.collection("Institutions").document(sInstitutionId).collection("Locations").getDocuments { snapshot, error in
-            guard let oLocationDocuments = snapshot?.documents else {
-                hCompletionHandler(aoLocationDictionary)
-                return
             }
-            for oLocationDocument in oLocationDocuments {
-                let oLocationData = oLocationDocument.data()
-                aoLocationDictionary[oLocationDocument.reference] = oLocationData
-            }
-            hCompletionHandler(aoLocationDictionary)
+        } catch {
+            print(error)
         }
     }
     
@@ -179,14 +157,19 @@ class DBFunctions: ObservableObject {
         
       Returns: None
     -------------------------------------------------------------------F*/
-    func fnUpdateEventLikes(sEvent: EventModel) {
-        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument { snapshot, error in
-            guard var oEventData = snapshot?.data() else {
-                return
+    func fnUpdateEventLikes(sEvent: EventModel) async -> Bool {
+        do {
+            let snapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument()
+            guard var oEventData = snapshot.data() else {
+                return false
             }
             sEvent.im_Likes += 1
             oEventData["event_likes"] = sEvent.im_Likes
-            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).updateData(oEventData)
+            try await oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).updateData(oEventData)
+            return true
+        } catch {
+            print(error)
+            return false
         }
     }
     
@@ -199,14 +182,19 @@ class DBFunctions: ObservableObject {
          
       Returns: None
     -------------------------------------------------------------------F*/
-    func fnUpdateEventReports(sEvent: EventModel) {
-        oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument { snapshot, error in
-            guard var oEventData = snapshot?.data() else {
-                return
+    func fnUpdateEventReports(sEvent: EventModel) async -> Bool {
+        do {
+            let snapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).getDocument()
+            guard var oEventData = snapshot.data() else {
+                return false
             }
             let iNumReports = oEventData["event_reports"] as! Int
             oEventData["event_reports"] = iNumReports + 1
-            self.oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).updateData(oEventData)
+            try await oDatabase.collection("Institutions").document(self.sInstitutionId).collection("Organizations").document(sEvent.sm_HostId).collection("Events").document(sEvent.sm_Id).updateData(oEventData)
+            return true
+        } catch {
+            print(error)
+            return false
         }
     }
     
@@ -257,6 +245,26 @@ class DBFunctions: ObservableObject {
                 aoOrganizationAnnouncementList.append(AnnouncementModel(sId: oOrganizationAnnouncementDocument.documentID, sDescription: oAnnouncementData["announcement_message"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, bFollowed: false, oDateEvent: oAnnouncementData["announcement_timestamp"] as! Timestamp))
             }
             hCompletionHandler(aoOrganizationAnnouncementList)
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnGetAccountIsFollowingOrganization
+     
+     Summary: Handler returns true if the logged in account is following the organization, false otherwise
+     
+     Args: oOrganization - the doc reference of the organization being queried
+     hCompletionHandler - the handler that holds async return value
+     
+     Returns: None technically, but handler contains Bool
+     -------------------------------------------------------------------F*/
+    func fnGetAccountIsFollowingOrganization(oOrganization: DocumentReference) async -> Bool {
+        do {
+            let snapshot = try await oDatabase.collection("Institutions").document(sAccountId).collection("Relationships").whereField("relationship_org", isEqualTo: oOrganization).whereField("relationship_status", isEqualTo: 2).whereField("relationship_type", isEqualTo: 1).getDocuments()
+            return snapshot.documents.count > 0
+        } catch {
+            print(error)
+            return false
         }
     }
 }

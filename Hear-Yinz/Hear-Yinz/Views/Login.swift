@@ -26,7 +26,7 @@ struct Login: View {
         VStack {
             if networkManager.isConnected {
                 Group {
-                    if oLoginFunctions.bm_SignedIn {
+                    if !oLoginFunctions.bm_SignedIn {
                         Button("Login") {
                             oLoginFunctions.fnLogin(sEmail: "test@stvincent.edu", sPassword: "test123"
                         )}
