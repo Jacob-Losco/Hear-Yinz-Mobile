@@ -21,10 +21,12 @@ struct MapView: View {
     @State private var oRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 40.2928, longitude: -79.4021), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
     
     var body: some View {
+        
         Group{
             ZStack {
                 Map(coordinateRegion: $oRegion)
                     .edgesIgnoringSafeArea(.all)
+                
                 VStack{
                     Spacer()
                     Rectangle() //Adds custom color background to tab bar.
@@ -32,6 +34,9 @@ struct MapView: View {
                         .frame(height: 10)
                         .background(Color("highlight"))
                 }
+                
+                // Add the annotation to the map
+                MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40.2928, longitude: -79.4021))
             }.onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight
                 UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
@@ -52,6 +57,17 @@ struct MapView: View {
     
     init() {
         
+    }
+}
+
+// Annotation struct
+struct MapAnnotation: View {
+    var coordinate: CLLocationCoordinate2D
+    
+    var body: some View {
+        ZStack {
+            Circle().fill(Color.red).frame(width: 20, height: 20)
+        }.offset(x: 0, y: -10)
     }
 }
 
