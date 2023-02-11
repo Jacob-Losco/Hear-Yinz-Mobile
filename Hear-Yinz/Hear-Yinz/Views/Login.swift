@@ -8,6 +8,7 @@ Exported Data Structures: Login - the view itself
 Exported Functions: None
 
 Contributors:
+    Sarah Kudrick - 2/9/2023 - SP-454
     Jacob Losco - 1/31/2023 - SP-365
 
 ===================================================================+*/
@@ -21,12 +22,41 @@ struct Login: View {
     func fnListen() {
         oLoginFunctions.fnListenAuthenticationState()
     }
+    @State var sEmailEntry = ""
+    @State var sPasswordEntry = ""
+
     
     var body: some View {
+        VStack{
+            Text("Hear Yinz!")
+                .font(.largeTitle)
+                .padding()
+            
+            TextField("School Email", text: $sEmailEntry)
+                .padding()
+                .background(Color("highlight"))
+                .autocorrectionDisabled(true)
+            SecureField("Password", text: $sPasswordEntry)
+                .padding()
+                .background(Color("highlight"))
+            Button{
+                
+            } label: {
+                ZStack{
+                    RoundedRectangle(cornerRadius: 25)
+                        .fill(Color("selected"))
+                        .frame(width: 200, height: 100)
+                    Text("Log in")
+                        .foregroundColor(Color("highlight"))
+                }
+                .padding()
+            }
+            
+        }
         VStack {
             if networkManager.isConnected {
                 Group {
-                    if oLoginFunctions.bm_SignedIn {
+                    if !oLoginFunctions.bm_SignedIn {
                         Button("Login") {
                             oLoginFunctions.fnLogin(sEmail: "test@stvincent.edu", sPassword: "test123"
                         )}
