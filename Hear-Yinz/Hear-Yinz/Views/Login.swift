@@ -1,13 +1,14 @@
 /*+===================================================================
 File: Login.swift
 
-Summary: View for login access to mobile app. Currently uses button to login, form will be implemented next sprint
+Summary: View for login access to mobile app.
 
 Exported Data Structures: Login - the view itself
 
 Exported Functions: None
 
 Contributors:
+    Sarah Kudrick - 2/12/2023 - SP-455
     Sarah Kudrick - 2/9/2023 - SP-454
     Jacob Losco - 1/31/2023 - SP-365
 
@@ -24,52 +25,73 @@ struct Login: View {
     }
     @State var sEmailEntry = ""
     @State var sPasswordEntry = ""
+    @State var sloginStatus: String = ""
+    //CURRENT deafult login is teststatic_officer@teststatic.edu:test123
+    //old default login was test@stvincent.edu:test123
+    var bDisableLoginButton: Bool {
+        sEmailEntry.isEmpty || sPasswordEntry.isEmpty || !sEmailEntry.contains("@")
+        //used to validate form entries before enabling login button
+    }
 
     
     var body: some View {
-        VStack{
-            Text("Hear Yinz!")
-                .font(.largeTitle)
-                .padding()
-            
-            TextField("School Email", text: $sEmailEntry)
-                .padding()
-                .background(Color("highlight"))
-                .autocorrectionDisabled(true)
-            SecureField("Password", text: $sPasswordEntry)
-                .padding()
-                .background(Color("highlight"))
-            Button{
+        Group{
+            if oLoginFunctions.bm_SignedIn {
+                ContentView()
                 
-            } label: {
-                ZStack{
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(Color("selected"))
-                        .frame(width: 200, height: 100)
-                    Text("Log in")
-                        .foregroundColor(Color("highlight"))
-                }
-                .padding()
-            }
-            
-        }
-        VStack {
-            if networkManager.isConnected {
-                Group {
-                    if !oLoginFunctions.bm_SignedIn {
-                        Button("Login") {
-                            oLoginFunctions.fnLogin(sEmail: "test@stvincent.edu", sPassword: "test123"
-                        )}
-                    } else {
-                        ContentView()
-                    }
-                }
             } else {
-                VStack {
-                    Text("No Internet Connection...")
+                VStack{
+                    Text("Hear Yinz!")
+                        .font(.largeTitle)
+                        .padding()
+                    
+                    Text(sloginStatus)
+                        .padding()
+                    
+                    TextField("School Email", text: $sEmailEntry)
+                        .padding()
+                        .background(Color("highlight"))
+                        .autocorrectionDisabled(true)
+                        .autocapitalization(.none)
+                    SecureField("Password", text: $sPasswordEntry)
+                        .padding()
+                        .background(Color("highlight"))
+                    Button{
+                        if networkManager.isConnected {
+                            oLoginFunctions.fnLogin(sEmail: sEmailEntry, sPassword: sPasswordEntry)
+                            if oLoginFunctions.bm_SignedIn {
+                                ContentView()
+                            } else {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                                    sloginStatus="Incorrect login"
+                                    //this delay prevents the incorrect login message from displaying to user while contentview loads upon correct login
+                                }
+                            }
+                            
+                        } else {
+
+                            sloginStatus = "No Internet connection..."
+
+                        }
+                    } label: {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 25)
+                                .fill(Color("selected"))
+                                .frame(width: 200, height: 100)
+                            Text("Log in")
+                                .foregroundColor(Color("highlight"))
+                        }
+                        .padding()
+                    }.onAppear{
+                        sloginStatus=""
+                    }.disabled(bDisableLoginButton)
+                    //disabled modifier disables login button until form validation is achieved
                 }
             }
+
+            
         }.onAppear(perform: fnListen)
+    
     }
 }
 
