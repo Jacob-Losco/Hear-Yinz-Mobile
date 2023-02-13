@@ -57,9 +57,6 @@ class LoginFunctions: ObservableObject {
                 return
             }
         }
-        DispatchQueue.main.async {
-            self.bm_SignedIn = true
-        }
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -73,7 +70,5 @@ class LoginFunctions: ObservableObject {
     -------------------------------------------------------------------F*/
     func fnLogout() {
         try? Auth.auth().signOut()
-        
-        self.bm_SignedIn = false
     }
 }
