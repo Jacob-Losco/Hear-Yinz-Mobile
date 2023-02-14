@@ -49,14 +49,7 @@ struct MapView: View {
                     UINavigationController.attemptRotationToDeviceOrientation()
                 }
             }
-            .task {
-                await oDBFunctions.fnInitSessionData()
-            }
         }
-    }
-    
-    init() {
-        
     }
 }
 

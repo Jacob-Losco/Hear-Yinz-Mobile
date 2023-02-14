@@ -11,7 +11,11 @@ Exported Functions: fnInitSessionData - sets necessary variables to use other da
                     fnGetInstitutionAnnouncements - updates aoAnnouncementList with all announcement data
                     fnUpdateEventLikes - increases an events likes by 1 in database
                     fnUpdateEventReports - increase an events reports by 1 in database
-                    fnFollowOrganization - creates a follow relationship between the user and an organization
+                    fnCreateRelationshipOrganziation - creates a relationship between the user and an organization
+                    fnDeleteRelationshipOrganization - deletes a relationship between the user and an organization
+                    fnGetDarkMode - gets a bool on whether the user is using dark mode or not
+                    fnToggleDarkMode - toggles the users darkmode field in database
+                    fnGetBlockedOrganizations - returns all organizations blocked by user
 
 Contributors:
     Jacob Losco - 2/10/2023 - SP-358
@@ -31,6 +35,7 @@ import FirebaseStorage
     var oInstitutionImageDictionary : [StorageReference : UIImage] = [:]
     @Published var aoEventCache : [EventModel] = [] //if on eventmap, all approved events in db occuring after Date.now(), sorted by timestamp
     @Published var aoAnnouncementList: [AnnouncementModel] = []
+    @Published var aoOrganizationList: [OrganizationModel] = []
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnInitSessionData
@@ -45,9 +50,10 @@ import FirebaseStorage
         sInstitutionId = await fnGetInstitution(sUserEmail: Auth.auth().currentUser?.email ?? "N/A")
         sAccountId = await fnGetUserAccount(sUserEmail: Auth.auth().currentUser?.email ?? "N/A")
         await fnGetImageDictionary(hCompletionHandler: {(imageDictionary) -> Void in
-            self.oInstitutionImageDictionary = imageDictionary
+            if(self.sAccountId != "Error") {
+                self.oInstitutionImageDictionary = imageDictionary
+            }
         })
-        print("Test One")
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -67,10 +73,10 @@ import FirebaseStorage
                 return oSnapshot.documents[0].documentID
             } catch {
                 print(error)
-                return "Error Retrieving Data"
+                return "Error"
             }
         } else {
-            return "Error Not Signed In"
+            return "Error"
         }
     }
     
@@ -90,10 +96,10 @@ import FirebaseStorage
                 return oSnapshot.documents[0].documentID
             } catch {
                 print(error)
-                return "Error Retrieving Data"
+                return "Error"
             }
         } else {
-            return "Error Not Signed In"
+            return "Error"
         }
     }
 
@@ -107,7 +113,6 @@ import FirebaseStorage
       Returns: None
     -------------------------------------------------------------------F*/
     func fnGetInstitutionEvents() async -> Void {
-        print("Test Two")
         do {
             let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments()
             for oOrganizationDocument in oSnapshot.documents {
@@ -409,4 +414,34 @@ import FirebaseStorage
                 hCompletionHandler(imageDictionary)
             }
         }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnGetBlockedOrganizations
+     
+     Summary: returns a list of organizations that have been blocked by the user
+     
+     Args: None
+     
+     Returns: [OrganizationModel] - a list of blocked organizations
+     -------------------------------------------------------------------F*/
+    func fnGetBlockedOrganizations() async -> Void {
+        do {
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").document(sAccountId).collection("Relationships").whereField("relationship_type", isEqualTo: 2).getDocuments()
+            for oRelationshipDocument in oSnapshot.documents {
+                let oRelationshipData = oRelationshipDocument.data()
+                let oOrganizationRef = oRelationshipData["relationship_org"] as! DocumentReference
+                do {
+                    let oOrganizationSnapshot = try await oOrganizationRef.getDocument()
+                    let oOrganizationData = oOrganizationSnapshot.data()
+                    aoOrganizationList.append(OrganizationModel(sId: oOrganizationSnapshot.documentID, sName: oOrganizationData?["organization_name"] as! String))
+                } catch {
+                    print(error)
+                    return
+                }
+            }
+        } catch {
+            print(error)
+            return
+        }
+    }
 }
