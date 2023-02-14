@@ -7,6 +7,7 @@ Exported Data Structures: aoEventCache [EventModel] - a list of all the events t
                         aoAnnouncementList [AnnouncementModel] - a list of all announcements to be displayed to the map
 
 Exported Functions: fnInitSessionData - sets necessary variables to use other database functions
+                    fnGetImageDictionary - sets a dictionary with images for all organizations in institution
                     fnGetInstitutionEvents - updates aoEventCache with all event data
                     fnGetInstitutionAnnouncements - updates aoAnnouncementList with all announcement data
                     fnUpdateEventLikes - increases an events likes by 1 in database
@@ -17,8 +18,9 @@ Exported Functions: fnInitSessionData - sets necessary variables to use other da
                     fnToggleDarkMode - toggles the users darkmode field in database
                     fnGetBlockedOrganizations - returns all organizations blocked by user
 
+
 Contributors:
-    Jacob Losco - 2/10/2023 - SP-358
+    Jacob Losco - 2/14/2023 - SP-361
 
 ===================================================================+*/
 
@@ -199,7 +201,7 @@ import FirebaseStorage
      
      Returns: None
      -------------------------------------------------------------------F*/
-    func fnGetOrganizationAnnouncements(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String) async -> Void {
+    private func fnGetOrganizationAnnouncements(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String) async -> Void {
         do {
             let oSnapshot = try await oOrganization.collection("Announcements").order(by: "announcement_timestamp").getDocuments()
             let sInstitutionReference = oStorage.reference().child("images/" + sInstitutionId + "/")
@@ -228,9 +230,9 @@ import FirebaseStorage
      
      Returns: Bool - true if the user follows the organization, false otherwise
      -------------------------------------------------------------------F*/
-    func fnGetAccountIsFollowingOrganization(oOrganization: DocumentReference) async -> Bool {
+    private func fnGetAccountIsFollowingOrganization(oOrganization: DocumentReference) async -> Bool {
         do {
-            let oSnapshot = try await oDatabase.collection("Institutions").document(sAccountId).collection("Relationships").whereField("relationship_org", isEqualTo: oOrganization).whereField("relationship_status", isEqualTo: 2).whereField("relationship_type", isEqualTo: 1).getDocuments()
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").document(sAccountId).collection("Relationships").whereField("relationship_org", isEqualTo: oOrganization).whereField("relationship_status", isEqualTo: 2).whereField("relationship_type", isEqualTo: 1).getDocuments()
             return oSnapshot.documents.count > 0
         } catch {
             print(error)
@@ -312,7 +314,7 @@ import FirebaseStorage
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-     Function: fnUnFollowOrganization
+     Function: fnDeleteRelationshipOrganization
      
      Summary: deletes relationship from account that makes them a follower of this organization
      
@@ -323,7 +325,7 @@ import FirebaseStorage
      
      Returns: Completion Handler Bool - true if the deletion in the db was successful, false otherwise
      -------------------------------------------------------------------F*/
-    func fnUnfollowOrganization(sOrganizationId: String, iRelationshipType: Int, hCompletionHandler: @escaping (Bool) -> Void) {
+    func fnDeleteRelationshipOrganization(sOrganizationId: String, iRelationshipType: Int, hCompletionHandler: @escaping (Bool) -> Void) {
         oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").document(sOrganizationId).getDocument { snapshot, error in
             guard let oOrganizationRef = snapshot?.reference else {
                 hCompletionHandler(false)
@@ -343,6 +345,31 @@ import FirebaseStorage
                     }
                 }
             }
+        }
+    }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnGetDarkMode
+     
+     Summary: returns a bool for whether or not the user wants dark mode enabled
+     
+     Args: None
+     
+     Returns: Bool - true if the user is using dark mode, false otherwise
+     -------------------------------------------------------------------F*/
+    func fnGetDarkMode() async -> Bool {
+        do {
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").document(sAccountId).getDocument()
+            let oAccountData = oSnapshot.data()
+            if(oAccountData != nil) {
+                let bDarkMode = oAccountData!["account_darkmode"] as! Bool
+                return bDarkMode
+            } else {
+                return false
+            }
+        } catch {
+            print(error)
+            return false
         }
     }
     
