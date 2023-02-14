@@ -28,7 +28,7 @@ import FirebaseStorage
     let oDatabase = Firestore.firestore() //object representing the firestore database
     var sInstitutionId : String = "" //the id of the institution currently logged in
     var sAccountId : String = "" //the id of the account currently logged in
-    var oInstitutionImage : UIImage? = nil
+    var oInstitutionImageDictionary : [StorageReference : UIImage] = [:]
     @Published var aoEventCache : [EventModel] = [] //if on eventmap, all approved events in db occuring after Date.now(), sorted by timestamp
     @Published var aoAnnouncementList: [AnnouncementModel] = []
     
@@ -44,6 +44,10 @@ import FirebaseStorage
     func fnInitSessionData() async {
         sInstitutionId = await fnGetInstitution(sUserEmail: Auth.auth().currentUser?.email ?? "N/A")
         sAccountId = await fnGetUserAccount(sUserEmail: Auth.auth().currentUser?.email ?? "N/A")
+        await fnGetImageDictionary(hCompletionHandler: {(imageDictionary) -> Void in
+            self.oInstitutionImageDictionary = imageDictionary
+        })
+        print("Test One")
     }
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -103,11 +107,12 @@ import FirebaseStorage
       Returns: None
     -------------------------------------------------------------------F*/
     func fnGetInstitutionEvents() async -> Void {
+        print("Test Two")
         do {
             let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments()
             for oOrganizationDocument in oSnapshot.documents {
                 let oOrganizationData = oOrganizationDocument.data()
-                await fnGetOrganizationEvents(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String)
+                await self.fnGetOrganizationEvents(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String)
             }
         } catch {
             print(error)
@@ -129,15 +134,22 @@ import FirebaseStorage
     private func fnGetOrganizationEvents(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String) async -> Void {
         do {
             let oSnapshot = try await oOrganization.collection("Events").order(by: "event_timestamp").getDocuments()
+            let sInstitutionReference = oStorage.reference().child("images/" + sInstitutionId + "/")
+            let sOrganizationReference = oStorage.reference().child("images/" + sInstitutionId + "/" + oOrganization.documentID + "/")
+            var oOrganizationImage = oInstitutionImageDictionary[sOrganizationReference]
+            if oOrganizationImage == nil {
+                oOrganizationImage = oInstitutionImageDictionary[sInstitutionReference]
+            }
             for oOrganizationEventDocument in oSnapshot.documents {
                 let oEventData = oOrganizationEventDocument.data()
                 do {
+                    
                     let oLocationSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Locations").document(oEventData["event_location"] as! String).getDocument()
                     guard let oLocationData = oLocationSnapshot.data() else {
                         continue
                     }
                     let bFollowed = await fnGetAccountIsFollowingOrganization(oOrganization: oOrganization)
-                    aoEventCache.append(EventModel(sId: oOrganizationEventDocument.documentID, sName: oEventData["event_name"] as! String, sDescription: oEventData["event_description"] as! String, oLocationCoordinate: oLocationData["location_coordinate"] as! GeoPoint, sLocationName: oLocationData["location_name"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, iLikes: oEventData["event_likes"] as! Int, bFollowed: bFollowed, oDateEvent: oEventData["event_timestamp"] as! Timestamp, oImage: nil))
+                    aoEventCache.append(EventModel(sId: oOrganizationEventDocument.documentID, sName: oEventData["event_name"] as! String, sDescription: oEventData["event_description"] as! String, oLocationCoordinate: oLocationData["location_coordinate"] as! GeoPoint, sLocationName: oLocationData["location_name"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, iLikes: oEventData["event_likes"] as! Int, bFollowed: bFollowed, oDateEvent: oEventData["event_timestamp"] as! Timestamp, oImage: oOrganizationImage))
                 } catch {
                     print(error)
                     return
@@ -148,8 +160,6 @@ import FirebaseStorage
             return
         }
     }
-    
-    
     
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
          Function: fnGetInstitutionAnnouncements
@@ -187,10 +197,16 @@ import FirebaseStorage
     func fnGetOrganizationAnnouncements(oOrganization: DocumentReference, sOrganizationName: String, sOrganizationDescription: String) async -> Void {
         do {
             let oSnapshot = try await oOrganization.collection("Announcements").order(by: "announcement_timestamp").getDocuments()
+            let sInstitutionReference = oStorage.reference().child("images/" + sInstitutionId + "/")
+            let sOrganizationReference = oStorage.reference().child("images/" + sInstitutionId + "/" + oOrganization.documentID + "/")
+            var oOrganizationImage = oInstitutionImageDictionary[sOrganizationReference]
+            if oOrganizationImage == nil {
+                oOrganizationImage = oInstitutionImageDictionary[sInstitutionReference]
+            }
             for oOrganizationAnnouncementDocument in oSnapshot.documents {
                 let oAnnouncementData = oOrganizationAnnouncementDocument.data()
                 let bFollowed = await fnGetAccountIsFollowingOrganization(oOrganization: oOrganization)
-                aoAnnouncementList.append(AnnouncementModel(sId: oOrganizationAnnouncementDocument.documentID, sDescription: oAnnouncementData["announcement_message"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, bFollowed: bFollowed, oDateEvent: oAnnouncementData["announcement_timestamp"] as! Timestamp, oImage: nil))
+                aoAnnouncementList.append(AnnouncementModel(sId: oOrganizationAnnouncementDocument.documentID, sDescription: oAnnouncementData["announcement_message"] as! String, sHostId: oOrganization.documentID, sHostName: sOrganizationName, sHostDescription: sOrganizationDescription, bFollowed: bFollowed, oDateEvent: oAnnouncementData["announcement_timestamp"] as! Timestamp, oImage: oOrganizationImage))
             }
         } catch {
             print(error)
@@ -346,4 +362,51 @@ import FirebaseStorage
             hCompletionHandler(true)
         }
     }
+    
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnGetImageDictionary
+     
+     Summary: updates accounts dark mode setting in database
+     
+     Args: None
+     
+     Returns: Completion Handler Bool - true if the update in the db was successful, false otherwise
+     -------------------------------------------------------------------F*/
+    func fnGetImageDictionary(hCompletionHandler: @escaping ([StorageReference : UIImage]) -> Void) async {
+        var imageDictionary : [StorageReference : UIImage] = [:]
+        let storageReference = oStorage.reference().child("images/" + sInstitutionId + "/")
+        do {
+            let institutionResult = try await storageReference.listAll()
+            let oInstitutionImage = institutionResult.items
+                oInstitutionImage[0].getData(maxSize: 5 * 1024 * 1024) { data, error in
+                    if data == nil && error != nil {
+                        hCompletionHandler(imageDictionary)
+                        return
+                    }
+                    imageDictionary[storageReference] = UIImage(data: data!)
+                    let oInstitutionPrefixes = institutionResult.prefixes
+                    for prefix in oInstitutionPrefixes {
+                        prefix.listAll { result, error in
+                            guard let oOrganizationImage = result?.items else {
+                                return
+                            }
+                            if(!oOrganizationImage.isEmpty) {
+                                oOrganizationImage[0].getData(maxSize: 5 * 1024 * 1024) { data, error in
+                                    if data != nil && error == nil {
+                                        imageDictionary[prefix] = UIImage(data: data!)
+                                        return
+                                    }
+                                    else {
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    hCompletionHandler(imageDictionary)
+                }
+            } catch {
+                hCompletionHandler(imageDictionary)
+            }
+        }
 }
