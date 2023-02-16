@@ -58,7 +58,6 @@ struct MapView: View {
             .task {
                 await oDBFunctions.fnInitSessionData()
                 await oDBFunctions.fnGetInstitutionEvents()
-                print(oDBFunctions.aoEventCache)
                 self.aoEventCache = self.oDBFunctions.aoEventCache // update the state with the latest value
             }
         }
