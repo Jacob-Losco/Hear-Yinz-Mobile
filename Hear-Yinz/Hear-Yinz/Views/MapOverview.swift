@@ -10,6 +10,7 @@ Exported Functions: none
 Contributors:
     Keaton Hollobaugh - 02/02/2023 - SP-216
     Jacob Losco - 2/4/2023 - SP-220
+    Keaton Hollobaugh - 02/08/2023 - SP-227
 ===================================================================+*/
 
 import SwiftUI
@@ -18,10 +19,10 @@ import CoreLocation
 
 struct MapView: View {
     @ObservedObject var oDBFunctions = DBFunctions()
-    @State private var oRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 40.2928, longitude: -79.4021), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
+    @State private var oRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
+    @State private var aoEventCache: [EventModel] = []
     
     var body: some View {
-        
         Group{
             ZStack {
                 Map(coordinateRegion: $oRegion)
@@ -34,13 +35,18 @@ struct MapView: View {
                         .frame(height: 10)
                         .background(Color("highlight"))
                 }
-                
                 // Add the annotation to the map
-                MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40.2928, longitude: -79.4021))
+                ForEach(aoEventCache, id: \.id) { event in
+                    let coordinate = CLLocationCoordinate2D(latitude: event.om_LocationCoordinate.latitude, longitude: event.om_LocationCoordinate.longitude)
+                    MapAnnotation(coordinate: coordinate, mapText: event.sm_HostName, omImage: event.om_Image)
+                    }
+                }
             }.onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight
                 UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
                 UINavigationController.attemptRotationToDeviceOrientation()
+                self.aoEventCache = self.oDBFunctions.aoEventCache // update the state with the initial value
+                
             }
             .onDisappear {
                 DispatchQueue.main.async {
@@ -49,17 +55,26 @@ struct MapView: View {
                     UINavigationController.attemptRotationToDeviceOrientation()
                 }
             }
+            .task {
+                await oDBFunctions.fnInitSessionData()
+                await oDBFunctions.fnGetInstitutionEvents()
+                self.aoEventCache = self.oDBFunctions.aoEventCache // update the state with the latest value
+            }
         }
     }
-}
 
 // Annotation struct
 struct MapAnnotation: View {
     var coordinate: CLLocationCoordinate2D
+    var mapText: String
+    var omImage: UIImage?
     
     var body: some View {
         ZStack {
             Circle().fill(Color.red).frame(width: 20, height: 20)
+            Button(action: {}){
+                Text(mapText)
+            }
         }.offset(x: 0, y: -10)
     }
 }

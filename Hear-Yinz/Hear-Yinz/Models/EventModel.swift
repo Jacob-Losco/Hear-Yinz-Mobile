@@ -15,7 +15,7 @@ Contributors:
 import Foundation
 import FirebaseFirestore
 
-class EventModel {
+class EventModel: Identifiable {
     let sm_Id: String //document id of the event
     let sm_Name: String //name of the event
     let sm_Description: String //description of the event
