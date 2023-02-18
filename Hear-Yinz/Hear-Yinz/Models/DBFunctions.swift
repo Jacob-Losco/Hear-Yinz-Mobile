@@ -63,7 +63,7 @@ import FirebaseStorage
 
       Summary: Retrieves user Institution document id from the database. Returns failure message if retrieval fails
 
-      Args: None
+      Args: sUserEmail - the email of the authenticated user
 
       Returns: String - the id of the institution this account is logged into, or an error message
     -------------------------------------------------------------------F*/
@@ -87,7 +87,7 @@ import FirebaseStorage
 
       Summary: Retrives user Account document id from the database. Returns failure message if retrieval fails
 
-      Args: sInstitutionId - the document id of the user institution
+      Args: sUserEmail - the email of the authenticated user
 
       Returns: String - document id of the account associated with the authed user
     -------------------------------------------------------------------F*/
