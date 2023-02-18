@@ -22,7 +22,6 @@ struct SettingsView: View {
             Text("Settings Page")
             Button {
                 oLoginFunctions.fnLogout()
-                //sLoginStatus=""
             } label: {
                 ZStack{
                     RoundedRectangle(cornerRadius: 25)
