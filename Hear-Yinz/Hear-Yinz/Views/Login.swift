@@ -9,7 +9,6 @@ Exported Functions: None
 
 Contributors:
     Sarah Kudrick - 2/12/2023 - SP-455
-    Sarah Kudrick - 2/9/2023 - SP-454
     Jacob Losco - 1/31/2023 - SP-365
 
 ===================================================================+*/
@@ -26,8 +25,6 @@ struct Login: View {
     @State var sEmailEntry = ""
     @State var sPasswordEntry = ""
     @State var sloginStatus: String = ""
-    //CURRENT deafult login is teststatic_officer@teststatic.edu:test123
-    //old default login was test@stvincent.edu:test123
     var bDisableLoginButton: Bool {
         sEmailEntry.isEmpty || sPasswordEntry.isEmpty || !sEmailEntry.contains("@")
         //used to validate form entries before enabling login button
