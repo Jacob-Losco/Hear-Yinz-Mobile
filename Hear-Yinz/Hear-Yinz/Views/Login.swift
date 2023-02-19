@@ -17,8 +17,10 @@ import SwiftUI
 import FirebaseAuth
 
 struct Login: View {
-    @ObservedObject var networkManager = NetworkManager() //watches internet connection
+    @ObservedObject var oNetworkManager = NetworkManager() //watches internet connection
     @ObservedObject var oLoginFunctions = LoginFunctions() //contains login functions
+    
+    
     func fnListen() {
         oLoginFunctions.fnListenAuthenticationState()
     }
@@ -57,7 +59,7 @@ struct Login: View {
                         .padding()
                         .background(Color("highlight"))
                     Button{
-                        if networkManager.isConnected {
+                        if oNetworkManager.isConnected {
                             oLoginFunctions.fnLogin(sEmail: sEmailEntry, sPassword: sPasswordEntry)
                             if oLoginFunctions.bm_SignedIn {
                                 ContentView()

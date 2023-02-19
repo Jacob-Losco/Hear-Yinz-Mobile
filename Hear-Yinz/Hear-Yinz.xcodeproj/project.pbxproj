@@ -25,6 +25,12 @@
 		D02618002975F50500E21053 /* Hear_YinzTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02617FF2975F50500E21053 /* Hear_YinzTests.swift */; };
 		D026180A2975F50500E21053 /* Hear_YinzUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02618092975F50500E21053 /* Hear_YinzUITests.swift */; };
 		D026180C2975F50500E21053 /* Hear_YinzUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D026180B2975F50500E21053 /* Hear_YinzUITestsLaunchTests.swift */; };
+		D0384F6729A29AAB000ED61D /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0384F6629A29AAB000ED61D /* MapViewModel.swift */; };
+		D0384F6829A29AAB000ED61D /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0384F6629A29AAB000ED61D /* MapViewModel.swift */; };
+		D0384F6929A29AAB000ED61D /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0384F6629A29AAB000ED61D /* MapViewModel.swift */; };
+		D0384F6B29A2A3E4000ED61D /* MapMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0384F6A29A2A3E4000ED61D /* MapMarkerView.swift */; };
+		D0384F6C29A2A3E4000ED61D /* MapMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0384F6A29A2A3E4000ED61D /* MapMarkerView.swift */; };
+		D0384F6D29A2A3E4000ED61D /* MapMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0384F6A29A2A3E4000ED61D /* MapMarkerView.swift */; };
 		D03BA32F29847882008E3C22 /* DBFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03BA32E29847882008E3C22 /* DBFunctions.swift */; };
 		D03BA33029847882008E3C22 /* DBFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03BA32E29847882008E3C22 /* DBFunctions.swift */; };
 		D03BA33129847882008E3C22 /* DBFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03BA32E29847882008E3C22 /* DBFunctions.swift */; };
@@ -94,6 +100,8 @@
 		D02618052975F50500E21053 /* Hear-YinzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Hear-YinzUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D02618092975F50500E21053 /* Hear_YinzUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hear_YinzUITests.swift; sourceTree = "<group>"; };
 		D026180B2975F50500E21053 /* Hear_YinzUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hear_YinzUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D0384F6629A29AAB000ED61D /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
+		D0384F6A29A2A3E4000ED61D /* MapMarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMarkerView.swift; sourceTree = "<group>"; };
 		D03BA32E29847882008E3C22 /* DBFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBFunctions.swift; sourceTree = "<group>"; };
 		D03BA332298478A7008E3C22 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
 		D03BA33629847A71008E3C22 /* LoginFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFunctions.swift; sourceTree = "<group>"; };
@@ -188,6 +196,7 @@
 				D0B192E0298EFB6B002E7B50 /* AppDelegate.swift */,
 				D02617EE2975F50400E21053 /* Hear_YinzApp.swift */,
 				D081A668297C712B00541AC1 /* Views */,
+				D0384F6529A29A90000ED61D /* ViewModels */,
 				D081A66D297C737800541AC1 /* Models */,
 				D02617F22975F50500E21053 /* Assets.xcassets */,
 				D02617F42975F50500E21053 /* Preview Content */,
@@ -220,6 +229,14 @@
 			path = "Hear-YinzUITests";
 			sourceTree = "<group>";
 		};
+		D0384F6529A29A90000ED61D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				D0384F6629A29AAB000ED61D /* MapViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		D081A668297C712B00541AC1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +245,7 @@
 				F96DDD65298C3C2800D2F13D /* MapOverview.swift */,
 				D0B192D2298DE4AF002E7B50 /* SettingsView.swift */,
 				9A6C272E298ED7A200340335 /* AnnouncementsView.swift */,
+				D0384F6A29A2A3E4000ED61D /* MapMarkerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -497,8 +515,10 @@
 				D0B192D3298DE4AF002E7B50 /* SettingsView.swift in Sources */,
 				D03BA32F29847882008E3C22 /* DBFunctions.swift in Sources */,
 				D0151048298D670000BB9C80 /* AnnouncementModel.swift in Sources */,
+				D0384F6729A29AAB000ED61D /* MapViewModel.swift in Sources */,
 				D03BA33729847A71008E3C22 /* LoginFunctions.swift in Sources */,
 				9A6C272F298ED7A200340335 /* AnnouncementsView.swift in Sources */,
+				D0384F6B29A2A3E4000ED61D /* MapMarkerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -517,8 +537,10 @@
 				D0B192D4298DE4AF002E7B50 /* SettingsView.swift in Sources */,
 				D03BA33029847882008E3C22 /* DBFunctions.swift in Sources */,
 				D0151049298D670000BB9C80 /* AnnouncementModel.swift in Sources */,
+				D0384F6829A29AAB000ED61D /* MapViewModel.swift in Sources */,
 				D03BA33829847A71008E3C22 /* LoginFunctions.swift in Sources */,
 				9A6C2730298ED7A200340335 /* AnnouncementsView.swift in Sources */,
+				D0384F6C29A2A3E4000ED61D /* MapMarkerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,8 +557,10 @@
 				D026180C2975F50500E21053 /* Hear_YinzUITestsLaunchTests.swift in Sources */,
 				D03BA349298A125C008E3C22 /* ContentView.swift in Sources */,
 				D03BA335298478A7008E3C22 /* EventModel.swift in Sources */,
+				D0384F6D29A2A3E4000ED61D /* MapMarkerView.swift in Sources */,
 				D03BA345298A1241008E3C22 /* Login.swift in Sources */,
 				D026180A2975F50500E21053 /* Hear_YinzUITests.swift in Sources */,
+				D0384F6929A29AAB000ED61D /* MapViewModel.swift in Sources */,
 				D03BA33929847A71008E3C22 /* LoginFunctions.swift in Sources */,
 				D015104A298D670000BB9C80 /* AnnouncementModel.swift in Sources */,
 				D0B192D5298DE4AF002E7B50 /* SettingsView.swift in Sources */,

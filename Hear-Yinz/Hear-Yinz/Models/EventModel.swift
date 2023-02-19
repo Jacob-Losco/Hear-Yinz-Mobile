@@ -14,12 +14,13 @@ Contributors:
 
 import Foundation
 import FirebaseFirestore
+import CoreLocation
 
-class EventModel {
+class EventModel: Identifiable {
     let sm_Id: String //document id of the event
     let sm_Name: String //name of the event
     let sm_Description: String //description of the event
-    let om_LocationCoordinate: GeoPoint //the coordinate of the location of the event
+    let om_LocationCoordinate: CLLocationCoordinate2D //the coordinate of the location of the event
     let sm_LocationName: String //the name of the location of the event
     let sm_HostId: String //the document id of the organization that is hosting the event
     var sm_HostName: String = "" //the name of the organization that is hosting the event
@@ -53,7 +54,7 @@ class EventModel {
         self.sm_Id = sId
         self.sm_Name = sName
         self.sm_Description = sDescription
-        self.om_LocationCoordinate = oLocationCoordinate
+        self.om_LocationCoordinate = CLLocationCoordinate2D(latitude: (oLocationCoordinate.latitude + Double.random(in: -0.0002 ..< 0.0002)), longitude: (oLocationCoordinate.longitude + Double.random(in: -0.0002 ..< 0.0002)))
         self.sm_LocationName = sLocationName
         self.sm_HostId = sHostId
         self.sm_HostName = sHostName

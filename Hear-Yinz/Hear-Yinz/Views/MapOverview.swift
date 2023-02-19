@@ -11,6 +11,7 @@ Contributors:
     Sarah Kudrick - 2/13/23 - SP-456 (i commented out a line around line 55 to test my code. You can delete this once this line is uncommented.)
     Keaton Hollobaugh - 02/02/2023 - SP-216
     Jacob Losco - 2/4/2023 - SP-220
+    Keaton Hollobaugh - 02/08/2023 - SP-227
 ===================================================================+*/
 
 import SwiftUI
@@ -18,15 +19,17 @@ import MapKit
 import CoreLocation
 
 struct MapView: View {
-    @ObservedObject var oDBFunctions = DBFunctions()
-    @State private var oRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 40.2928, longitude: -79.4021), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
+    @StateObject private var oMapData = MapViewModel()
     
     var body: some View {
-        
         Group{
             ZStack {
-                Map(coordinateRegion: $oRegion)
-                    .edgesIgnoringSafeArea(.all)
+                Map(coordinateRegion: $oMapData.oLocationRegion, annotationItems: oMapData.aoEventList, annotationContent: { event in
+                    MapAnnotation(coordinate: event.om_LocationCoordinate) {
+                        MapMarkerView(id: event.sm_Id, mapText: event.sm_Name, image: event.om_Image)
+                    }
+                })
+                .edgesIgnoringSafeArea(.all)
                 
                 VStack{
                     Spacer()
@@ -35,13 +38,11 @@ struct MapView: View {
                         .frame(height: 10)
                         .background(Color("highlight"))
                 }
-                
-                // Add the annotation to the map
-                MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40.2928, longitude: -79.4021))
             }.onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight
                 UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
                 UINavigationController.attemptRotationToDeviceOrientation()
+                
             }
             .onDisappear {
                 DispatchQueue.main.async {
@@ -56,21 +57,10 @@ struct MapView: View {
 
         }
     }
-}
-
-// Annotation struct
-struct MapAnnotation: View {
-    var coordinate: CLLocationCoordinate2D
     
-    var body: some View {
-        ZStack {
-            Circle().fill(Color.red).frame(width: 20, height: 20)
-        }.offset(x: 0, y: -10)
-    }
-}
-
-struct MapView_Previews: PreviewProvider {
-    static var previews: some View {
-        MapView()
+    struct MapView_Previews: PreviewProvider {
+        static var previews: some View {
+            MapView()
+        }
     }
 }
