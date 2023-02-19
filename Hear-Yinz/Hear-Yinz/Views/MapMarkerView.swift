@@ -15,9 +15,6 @@ struct MapMarkerView: View {
     var body: some View {
         ZStack {
             Circle().fill(Color.red).frame(width: 20, height: 20)
-            Button(action: {}){
-                Text(mapText)
-            }
         }.offset(x: 0, y: -10)
     }
     
@@ -25,5 +22,11 @@ struct MapMarkerView: View {
         self.id = id
         self.mapText = mapText
         self.omImage = image
+    }
+    
+    struct MapMarkView_Preview: PreviewProvider {
+        static var previews: some View {
+            MapMarkerView(id: "test", mapText: "Test", image: nil)
+        }
     }
 }
