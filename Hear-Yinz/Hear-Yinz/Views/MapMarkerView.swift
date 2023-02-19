@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct MapMarkerView: View {
-    var id: String
-    var mapText: String
+    var sid: String
+    var smapText: String
     var omImage: UIImage?
     
     var body: some View {
@@ -19,8 +19,8 @@ struct MapMarkerView: View {
     }
     
     init(id: String, mapText: String, image: UIImage?) {
-        self.id = id
-        self.mapText = mapText
+        self.sid = id
+        self.smapText = mapText
         self.omImage = image
     }
     
