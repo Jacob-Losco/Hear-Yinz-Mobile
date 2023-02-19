@@ -104,6 +104,17 @@ import FirebaseStorage
             return "Error"
         }
     }
+    
+    public func fnGetInstitutionCoordinate() async -> GeoPoint {
+        do {
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).getDocument()
+            let oInstitutionData = oSnapshot.data()
+            return oInstitutionData?["institution_location"] as! GeoPoint
+        } catch {
+            print(error)
+            return GeoPoint(latitude: 0, longitude: 0)
+        }
+    }
 
     /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Function: fnGetInstitutionEvents
@@ -121,6 +132,7 @@ import FirebaseStorage
                 let oOrganizationData = oOrganizationDocument.data()
                 await self.fnGetOrganizationEvents(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String)
             }
+            aoEventCache = aoEventCache.sorted(by: { $0.om_DateEvent.compare($1.om_DateEvent) == .orderedAscending })
         } catch {
             print(error)
             return

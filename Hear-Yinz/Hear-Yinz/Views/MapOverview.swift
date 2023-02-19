@@ -18,15 +18,17 @@ import MapKit
 import CoreLocation
 
 struct MapView: View {
-    @ObservedObject var oDBFunctions = DBFunctions()
-    @State private var oRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
-    @State private var aoEventCache: [EventModel] = []
+    @StateObject private var oMapData = MapViewModel()
     
     var body: some View {
         Group{
             ZStack {
-                Map(coordinateRegion: $oRegion)
-                    .edgesIgnoringSafeArea(.all)
+                Map(coordinateRegion: $oMapData.oLocationRegion, annotationItems: oMapData.aoEventList, annotationContent: { event in
+                    MapAnnotation(coordinate: event.om_LocationCoordinate) {
+                        MapMarkerView(id: event.sm_Id, mapText: event.sm_Name, image: event.om_Image)
+                    }
+                })
+                .edgesIgnoringSafeArea(.all)
                 
                 VStack{
                     Spacer()
@@ -35,17 +37,10 @@ struct MapView: View {
                         .frame(height: 10)
                         .background(Color("highlight"))
                 }
-                // Add the annotation to the map
-                ForEach(aoEventCache, id: \.id) { event in
-                    let coordinate = CLLocationCoordinate2D(latitude: event.om_LocationCoordinate.latitude, longitude: event.om_LocationCoordinate.longitude)
-                    MapAnnotation(coordinate: coordinate, mapText: event.sm_HostName, omImage: event.om_Image)
-                    }
-                }
             }.onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight
                 UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
                 UINavigationController.attemptRotationToDeviceOrientation()
-                self.aoEventCache = self.oDBFunctions.aoEventCache // update the state with the initial value
                 
             }
             .onDisappear {
@@ -55,32 +50,12 @@ struct MapView: View {
                     UINavigationController.attemptRotationToDeviceOrientation()
                 }
             }
-            .task {
-                await oDBFunctions.fnInitSessionData()
-                await oDBFunctions.fnGetInstitutionEvents()
-                self.aoEventCache = self.oDBFunctions.aoEventCache // update the state with the latest value
-            }
         }
     }
-
-// Annotation struct
-struct MapAnnotation: View {
-    var coordinate: CLLocationCoordinate2D
-    var mapText: String
-    var omImage: UIImage?
     
-    var body: some View {
-        ZStack {
-            Circle().fill(Color.red).frame(width: 20, height: 20)
-            Button(action: {}){
-                Text(mapText)
-            }
-        }.offset(x: 0, y: -10)
-    }
-}
-
-struct MapView_Previews: PreviewProvider {
-    static var previews: some View {
-        MapView()
+    struct MapView_Previews: PreviewProvider {
+        static var previews: some View {
+            MapView()
+        }
     }
 }
