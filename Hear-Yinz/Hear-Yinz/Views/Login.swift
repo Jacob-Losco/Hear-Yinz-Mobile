@@ -27,6 +27,9 @@ struct Login: View {
     @State var sEmailEntry = ""
     @State var sPasswordEntry = ""
     @State var sloginStatus: String = ""
+
+    //@State var sloginStatus: String = "Log in below"
+
     var bDisableLoginButton: Bool {
         sEmailEntry.isEmpty || sPasswordEntry.isEmpty || !sEmailEntry.contains("@")
         //used to validate form entries before enabling login button
@@ -82,7 +85,7 @@ struct Login: View {
                         }
                         .padding()
                     }.onAppear{
-                        sloginStatus=""
+                        sloginStatus="Log in below"
                     }.disabled(bDisableLoginButton)
                     //disabled modifier disables login button until form validation is achieved
                 }

@@ -8,6 +8,7 @@ Exported Data Structures: MapView - the view itself
 Exported Functions: none
 
 Contributors:
+    Sarah Kudrick - 2/13/23 - SP-456 (i commented out a line around line 55 to test my code. You can delete this once this line is uncommented.)
     Keaton Hollobaugh - 02/02/2023 - SP-216
     Jacob Losco - 2/4/2023 - SP-220
     Keaton Hollobaugh - 02/08/2023 - SP-227
@@ -50,6 +51,10 @@ struct MapView: View {
                     UINavigationController.attemptRotationToDeviceOrientation()
                 }
             }
+            .task {
+                //await oDBFunctions.fnInitSessionData() //removed by SK for testing SP-456
+            }
+
         }
     }
     
