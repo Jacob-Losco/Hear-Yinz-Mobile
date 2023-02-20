@@ -79,8 +79,12 @@ struct Login: View {
                         ZStack{
                             RoundedRectangle(cornerRadius: 25)
                                 .fill(Color("selected"))
-                                .frame(width: 200, height: 100)
+                                .frame(width: .infinity, height: 100)
+                                .shadow(radius: 10)
+                                .padding()
                             Text("Log in")
+                                .font(.title)
+                                .fontWeight(.semibold)
                                 .foregroundColor(Color("highlight"))
                         }
                         .padding()
