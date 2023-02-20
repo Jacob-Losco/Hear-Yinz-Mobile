@@ -19,6 +19,14 @@ import CoreLocation
 
 struct MapView: View {
     @StateObject private var oMapData = MapViewModel()
+    @State private var oFromDate: Date = Date.now
+    @State private var sFromDateLabel: String = ""
+    @State private var oToDate: Date = Date.now;
+    @State private var sToDateLabel: String = ""
+    @State private var dFromDateValue: Double = Double(Date.now.timeIntervalSinceNow)
+    @State private var dToDateValue: Double = 0
+    @State private var dMaxToDateValue: Double = 0;
+    
     
     var body: some View {
         Group{
@@ -32,6 +40,16 @@ struct MapView: View {
                 
                 VStack{
                     Spacer()
+                    VStack {
+                        Text("\(sFromDateLabel) - \(sToDateLabel)")
+                        Slider(value: $dToDateValue, in: dFromDateValue...dMaxToDateValue)
+                            .frame(width: 300, height: 20)
+                            .onChange(of: dToDateValue) { value in
+                                oToDate = Date(timeIntervalSinceNow: TimeInterval(dToDateValue))
+                                sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
+                            }
+                    }
+                    .cornerRadius(15)
                     Rectangle() //Adds custom color background to tab bar.
                         .fill(Color.clear)
                         .frame(height: 10)
@@ -49,6 +67,14 @@ struct MapView: View {
                     UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
                     UINavigationController.attemptRotationToDeviceOrientation()
                 }
+            }
+            .task {
+                sFromDateLabel = oFromDate.formatted(.dateTime.day().month().year())
+                sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
+                var oDateComponent = DateComponents()
+                oDateComponent.year = 1
+                let oMaxToDate = Calendar.current.date(byAdding: oDateComponent, to: oFromDate) ?? Date.now
+                dMaxToDateValue = oMaxToDate.timeIntervalSinceNow
             }
         }
     }
