@@ -226,6 +226,48 @@ final class Hear_YinzUITests: XCTestCase {
         app.buttons["Log out"].tap()
 
     }
+    /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Test: testLogout
+
+      Target: Logout button on setting page
+
+      Assertions:
+      tapping the logout button logs user outdisplays login view
+      tapping the logout button displays login view
+
+      Writer: Sarah Kudrick
+    -------------------------------------------------------------------T*/
+    func testLogout(){
+
+        let app = XCUIApplication()
+        app.launch()
+        
+        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+        }
+        
+        app.textFields["School Email"].tap()
+        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["Password"].tap()
+        app.secureTextFields["Password"].typeText("test123")
+        app.buttons["Log in"].tap()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        }
+        
+        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        
+        
+        //let settingsPageStaticText = app.staticTexts["Settings Page"]
+        
+        //app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        app.buttons["Log out"].tap()
+        XCTAssertFalse(LoginFunctions().bm_SignedIn)
+        //tests if user was logged out in firebase
+        XCTAssert(app.textFields["School Email"].exists)
+        //tests if app is displaying login view
+    }
     
 
     func testLaunchPerformance() throws {
