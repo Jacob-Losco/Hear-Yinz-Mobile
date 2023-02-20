@@ -27,6 +27,9 @@ struct Login: View {
     @State var sEmailEntry = ""
     @State var sPasswordEntry = ""
     @State var sloginStatus: String = ""
+
+    //@State var sloginStatus: String = "Log in below"
+
     var bDisableLoginButton: Bool {
         sEmailEntry.isEmpty || sPasswordEntry.isEmpty || !sEmailEntry.contains("@")
         //used to validate form entries before enabling login button
@@ -76,13 +79,17 @@ struct Login: View {
                         ZStack{
                             RoundedRectangle(cornerRadius: 25)
                                 .fill(Color("selected"))
-                                .frame(width: 200, height: 100)
+                                .frame(width: .infinity, height: 100)
+                                .shadow(radius: 10)
+                                .padding()
                             Text("Log in")
+                                .font(.title)
+                                .fontWeight(.semibold)
                                 .foregroundColor(Color("highlight"))
                         }
                         .padding()
                     }.onAppear{
-                        sloginStatus=""
+                        sloginStatus="Log in below"
                     }.disabled(bDisableLoginButton)
                     //disabled modifier disables login button until form validation is achieved
                 }
