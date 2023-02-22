@@ -20,6 +20,7 @@ import CoreLocation
 
 struct MapView: View {
     @StateObject private var oMapData = MapViewModel()
+    @State private var aoEventList: [EventModel] = []
     @State private var oFromDate: Date = Date.now
     @State private var sFromDateLabel: String = ""
     @State private var oToDate: Date = Date.now;
@@ -32,7 +33,7 @@ struct MapView: View {
     var body: some View {
         Group{
             ZStack {
-                Map(coordinateRegion: $oMapData.oLocationRegion, annotationItems: oMapData.aoEventList, annotationContent: { event in
+                Map(coordinateRegion: $oMapData.oLocationRegion, annotationItems: aoEventList, annotationContent: { event in
                     MapAnnotation(coordinate: event.om_LocationCoordinate) {
                         MapMarkerView(id: event.sm_Id, mapText: event.sm_Name, image: event.om_Image)
                     }
@@ -47,6 +48,7 @@ struct MapView: View {
                             .frame(width: 300, height: 20)
                             .onChange(of: dToDateValue) { value in
                                 oToDate = Date(timeIntervalSinceNow: TimeInterval(dToDateValue))
+                                aoEventList = oMapData.fnFilterEventsList(toDate: oToDate)
                                 sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
                             }
                     }
@@ -70,6 +72,7 @@ struct MapView: View {
                 }
             }
             .task {
+                aoEventList = oMapData.fnFilterEventsList(toDate: Date.now)
                 sFromDateLabel = oFromDate.formatted(.dateTime.day().month().year())
                 sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
                 var oDateComponent = DateComponents()
