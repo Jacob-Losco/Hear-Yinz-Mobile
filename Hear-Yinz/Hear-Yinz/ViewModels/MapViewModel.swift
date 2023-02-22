@@ -31,7 +31,9 @@ class MapViewModel: ObservableObject {
     func fnFilterEventsList(toDate: Date) -> [EventModel] {
         var aoEventList: [EventModel] = []
         let oCache = oDBFunctions.aoEventCache
+        print(oCache.count)
         for oEvent in oCache {
+            print(oEvent.om_DateEvent)
             if(!(oEvent.om_DateEvent < toDate)) {
                 break
             }

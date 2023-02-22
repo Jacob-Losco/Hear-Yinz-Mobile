@@ -27,15 +27,13 @@ struct SettingsView: View {
                 ZStack{
                     RoundedRectangle(cornerRadius: 25)
                         .fill(Color("selected"))
-                        .frame(width: .infinity, height: 100)
+                        .frame(width: 300, height: 100)
                         .shadow(radius: 10)
                         .padding()
                     Text("Log out")
                         .font(.title)
                         .fontWeight(.semibold)
                         .foregroundColor(Color("highlight"))
-                    
-                    
                 }
                 .padding()
             }
