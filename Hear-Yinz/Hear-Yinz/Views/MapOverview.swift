@@ -36,6 +36,7 @@ struct MapView: View {
                 Map(coordinateRegion: $oMapData.oLocationRegion, annotationItems: aoEventList, annotationContent: { event in
                     MapAnnotation(coordinate: event.om_LocationCoordinate) {
                         MapMarkerView(id: event.sm_Id, mapText: event.sm_Name, image: event.om_Image)
+                            .accessibility(identifier: "mapmarker_" + event.sm_Id)
                     }
                 })
                 .edgesIgnoringSafeArea(.all)
@@ -45,6 +46,7 @@ struct MapView: View {
                     VStack {
                         Text("\(sFromDateLabel) - \(sToDateLabel)")
                         Slider(value: $dToDateValue, in: dFromDateValue...dMaxToDateValue)
+                            .accessibility(identifier: "map_slider")
                             .frame(width: 300, height: 20)
                             .onChange(of: dToDateValue) { value in
                                 oToDate = Date(timeIntervalSinceNow: TimeInterval(dToDateValue))

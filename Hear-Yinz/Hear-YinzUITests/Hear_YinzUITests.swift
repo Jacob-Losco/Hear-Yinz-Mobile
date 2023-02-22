@@ -22,8 +22,6 @@ final class Hear_YinzUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
-    
-    
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Test: testLogin
 
@@ -60,6 +58,7 @@ final class Hear_YinzUITests: XCTestCase {
         app.buttons["Log out"].tap()
         
     }
+    
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Test: testIncorrectLogin
 
@@ -108,8 +107,6 @@ final class Hear_YinzUITests: XCTestCase {
         app.buttons["Log out"].tap()
         
     }
-    
-
     
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Test: testNavToAnnouncements
@@ -226,6 +223,7 @@ final class Hear_YinzUITests: XCTestCase {
         app.buttons["Log out"].tap()
 
     }
+    
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       Test: testLogout
 
@@ -269,7 +267,49 @@ final class Hear_YinzUITests: XCTestCase {
         //tests if app is displaying login view
     }
     
+    /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Test: testSliderStartPosition
 
+      Target: Map Slider
+
+      Assertions:
+      Slider exists on map view
+      There are zero map markers displayed when the map opens in teststatic institution
+
+      Writer: Jacob Losco
+    -------------------------------------------------------------------T*/
+    func testSlider() {
+        
+        let app = XCUIApplication()
+        app.launch()
+        
+        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+        }
+        
+        app.textFields["School Email"].tap()
+        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["Password"].tap()
+        app.secureTextFields["Password"].typeText("test123")
+        app.buttons["Log in"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){
+            
+        }
+        
+        let mapSlider = app.sliders["map_slider"]
+        XCTAssertTrue(mapSlider.isEnabled)
+        
+        mapSlider.adjust(toNormalizedSliderPosition: 0.5)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        }
+        
+        app.buttons["Log out"].tap()
+    }
+    
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
             // This measures how long it takes to launch your application.
