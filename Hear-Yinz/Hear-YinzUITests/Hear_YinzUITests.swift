@@ -268,13 +268,13 @@ final class Hear_YinzUITests: XCTestCase {
     }
     
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      Test: testSliderStartPosition
+      Test: testSlider
 
       Target: Map Slider
 
       Assertions:
-      Slider exists on map view
-      There are zero map markers displayed when the map opens in teststatic institution
+      Slider is enabled on map view
+      setting slider and tapping at half position sets label to equal to half a year from today
 
       Writer: Jacob Losco
     -------------------------------------------------------------------T*/
@@ -294,18 +294,24 @@ final class Hear_YinzUITests: XCTestCase {
         app.secureTextFields["Password"].typeText("test123")
         app.buttons["Log in"].tap()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){
-            
-        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
         
         let mapSlider = app.sliders["map_slider"]
         XCTAssertTrue(mapSlider.isEnabled)
         
-        mapSlider.adjust(toNormalizedSliderPosition: 0.5)
+        var oDateComponent = DateComponents()
+        oDateComponent.day = 4
+        let oSelectedDate = Calendar.current.date(byAdding: oDateComponent, to: Date.now) ?? Date.now
+        let oSelectedDateLabel = oSelectedDate.formatted(.dateTime.day().month().year())
         
+        mapSlider.adjust(toNormalizedSliderPosition: 0.01)
+        mapSlider.tap()
+        
+        XCTAssertTrue(app.staticTexts[oSelectedDateLabel].isEnabled)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
             app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
         }
+        
         
         app.buttons["Log out"].tap()
     }
