@@ -24,21 +24,28 @@ class MapViewModel: ObservableObject {
 
       Summary: returns a subset of the aoEventCache array for the events that need to be displayed to map based on date
 
-      Args: toDate - the latest date to display on the map
+      Args: oToDate - the latest date to display on the map
+            bJustDate - true if user only wants events from a specific date, false otherwise
 
       Returns: [EventModel] - the list of events to display on the map
     -------------------------------------------------------------------F*/
-    func fnFilterEventsList(toDate: Date) -> [EventModel] {
+    func fnFilterEventsList(oToDate: Date, bJustDate: Bool) -> [EventModel] {
         var aoEventList: [EventModel] = []
+        let oToDateComponents = Calendar.current.dateComponents([.day, .month, .year], from: oToDate)
+        let oToDateDay = oToDateComponents.day ?? 0
+        let oToDateMonth = oToDateComponents.month ?? 0
+        let oToDateYear = oToDateComponents.year ?? 0
         let oCache = oDBFunctions.aoEventCache
-        print(oCache.count)
         for oEvent in oCache {
-            print(oEvent.om_DateEvent)
-            if(!(oEvent.om_DateEvent < toDate)) {
-                break
-            }
-            else {
+            let oEventDateComponents = Calendar.current.dateComponents([.day, .month, .year], from: oEvent.om_DateEvent)
+            let oEventDateDay = oEventDateComponents.day ?? 0
+            let oEventDateMonth = oEventDateComponents.month ?? 0
+            let oEventDateYear = oEventDateComponents.year ?? 0
+            if(bJustDate ? (oEventDateDay == oToDateDay && oEventDateMonth == oToDateMonth && oEventDateYear == oToDateYear) : oEvent.om_DateEvent < oToDate) {
                 aoEventList.append(oEvent)
+            }
+            else if (!bJustDate){
+                break
             }
         }
         return aoEventList
