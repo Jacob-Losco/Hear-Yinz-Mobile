@@ -24,17 +24,15 @@ class MapViewModel: ObservableObject {
 
       Summary: returns a subset of the aoEventCache array for the events that need to be displayed to map based on date
 
-      Args: toDate - the latest date to display on the map
+      Args: oToDate - the latest date to display on the map
 
       Returns: [EventModel] - the list of events to display on the map
     -------------------------------------------------------------------F*/
-    func fnFilterEventsList(toDate: Date) -> [EventModel] {
+    func fnFilterEventsList(oToDate: Date) -> [EventModel] {
         var aoEventList: [EventModel] = []
         let oCache = oDBFunctions.aoEventCache
-        print(oCache.count)
         for oEvent in oCache {
-            print(oEvent.om_DateEvent)
-            if(!(oEvent.om_DateEvent < toDate)) {
+            if(!(oEvent.om_DateEvent < oToDate)) {
                 break
             }
             else {
