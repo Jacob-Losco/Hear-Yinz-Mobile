@@ -51,12 +51,13 @@ struct MapView: View {
                             .frame(width: 300, height: 20)
                             .onChange(of: dToDateValue) { value in
                                 oToDate = Date(timeIntervalSinceNow: TimeInterval(dToDateValue))
-                                aoEventList = oMapData.fnFilterEventsList(oToDate: oToDate)
+                                aoEventList = oMapData.fnFilterEventsList(oToDate: oToDate, bJustDate: false)
                                 sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
                                 sSliderDateLabel = sFromDateLabel + "-" + sToDateLabel
                             }
                     }
                     .onTapGesture {
+                        aoEventList = oMapData.fnFilterEventsList(oToDate: oToDate, bJustDate: true)
                         sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
                         sSliderDateLabel = sToDateLabel
                     }
@@ -80,7 +81,7 @@ struct MapView: View {
                 }
             }
             .task {
-                aoEventList = oMapData.fnFilterEventsList(oToDate: Date.now)
+                aoEventList = oMapData.fnFilterEventsList(oToDate: Date.now, bJustDate: true)
                 sFromDateLabel = oFromDate.formatted(.dateTime.day().month().year())
                 sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
                 sSliderDateLabel = sFromDateLabel + "-" + sToDateLabel
