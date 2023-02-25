@@ -9,9 +9,8 @@ Exported Functions: none
 
 Contributors:
     Sarah Kudrick - 2/25/23 - added dm sans font at line 49
-    Keaton Hollobaugh - 02/02/2023 - SP-216
-    Jacob Losco - 2/4/2023 - SP-220
     Keaton Hollobaugh - 02/08/2023 - SP-227
+    Jacob Losco - 2/4/2023 - SP-220
 ===================================================================+*/
 
 import SwiftUI

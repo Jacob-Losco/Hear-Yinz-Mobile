@@ -9,7 +9,6 @@ Exported Functions: None
 
 Contributors:
     Sarah Kudrick - 2/25/23 - adding dm sans
-    Sarah Kudrick - 2/12/2023 - SP-455
     Jacob Losco - 1/31/2023 - SP-365
 
 ===================================================================+*/
