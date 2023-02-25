@@ -8,6 +8,7 @@ Exported Data Structures: SettingsView - the view itself
 Exported Functions: None
 
 Contributors:
+    Sarah Kudrick - 2/25/23 - adding DM Sans
     Jacob Losco - 2/4/2023 - SP-220
 
 ===================================================================+*/
@@ -31,7 +32,7 @@ struct SettingsView: View {
                         .shadow(radius: 10)
                         .padding()
                     Text("Log out")
-                        .font(.title)
+                        .font(.custom("DMSans-Regular", size: 36))
                         .fontWeight(.semibold)
                         .foregroundColor(Color("highlight"))
                 }
