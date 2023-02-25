@@ -8,7 +8,7 @@ Exported Data Structures: Login - the view itself
 Exported Functions: None
 
 Contributors:
-    Sarah Kudrick - 2/12/2023 - SP-455
+    Sarah Kudrick - 2/25/23 - adding dm sans
     Jacob Losco - 1/31/2023 - SP-365
 
 ===================================================================+*/
@@ -44,10 +44,11 @@ struct Login: View {
             } else {
                 VStack{
                     Text("Hear Yinz!")
-                        .font(.largeTitle)
+                        .font(.custom("DMSans-Regular", size: 46))
                         .padding()
                     
                     Text(sloginStatus)
+                        .font(.custom("DMSans-Regular", size: 18))
                         .padding()
                     
                     TextField("School Email", text: $sEmailEntry)
@@ -83,7 +84,7 @@ struct Login: View {
                                 .shadow(radius: 10)
                                 .padding()
                             Text("Log in")
-                                .font(.title)
+                                .font(.custom("DMSans-Regular", size: 36))
                                 .fontWeight(.semibold)
                                 .foregroundColor(Color("highlight"))
                         }

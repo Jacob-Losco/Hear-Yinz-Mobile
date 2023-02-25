@@ -8,10 +8,9 @@ Exported Data Structures: MapView - the view itself
 Exported Functions: none
 
 Contributors:
-    Sarah Kudrick - 2/13/23 - SP-456 (i commented out a line around line 55 to test my code. You can delete this once this line is uncommented.)
-    Keaton Hollobaugh - 02/02/2023 - SP-216
-    Jacob Losco - 2/4/2023 - SP-220
+    Sarah Kudrick - 2/25/23 - added dm sans font at line 49
     Keaton Hollobaugh - 02/08/2023 - SP-227
+    Jacob Losco - 2/4/2023 - SP-220
 ===================================================================+*/
 
 import SwiftUI
@@ -46,6 +45,7 @@ struct MapView: View {
                     Spacer()
                     VStack {
                         Text("\(sSliderDateLabel)")
+                            .font(.custom("DMSans-Regular", size: 18))
                         Slider(value: $dToDateValue, in: dFromDateValue...dMaxToDateValue)
                             .accessibility(identifier: "map_slider")
                             .frame(width: 300, height: 20)
