@@ -28,7 +28,7 @@ struct SettingsView: View {
                 ZStack{
                     RoundedRectangle(cornerRadius: 25)
                         .fill(Color("selected"))
-                        .frame(width: 300, height: 100)
+                        .frame(width: 350, height: 100)
                         .shadow(radius: 10)
                         .padding()
                     Text("Log out")
@@ -38,7 +38,7 @@ struct SettingsView: View {
                 }
                 .padding()
             }
-            Spacer()
+            //Spacer()
             Text("Blocked Organizations")
                 .font(.custom("DMSans-Regular", size: 24))
             UnblockRowView()
@@ -73,10 +73,13 @@ struct UnblockRowView: View {
             } label: {
                 ZStack{
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color("selected"))
+                        .fill(Color("button"))
                         .frame(height: 40)
+                        .padding(.trailing)
                     Text("Unblock")
                         .font(.custom("DMSans-Regular", size: 18))
+                        .foregroundColor(Color.white)
+                        
                 }
             }
         }
