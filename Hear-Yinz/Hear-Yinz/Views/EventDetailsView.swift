@@ -14,6 +14,8 @@ Contributors:
 import SwiftUI
 
 struct EventDetailsView: View {
+    @Environment(\.presentationMode) var presentationMode
+    
     var event: EventModel
     
     var body: some View {
@@ -30,5 +32,13 @@ struct EventDetailsView: View {
                 .padding()
                 .font(.custom("DMSans-Regular", size: 18))
         }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width > 100 {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+        )
     }
 }
