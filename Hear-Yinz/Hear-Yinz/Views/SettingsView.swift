@@ -8,7 +8,7 @@ Exported Data Structures: SettingsView - the view itself
 Exported Functions: None
 
 Contributors:
-    Sarah Kudrick - 2/25/23 - adding DM Sans
+    Sarah Kudrick - 2/25/23 - SP-255
     Jacob Losco - 2/4/2023 - SP-220
 
 ===================================================================+*/
@@ -20,15 +20,15 @@ struct SettingsView: View {
 
     var body: some View {
         VStack{
-            Text("Settings Page")
-            Spacer()
+            //Text("Settings Page")
+            //Spacer()
             Button {
                 oLoginFunctions.fnLogout()
             } label: {
                 ZStack{
                     RoundedRectangle(cornerRadius: 25)
                         .fill(Color("selected"))
-                        .frame(width: 300, height: 100)
+                        .frame(width: 350, height: 100)
                         .shadow(radius: 10)
                         .padding()
                     Text("Log out")
@@ -38,7 +38,15 @@ struct SettingsView: View {
                 }
                 .padding()
             }
+            //Spacer()
+            Text("Blocked Organizations")
+                .font(.custom("DMSans-Regular", size: 24))
+            UnblockRowView()
+            UnblockRowView()
+            UnblockRowView()
+            
             Spacer()
+          
             Rectangle() //Adds custom color background to tab bar.
                 .fill(Color.clear)
                 .frame(height: 10)
@@ -51,5 +59,29 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView()
+    }
+}
+
+struct UnblockRowView: View {
+    var body: some View {
+        HStack{
+            Text("Organization name")
+                .font(.custom("DMSans-Regular", size: 18))
+                .padding()
+            Button{
+                
+            } label: {
+                ZStack{
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color("button"))
+                        .frame(height: 40)
+                        .padding(.trailing)
+                    Text("Unblock")
+                        .font(.custom("DMSans-Regular", size: 18))
+                        .foregroundColor(Color.white)
+                        
+                }
+            }
+        }
     }
 }
