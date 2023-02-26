@@ -61,6 +61,7 @@
 		F96DDD66298C3C2800D2F13D /* MapOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96DDD65298C3C2800D2F13D /* MapOverview.swift */; };
 		F96DDD67298C3C2800D2F13D /* MapOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96DDD65298C3C2800D2F13D /* MapOverview.swift */; };
 		F96DDD68298C3C2800D2F13D /* MapOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96DDD65298C3C2800D2F13D /* MapOverview.swift */; };
+		F9CBD86929AA884F00308167 /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CBD86829AA884F00308167 /* EventDetailsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,7 @@
 		D1778806EAA3C22354C6BC99 /* Pods-Hear-Yinz-Hear-YinzUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hear-Yinz-Hear-YinzUITests.debug.xcconfig"; path = "Target Support Files/Pods-Hear-Yinz-Hear-YinzUITests/Pods-Hear-Yinz-Hear-YinzUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		F5D796AEC5AF350C135A43A3 /* Pods_Hear_YinzTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Hear_YinzTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F96DDD65298C3C2800D2F13D /* MapOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapOverview.swift; sourceTree = "<group>"; };
+		F9CBD86829AA884F00308167 /* EventDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +250,7 @@
 				D0B192D2298DE4AF002E7B50 /* SettingsView.swift */,
 				9A6C272E298ED7A200340335 /* AnnouncementsView.swift */,
 				D0384F6A29A2A3E4000ED61D /* MapMarkerView.swift */,
+				F9CBD86829AA884F00308167 /* EventDetailsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -510,6 +513,7 @@
 				D0B192E1298EFB6B002E7B50 /* AppDelegate.swift in Sources */,
 				D02617EF2975F50400E21053 /* Hear_YinzApp.swift in Sources */,
 				D016C7D4299BDA600028679D /* OrganizationModel.swift in Sources */,
+				F9CBD86929AA884F00308167 /* EventDetailsView.swift in Sources */,
 				D03BA343298A1241008E3C22 /* Login.swift in Sources */,
 				D03BA347298A125C008E3C22 /* ContentView.swift in Sources */,
 				F96DDD66298C3C2800D2F13D /* MapOverview.swift in Sources */,
