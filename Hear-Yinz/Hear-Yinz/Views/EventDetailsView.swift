@@ -27,6 +27,7 @@ struct EventDetailsView: View {
             Image(uiImage: event.om_Image!)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100) // Adjust size here
                 .padding()
             Text(event.sm_Description)
                 .padding()
