@@ -154,10 +154,14 @@ import FirebaseStorage
         do {
             let oSnapshot = try await oOrganization.collection("Events").order(by: "event_timestamp").getDocuments()
             let sInstitutionReference = oStorage.reference().child("images/" + sInstitutionId + "/")
+            let oInstitutionImage = oInstitutionImageDictionary[sInstitutionReference]
             let sOrganizationReference = oStorage.reference().child("images/" + sInstitutionId + "/" + oOrganization.documentID + "/")
             var oOrganizationImage = oInstitutionImageDictionary[sOrganizationReference]
             if oOrganizationImage == nil {
-                oOrganizationImage = oInstitutionImageDictionary[sInstitutionReference]
+                oOrganizationImage = oInstitutionImage
+            }
+            if oOrganizationImage == nil {
+                oOrganizationImage = UIImage(named: "Default")
             }
             for oOrganizationEventDocument in oSnapshot.documents {
                 let oEventData = oOrganizationEventDocument.data()

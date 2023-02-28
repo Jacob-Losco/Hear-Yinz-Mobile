@@ -14,7 +14,7 @@ struct MapMarkerView: View {
     
     var body: some View {
         ZStack {
-            Circle().fill(Color.red).frame(width: 20, height: 20)
+            Circle().fill(Color.red).frame(width: 30, height: 30)
         }
         .offset(x: 0, y: -10)
     }
