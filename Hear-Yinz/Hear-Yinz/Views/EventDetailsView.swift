@@ -24,6 +24,15 @@ struct EventDetailsView: View {
                 .font(.title)
                 .padding()
                 .font(.custom("DMSans-Regular", size: 18))
+            Button(action: {
+                // Add your upvote action here
+            }) {
+                Image(systemName: "arrow.up.circle")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                    .foregroundColor(Color(red: 60/255, green: 120/255, blue: 216/255))
+            }
+            .padding()
             Image(uiImage: event.om_Image!)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
