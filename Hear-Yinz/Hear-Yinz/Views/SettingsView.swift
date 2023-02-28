@@ -34,7 +34,7 @@ struct SettingsView: View {
                     Text("Log out")
                         .font(.custom("DMSans-Regular", size: 36))
                         .fontWeight(.semibold)
-                        .foregroundColor(Color("highlight"))
+                        .foregroundColor(Color.white)
                 }
                 .padding()
             }
