@@ -54,7 +54,7 @@ class EventModel: Identifiable {
         self.sm_Id = sId
         self.sm_Name = sName
         self.sm_Description = sDescription
-        self.om_LocationCoordinate = CLLocationCoordinate2D(latitude: (oLocationCoordinate.latitude + Double.random(in: -0.0002 ..< 0.0002)), longitude: (oLocationCoordinate.longitude + Double.random(in: -0.0002 ..< 0.0002)))
+        self.om_LocationCoordinate = CLLocationCoordinate2D(latitude: (oLocationCoordinate.latitude + Double.random(in: -0.0004 ..< 0.0004)), longitude: (oLocationCoordinate.longitude + Double.random(in: -0.0004 ..< 0.0004)))
         self.sm_LocationName = sLocationName
         self.sm_HostId = sHostId
         self.sm_HostName = sHostName
