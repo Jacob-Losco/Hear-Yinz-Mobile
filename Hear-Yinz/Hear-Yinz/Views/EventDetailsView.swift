@@ -41,6 +41,8 @@ struct EventDetailsView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 100, height: 100) // Adjust size here
+            Text(event.sm_HostName)
+                .font(.custom("DMSans-Regular", size: 18))
         }
         .gesture(
             DragGesture()
