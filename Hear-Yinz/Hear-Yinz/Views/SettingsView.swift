@@ -12,7 +12,7 @@ Exported Functions: None
 
 
 Contributors:
-    Sarah Kudrick - 2/25/23 - SP-255
+    Sarah Kudrick - 3/2/23 - SP-256
     Jacob Losco - 2/4/2023 - SP-220
 
 
@@ -27,7 +27,8 @@ struct SettingsView: View {
     @ObservedObject var oDBFunctions = DBFunctions() //contains login functions
     //oDBFunctions.fnInitSessionData()
     //oDBFunctions.fnGetBlockedOrganizations()
-    @State private var aoBlockedList: [OrganizationModel] = []
+    @State var aoBlockedList: [OrganizationModel] = []
+    @State var isClicked: Bool = false
 
 
     var body: some View {
@@ -56,8 +57,11 @@ struct SettingsView: View {
             //UnblockRowView()
             //UnblockRowView()
             //UnblockRowView()
+            
             List(aoBlockedList, id: \.sm_Id){ org in
+                //if(aoBlockedList.contains(org)){
                 UnblockRowView(oOrganization: org, id: org.sm_Id, name: org.sm_Name)
+                //}
             }
             
             Spacer()

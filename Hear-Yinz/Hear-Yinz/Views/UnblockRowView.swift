@@ -12,7 +12,7 @@ Exported Functions: None
 
 
 Contributors:
-    Sarah Kudrick - 2/25/23 - SP-255
+    Sarah Kudrick - 3/2/23 - SP-256
     Jacob Losco - 2/4/2023 - SP-220
 
 
@@ -26,6 +26,7 @@ struct UnblockRowView: View {
     @ObservedObject var oDBFunctions = DBFunctions() //contains login functions
     var oOrganization: OrganizationModel
     @State private var cTapped = Color("button")
+    @State private var bTapped = false
     var body: some View {
         HStack{
             Text(oOrganization.sm_Id)
@@ -33,10 +34,12 @@ struct UnblockRowView: View {
                 .multilineTextAlignment(.center)
                 .padding()
             Button{
-                cTapped=Color.gray
+                //cTapped=Color.gray
                 oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: oOrganization.sm_Id, iRelationshipType: 2, hCompletionHandler: {(success)->Void in
                     if success {
                         cTapped=Color.gray
+                        bTapped=false
+                        //self.hidden()
                     } else {
                         print("Error at fnDeleteRelationshipOrganization in UnblockRowView")
                     }
@@ -57,8 +60,12 @@ struct UnblockRowView: View {
                         .frame(height: 40, alignment: .center)
                         
                 }
+            }.disabled(bTapped)
+        }.task{
+            await oDBFunctions.fnInitSessionData()
+            //await oDBFunctions.fnGetBlockedOrganizations()
+            //aoBlockedList = oDBFunctions.aoOrganizationList
             }
-        }
     }
     init(oOrganization: OrganizationModel, id: String, name: String) {
         self.oOrganization = OrganizationModel(sId: id, sName: name)
