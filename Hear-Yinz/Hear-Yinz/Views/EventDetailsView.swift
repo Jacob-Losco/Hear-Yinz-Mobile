@@ -16,7 +16,6 @@ import SwiftUI
 struct EventDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var oDBFunctions = DBFunctions()
-    @State private var likes = 0 // Reactive state variable for the number of likes
     @State private var isButtonDisabled = false // Reactive state variable for button disabled state
     var event: EventModel
 
@@ -27,10 +26,14 @@ struct EventDetailsView: View {
                 .font(.custom("DMSans-Regular", size: 18))
             HStack {
                 Button(action: {
-                    oDBFunctions.fnUpdateEventLikes(sEvent: event) { success in
-                        if success {
-                            likes += 1 // Update the likes reactive state variable
-                            isButtonDisabled = true // Disable the button after it's been clicked
+                    if !isButtonDisabled {
+                        event.im_Likes += 1 // Increment the number of likes
+                        isButtonDisabled = true // Disable the button after it's been clicked
+                        oDBFunctions.fnUpdateEventLikes(sEvent: event) { success in
+                            if !success {
+                                event.im_Likes -= 1 // Decrement the number of likes if update fails
+                                isButtonDisabled = false // Re-enable the button if update fails
+                            }
                         }
                     }
                 }) {
@@ -40,7 +43,7 @@ struct EventDetailsView: View {
                         .foregroundColor(Color(red: 60/255, green: 120/255, blue: 216/255))
                 }
                 .disabled(isButtonDisabled) // Disable the button if isButtonDisabled is true
-                Text("\(likes)") // Display the likes reactive state variable
+                Text("\(event.im_Likes)") // Display the number of likes
                     .font(.custom("DMSans-Regular", size: 18))
             }
             Text(event.sm_LocationName)
