@@ -15,21 +15,36 @@ import SwiftUI
 
 struct EventDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
-    
+    @StateObject var oDBFunctions = DBFunctions()
+    @State private var isButtonDisabled = false // Reactive state variable for button disabled state
     var event: EventModel
-    
+
     var body: some View {
         VStack(spacing: 10) {
             Text(event.sm_Name)
                 .font(.title)
                 .font(.custom("DMSans-Regular", size: 18))
-            Button(action: {
-                // Add your upvote action here
-            }) {
-                Image(systemName: "arrow.up.circle")
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .foregroundColor(Color(red: 60/255, green: 120/255, blue: 216/255))
+            HStack {
+                Button(action: {
+                    if !isButtonDisabled {
+                        event.im_Likes += 1 // Increment the number of likes
+                        isButtonDisabled = true // Disable the button after it's been clicked
+                        oDBFunctions.fnUpdateEventLikes(sEvent: event) { success in
+                            if !success {
+                                event.im_Likes -= 1 // Decrement the number of likes if update fails
+                                isButtonDisabled = false // Re-enable the button if update fails
+                            }
+                        }
+                    }
+                }) {
+                    Image(systemName: "arrow.up.circle")
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .foregroundColor(Color(red: 60/255, green: 120/255, blue: 216/255))
+                }
+                .disabled(isButtonDisabled) // Disable the button if isButtonDisabled is true
+                Text("\(event.im_Likes)") // Display the number of likes
+                    .font(.custom("DMSans-Regular", size: 18))
             }
             Text(event.sm_LocationName)
                 .font(.custom("DMSans-Regular", size: 18))
@@ -44,6 +59,9 @@ struct EventDetailsView: View {
             Text(event.sm_HostName)
                 .font(.custom("DMSans-Regular", size: 18))
         }
+        .task {
+            await oDBFunctions.fnInitSessionData()
+        }
         .gesture(
             DragGesture()
                 .onEnded { value in
@@ -54,4 +72,3 @@ struct EventDetailsView: View {
         )
     }
 }
-
