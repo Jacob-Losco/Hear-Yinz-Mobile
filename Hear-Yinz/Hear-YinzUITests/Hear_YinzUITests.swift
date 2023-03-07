@@ -395,6 +395,50 @@ final class Hear_YinzUITests: XCTestCase {
         app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
         app.buttons["Log out"].tap()
     }
+
+    func testToggleEventLikeButton() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+        }
+        
+        app.textFields["School Email"].tap()
+        app.textFields["School Email"].typeText("testdynamic_user@testdynamic.edu")
+        app.secureTextFields["Password"].tap()
+        app.secureTextFields["Password"].typeText("test123")
+        app.buttons["Log in"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
+        
+        let mapSlider = app.sliders["map_slider"]
+        XCTAssertTrue(mapSlider.isEnabled)
+        
+        mapSlider.adjust(toNormalizedSliderPosition: 0.6)
+        
+        XCTAssertTrue(app.otherElements.matching(identifier: "Map pin").otherElements["6D1xL8vuFRRCvY9TNLuY"].waitForExistence(timeout: 2))
+        app.otherElements.matching(identifier: "Map pin").otherElements["6D1xL8vuFRRCvY9TNLuY"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){
+            XCTAssertTrue(app.staticTexts["TestDynamic_Loc1"].exists)
+        }
+
+        // Toggle event like button
+        let likeButton = app.buttons.matching(identifier: "like_button").element(boundBy: 0)
+        let likesLabel = app.staticTexts.matching(identifier: "likes_Label").element
+        let initialLikes = Int(likesLabel.label)!
+        likeButton.tap()
+        let updatedLikes = Int(likesLabel.label)!
+
+        // Check if the like button has incremented the number of likes
+        XCTAssertEqual(updatedLikes, initialLikes + 1)
+
+        // Logout
+        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        app.buttons["Log out"].tap()
+    }
     
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
