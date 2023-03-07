@@ -43,8 +43,10 @@ struct EventDetailsView: View {
                         .foregroundColor(Color(red: 60/255, green: 120/255, blue: 216/255))
                 }
                 .disabled(isButtonDisabled) // Disable the button if isButtonDisabled is true
+                .accessibilityIdentifier("like_button")
                 Text("\(event.im_Likes)") // Display the number of likes
                     .font(.custom("DMSans-Regular", size: 18))
+                    .accessibilityIdentifier("likes_Label")
             }
             Text(event.sm_LocationName)
                 .font(.custom("DMSans-Regular", size: 18))
