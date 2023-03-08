@@ -17,6 +17,7 @@ struct EventDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var event: EventModel
+    @State var oSelectedOrgID: String? = nil
     
     var body: some View {
         VStack(spacing: 10) {
@@ -37,12 +38,20 @@ struct EventDetailsView: View {
                 .font(.custom("DMSans-Regular", size: 18))
             Text(event.sm_Description)
                 .font(.custom("DMSans-Regular", size: 18))
-            Image(uiImage: event.om_Image!)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100) // Adjust size here
-            Text(event.sm_HostName)
-                .font(.custom("DMSans-Regular", size: 18))
+            Button{
+                oSelectedOrgID = event.sm_HostId
+            } label: {
+                VStack{
+                    Image(uiImage: event.om_Image!)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 100, height: 100) // Adjust size here
+                    Text(event.sm_HostName)
+                        .font(.custom("DMSans-Regular", size: 18))
+                }
+                //if let org... goes here (I will delete this comment before I merge the finished control into main)
+            }
+            
         }
         .gesture(
             DragGesture()
