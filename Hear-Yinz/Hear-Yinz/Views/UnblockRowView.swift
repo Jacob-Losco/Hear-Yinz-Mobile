@@ -24,47 +24,63 @@ import SwiftUI
 
 struct UnblockRowView: View {
     @ObservedObject var oDBFunctions = DBFunctions() //contains login functions
+    @State private var aoBlockedList: [OrganizationModel] = []
     var oOrganization: OrganizationModel
     @State private var cTapped = Color("button")
     @State private var bTapped = false
+    //State private var aoBlockedListUpdated: [OrganizationModel] = []
     var body: some View {
-        HStack{
-            Text(oOrganization.sm_Id)
-                .font(.custom("DMSans-Regular", size: 18))
-                .multilineTextAlignment(.center)
-                .padding()
-            Button{
-                //cTapped=Color.gray
-                oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: oOrganization.sm_Id, iRelationshipType: 2, hCompletionHandler: {(success)->Void in
-                    if success {
-                        cTapped=Color.gray
-                        bTapped=false
-                        //self.hidden()
-                    } else {
-                        print("Error at fnDeleteRelationshipOrganization in UnblockRowView")
-                    }
-                    })//{(result) in}
-                //await oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: oOrganization.sm_Id, iRelationshipType: 2){(result) in}
-                //how do i do the bool -> void part
-                //adding {(result) in} is a solution stolen from the internet
-            } label: {
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(cTapped)
-                        .frame(height: 40)
-                        .padding(.trailing)
-                    Text("Unblock")
+        Group {
+            var aoBlockedListUpdated = SettingsView().aoBlockedList
+            //following line can also be tested using the aoBlockedListUpdated
+            //or just aoBlockedList (like the one that belongs to this rowview)
+            var bStillBlocked = oDBFunctions.aoOrganizationList.contains(where: { (id) -> Bool in
+                return id.sm_Id == oOrganization.sm_Id
+            })
+            //if not working, change to if true instad of bStillBlocked
+            if(true){
+                HStack {
+                    Text(oOrganization.sm_Id)
                         .font(.custom("DMSans-Regular", size: 18))
-                        .foregroundColor(Color.white)
                         .multilineTextAlignment(.center)
-                        .frame(height: 40, alignment: .center)
-                        
+                        .padding()
+                    Button{
+                        //cTapped=Color.gray
+                        oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: oOrganization.sm_Id, iRelationshipType: 2, hCompletionHandler: {(success)->Void in
+                            if success {
+                                cTapped=Color.gray
+                                bTapped=false
+                                //self.hidden()
+                            } else {
+                                print("Error at fnDeleteRelationshipOrganization in UnblockRowView")
+                                //print(error)
+                            }
+                            })//{(result) in}
+                        //await oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: oOrganization.sm_Id, iRelationshipType: 2){(result) in}
+                        //how do i do the bool -> void part
+                        //adding {(result) in} is a solution stolen from the internet
+                    } label: {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(cTapped)
+                                .frame(height: 40)
+                                .padding(.trailing)
+                            Text("Unblock")
+                                .font(.custom("DMSans-Regular", size: 18))
+                                .foregroundColor(Color.white)
+                                .multilineTextAlignment(.center)
+                                .frame(height: 40, alignment: .center)
+                                
+                        }
+                    }.disabled(bTapped)
                 }
-            }.disabled(bTapped)
-        }.task{
+            } //else
+
+        }
+        .task{
             await oDBFunctions.fnInitSessionData()
-            //await oDBFunctions.fnGetBlockedOrganizations()
-            //aoBlockedList = oDBFunctions.aoOrganizationList
+            await oDBFunctions.fnGetBlockedOrganizations()
+            aoBlockedList = oDBFunctions.aoOrganizationList
             }
     }
     init(oOrganization: OrganizationModel, id: String, name: String) {

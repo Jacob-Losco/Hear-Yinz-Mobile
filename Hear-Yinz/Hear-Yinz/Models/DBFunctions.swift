@@ -333,6 +333,7 @@ import FirebaseStorage
      Function: fnDeleteRelationshipOrganization
      
      Summary: deletes relationship from account that makes them a follower of this organization
+     also deletes the organization from aoorganizationlist
      
      Args: sOrganizationId - the doc id of the organization being unfollowed
      iRelationshipType - the type of relationship
@@ -358,6 +359,13 @@ import FirebaseStorage
                         return
                     } else {
                         hCompletionHandler(true)
+                        if(self.aoOrganizationList.contains(where: { (org) -> Bool in
+                            return org.sm_Id == sOrganizationId}))
+                           {
+                            self.aoOrganizationList.removeAll { item in
+                                    return item.sm_Id == sOrganizationId
+                                }
+                            }
                     }
                 }
             }
