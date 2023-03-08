@@ -37,7 +37,7 @@ struct MapView: View {
                 Map(coordinateRegion: $oMapData.oLocationRegion, annotationItems: aoEventList, annotationContent: { event in
                     MapAnnotation(coordinate: event.om_LocationCoordinate) {
                         MapMarkerView(id: event.sm_Id, mapText: event.sm_Name, image: event.om_Image)
-                            .accessibility(identifier: "mapmarker_" + event.sm_Id)
+                            .accessibility(identifier: event.sm_Id)
                             .onTapGesture {
                                 selectedEvent = event
                             }

@@ -17,6 +17,7 @@ struct MapMarkerView: View {
             Circle().fill(Color.red).frame(width: 30, height: 30)
         }
         .offset(x: 0, y: -10)
+        .accessibilityIdentifier(sid)
     }
     
     init(id: String, mapText: String, image: UIImage?) {
