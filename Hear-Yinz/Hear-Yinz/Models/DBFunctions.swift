@@ -21,6 +21,7 @@ Exported Functions: fnInitSessionData - sets necessary variables to use other da
 
 Contributors:
     Jacob Losco - 2/14/2023 - SP-361
+    Sarah Kudrick- 3/8/2023 - SP-450
 
 ===================================================================+*/
 
@@ -470,12 +471,43 @@ import FirebaseStorage
     func fnGetBlockedOrganizations() async -> Void {
         do {
             let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").document(sAccountId).collection("Relationships").whereField("relationship_type", isEqualTo: 2).getDocuments()
+            aoOrganizationList=[]
             for oRelationshipDocument in oSnapshot.documents {
                 let oRelationshipData = oRelationshipDocument.data()
                 let oOrganizationRef = oRelationshipData["relationship_org"] as! DocumentReference
                 do {
                     let oOrganizationSnapshot = try await oOrganizationRef.getDocument()
                     let oOrganizationData = oOrganizationSnapshot.data()
+                    aoOrganizationList.append(OrganizationModel(sId: oOrganizationSnapshot.documentID, sName: oOrganizationData?["organization_name"] as! String))
+                } catch {
+                    print(error)
+                    return
+                }
+            }
+        } catch {
+            print(error)
+            return
+        }
+    }
+    /*F+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     Function: fnGetOrganization
+     
+     Summary: returns an organization based on name
+     
+     Args: sOrganizationName- the name of the organization that should be returned
+     
+     Returns: aoOrganizationList- a list with the one Organization inside
+     -------------------------------------------------------------------F*/
+    func fnGetOrganization(sOrganizationName: String) async -> Void { //may neeed an async -> Void {
+        do {
+            let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").whereField("organization_name", isEqualTo: sOrganizationName).getDocuments()
+            for oRelationshipDocument in oSnapshot.documents {
+                let oRelationshipData = oRelationshipDocument.data()
+                let oOrganizationRef = oRelationshipData["relationship_org"] as! DocumentReference
+                do {
+                    let oOrganizationSnapshot = try await oOrganizationRef.getDocument()
+                    let oOrganizationData = oOrganizationSnapshot.data()
+                    aoOrganizationList=[]
                     aoOrganizationList.append(OrganizationModel(sId: oOrganizationSnapshot.documentID, sName: oOrganizationData?["organization_name"] as! String))
                 } catch {
                     print(error)

@@ -9,6 +9,7 @@ Exported Functions: none
 
 Contributors:
     Keaton Hollobaugh - 02/26/2023 - SP229/230
+    Sarah Kudrick - 03/08/2023 - SP450
 ===================================================================+*/
 
 import SwiftUI
@@ -19,7 +20,7 @@ struct EventDetailsView: View {
     @State private var isButtonDisabled = false // Reactive state variable for button disabled state
     var event: EventModel
 
-    //@State var oSelectedOrgID: String? = nil
+    @State var oSelectedOrg: OrganizationModel? = nil
 
     var body: some View {
         VStack(spacing: 10) {
@@ -57,7 +58,15 @@ struct EventDetailsView: View {
             Text(event.sm_Description)
                 .font(.custom("DMSans-Regular", size: 18))
             Button{
-                //oSelectedOrgID = event.sm_HostId
+                OrganizationPopUp(sSelectedOrgID: event.sm_HostName)
+                    .frame(width: .infinity, height: .infinity)
+                    .background(Color.red)
+                    //.offset(x: UIScreen.main.bounds.width / 2 - 150)
+                    .transition(.move(edge: .trailing))
+                    .animation(.easeInOut)
+                    .font(.custom("DMSans-Regular", size: 18))
+                //try await oDBFunctions.fnGetOrganization(sOrganizationName: event.sm_HostName, hCompletionHandler: <#T##(Bool) -> Void#>)
+                //oSelectedOrg = oDBFunctions.oOrganization
             } label: {
                 VStack{
                     Image(uiImage: event.om_Image!)
