@@ -470,6 +470,7 @@ import FirebaseStorage
      -------------------------------------------------------------------F*/
     func fnGetBlockedOrganizations() async -> Void {
         do {
+            aoOrganizationList = []
             let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").document(sAccountId).collection("Relationships").whereField("relationship_type", isEqualTo: 2).getDocuments()
             for oRelationshipDocument in oSnapshot.documents {
                 let oRelationshipData = oRelationshipDocument.data()

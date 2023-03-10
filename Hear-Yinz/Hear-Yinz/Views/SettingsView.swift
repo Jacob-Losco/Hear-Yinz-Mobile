@@ -26,7 +26,7 @@ struct SettingsView: View {
     @ObservedObject var oLoginFunctions = LoginFunctions() //contains login functions
     @ObservedObject var oDBFunctions = DBFunctions() //contains login functions
     @State var aoBlockedList: [OrganizationModel] = []
-    @State var isClicked: Bool = false
+    @State var bIsClicked: Bool = false
     
 
 
@@ -62,6 +62,7 @@ struct SettingsView: View {
                         .multilineTextAlignment(.center)
                         .padding()
                     Button {
+                        bIsClicked = true
                         oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: org.sm_Id, iRelationshipType: 2) { success in
                             if success {
                                 // Remove the organization from the blocked list
@@ -82,7 +83,7 @@ struct SettingsView: View {
                                 .multilineTextAlignment(.center)
                                 .frame(height: 40, alignment: .center)
                         }
-                    }
+                    }.disabled(bIsClicked)
 
                 }
 
@@ -100,7 +101,6 @@ struct SettingsView: View {
             await oDBFunctions.fnInitSessionData()
             await oDBFunctions.fnGetBlockedOrganizations()
             aoBlockedList = oDBFunctions.aoOrganizationList
-            print(aoBlockedList)
             }
     }
 }
