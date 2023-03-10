@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OrganizationPopUp: View {
-    //@Environment(\.presentationMode) var presentationMode
+    @Environment(\.presentationMode) var presentationMode
     
     //var org: OrganizationModel
     //@State var oSelectedOrgID: String? = nil
