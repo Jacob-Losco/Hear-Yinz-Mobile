@@ -1,27 +1,38 @@
 /*+===================================================================
 File: SettingsView
 
+
 Summary: View for settings screen
+
 
 Exported Data Structures: SettingsView - the view itself
 
+
 Exported Functions: None
 
+
 Contributors:
-    Sarah Kudrick - 2/25/23 - SP-255
+    Sarah Kudrick - 3/9/23 - SP-256
     Jacob Losco - 2/4/2023 - SP-220
+
 
 ===================================================================+*/
 
+
 import SwiftUI
+
 
 struct SettingsView: View {
     @ObservedObject var oLoginFunctions = LoginFunctions() //contains login functions
+    @ObservedObject var oDBFunctions = DBFunctions() //contains login functions
+    @State var aoBlockedList: [OrganizationModel] = []
+    @State var bIsClicked: Bool = false
+    
+
 
     var body: some View {
         VStack{
-            //Text("Settings Page")
-            //Spacer()
+
             Button {
                 oLoginFunctions.fnLogout()
             } label: {
@@ -38,12 +49,45 @@ struct SettingsView: View {
                 }
                 .padding()
             }
-            //Spacer()
+
             Text("Blocked Organizations")
                 .font(.custom("DMSans-Regular", size: 24))
-            UnblockRowView()
-            UnblockRowView()
-            UnblockRowView()
+
+            
+            List(aoBlockedList, id: \.sm_Id){ org in
+
+                HStack {
+                    Text(org.sm_Name)
+                        .font(.custom("DMSans-Regular", size: 18))
+                        .multilineTextAlignment(.center)
+                        .padding()
+                    Button {
+                        bIsClicked = true
+                        oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: org.sm_Id, iRelationshipType: 2) { success in
+                            if success {
+                                // Remove the organization from the blocked list
+                                aoBlockedList.removeAll(where: { $0.sm_Id == org.sm_Id })
+                            } else {
+                                print("Error at fnDeleteRelationshipOrganization in UnblockRowView")
+                            }
+                        }
+                    } label: {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color("button"))
+                                .frame(height: 40)
+                                .padding(.trailing)
+                            Text("Unblock")
+                                .font(.custom("DMSans-Regular", size: 18))
+                                .foregroundColor(Color.white)
+                                .multilineTextAlignment(.center)
+                                .frame(height: 40, alignment: .center)
+                        }
+                    }.disabled(bIsClicked)
+
+                }
+
+            }
             
             Spacer()
           
@@ -52,9 +96,15 @@ struct SettingsView: View {
                 .frame(height: 10)
                 .background(Color("highlight"))
 
-        }
+
+        }.task{
+            await oDBFunctions.fnInitSessionData()
+            await oDBFunctions.fnGetBlockedOrganizations()
+            aoBlockedList = oDBFunctions.aoOrganizationList
+            }
     }
 }
+
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
@@ -62,26 +112,5 @@ struct SettingsView_Previews: PreviewProvider {
     }
 }
 
-struct UnblockRowView: View {
-    var body: some View {
-        HStack{
-            Text("Organization name")
-                .font(.custom("DMSans-Regular", size: 18))
-                .padding()
-            Button{
-                
-            } label: {
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color("button"))
-                        .frame(height: 40)
-                        .padding(.trailing)
-                    Text("Unblock")
-                        .font(.custom("DMSans-Regular", size: 18))
-                        .foregroundColor(Color.white)
-                        
-                }
-            }
-        }
-    }
-}
+
+
