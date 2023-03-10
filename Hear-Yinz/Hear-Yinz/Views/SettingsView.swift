@@ -12,7 +12,7 @@ Exported Functions: None
 
 
 Contributors:
-    Sarah Kudrick - 3/2/23 - SP-256
+    Sarah Kudrick - 3/9/23 - SP-256
     Jacob Losco - 2/4/2023 - SP-220
 
 
@@ -25,16 +25,14 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject var oLoginFunctions = LoginFunctions() //contains login functions
     @ObservedObject var oDBFunctions = DBFunctions() //contains login functions
-    //oDBFunctions.fnInitSessionData()
-    //oDBFunctions.fnGetBlockedOrganizations()
     @State var aoBlockedList: [OrganizationModel] = []
     @State var isClicked: Bool = false
+    
 
 
     var body: some View {
         VStack{
-            //Text("Settings Page")
-            //Spacer()
+
             Button {
                 oLoginFunctions.fnLogout()
             } label: {
@@ -51,17 +49,43 @@ struct SettingsView: View {
                 }
                 .padding()
             }
-            //Spacer()
+
             Text("Blocked Organizations")
                 .font(.custom("DMSans-Regular", size: 24))
-            //UnblockRowView()
-            //UnblockRowView()
-            //UnblockRowView()
+
             
             List(aoBlockedList, id: \.sm_Id){ org in
-                //if(aoBlockedList.contains(org)){
-                UnblockRowView(oOrganization: org, id: org.sm_Id, name: org.sm_Name)
-                //}
+
+                HStack {
+                    Text(org.sm_Name)
+                        .font(.custom("DMSans-Regular", size: 18))
+                        .multilineTextAlignment(.center)
+                        .padding()
+                    Button {
+                        oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: org.sm_Id, iRelationshipType: 2) { success in
+                            if success {
+                                // Remove the organization from the blocked list
+                                aoBlockedList.removeAll(where: { $0.sm_Id == org.sm_Id })
+                            } else {
+                                print("Error at fnDeleteRelationshipOrganization in UnblockRowView")
+                            }
+                        }
+                    } label: {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color("button"))
+                                .frame(height: 40)
+                                .padding(.trailing)
+                            Text("Unblock")
+                                .font(.custom("DMSans-Regular", size: 18))
+                                .foregroundColor(Color.white)
+                                .multilineTextAlignment(.center)
+                                .frame(height: 40, alignment: .center)
+                        }
+                    }
+
+                }
+
             }
             
             Spacer()
@@ -76,6 +100,7 @@ struct SettingsView: View {
             await oDBFunctions.fnInitSessionData()
             await oDBFunctions.fnGetBlockedOrganizations()
             aoBlockedList = oDBFunctions.aoOrganizationList
+            print(aoBlockedList)
             }
     }
 }

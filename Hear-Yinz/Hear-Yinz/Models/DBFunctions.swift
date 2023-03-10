@@ -359,13 +359,13 @@ import FirebaseStorage
                         return
                     } else {
                         hCompletionHandler(true)
-                        if(self.aoOrganizationList.contains(where: { (org) -> Bool in
-                            return org.sm_Id == sOrganizationId}))
-                           {
-                            self.aoOrganizationList.removeAll { item in
-                                    return item.sm_Id == sOrganizationId
-                                }
-                            }
+                        //if(self.aoOrganizationList.contains(where: { (org) -> Bool in
+                            //return org.sm_Id == sOrganizationId}))
+                           //{
+                            //self.aoOrganizationList.removeAll { item in
+                                    //return item.sm_Id == sOrganizationId
+                                //}
+                            //}
                     }
                 }
             }
