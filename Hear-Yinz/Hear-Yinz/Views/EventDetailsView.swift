@@ -9,7 +9,7 @@ Exported Functions: none
 
 Contributors:
     Keaton Hollobaugh - 02/26/2023 - SP229/230
-    Sarah Kudrick - 03/08/2023 - SP450
+    Sarah Kudrick - 03/10/2023 - SP450
 ===================================================================+*/
 
 import SwiftUI
@@ -62,11 +62,7 @@ struct EventDetailsView: View {
             ZStack{
                 Button{
                     bShowPopUp = true
-                    //oSelectedOrgID = event.sm_HostId
-                    //OrganizationPopUp()
-                        //.offset(x: UIScreen.main.bounds.width / 2 - 450)
-                        //.transition(.move(edge: .trailing))
-                        //.animation(.easeInOut)
+
                 } label: {
                     VStack{
                         Image(uiImage: event.om_Image!)
@@ -76,12 +72,9 @@ struct EventDetailsView: View {
                         Text(event.sm_HostName)
                             .font(.custom("DMSans-Regular", size: 18))
                     }
-                    //if let org... goes here (I will delete this comment before I merge the finished control into main)
 
                 }
-                //if (bShowPopUp){
-                    //OrganizationPopUp()
-                //}
+
             }
             
         }
