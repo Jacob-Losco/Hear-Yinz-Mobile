@@ -8,10 +8,10 @@ Exported Data Structures: MapView - the view itself
 Exported Functions: none
 
 Contributors:
-    Sarah Kudrick - 2/25/23 - added dm sans font at line 49
     Keaton Hollobaugh - 02/08/2023 - SP-227
     Jacob Losco - 2/4/2023 - SP-220
     Keaton Hollobaugh - 02/26/2023 - SP-229/230
+    Sarah Kudrick - 03/10/2023 - SP-449
 ===================================================================+*/
 
 import SwiftUI
@@ -30,6 +30,7 @@ struct MapView: View {
     @State private var dToDateValue: Double = 0
     @State private var dMaxToDateValue: Double = 0;
     @State private var selectedEvent: EventModel? = nil
+    @State private var bShowPopUp = false
     
     var body: some View {
         Group{
@@ -46,7 +47,7 @@ struct MapView: View {
                 .edgesIgnoringSafeArea(.all)
                 
                 if let event = selectedEvent {
-                    EventDetailsView(event: event)
+                    EventDetailsView(event: event, bShowPopUp: $bShowPopUp)
                     .frame(width: 300, height: UIScreen.main.bounds.height)
                     .background(Color("highlight"))
                     .offset(x: UIScreen.main.bounds.width / 2 - 150)
@@ -80,6 +81,9 @@ struct MapView: View {
                         .fill(Color.clear)
                         .frame(height: 10)
                         .background(Color("highlight"))
+                }
+                if bShowPopUp {
+                    OrganizationPopUp(bShowPopUp: $bShowPopUp)
                 }
             }.onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight

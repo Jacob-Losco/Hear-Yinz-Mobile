@@ -9,6 +9,7 @@ Exported Functions: none
 
 Contributors:
     Keaton Hollobaugh - 02/26/2023 - SP229/230
+    Sarah Kudrick - 03/10/2023 - SP-449
 ===================================================================+*/
 
 import SwiftUI
@@ -18,6 +19,9 @@ struct EventDetailsView: View {
     @StateObject var oDBFunctions = DBFunctions()
     @State private var isButtonDisabled = false // Reactive state variable for button disabled state
     var event: EventModel
+    @Binding var bShowPopUp: Bool
+
+    //@State var oSelectedOrgID: String? = nil
 
     var body: some View {
         VStack(spacing: 10) {
@@ -54,12 +58,28 @@ struct EventDetailsView: View {
                 .font(.custom("DMSans-Regular", size: 18))
             Text(event.sm_Description)
                 .font(.custom("DMSans-Regular", size: 18))
-            Image(uiImage: event.om_Image!)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100) // Adjust size here
-            Text(event.sm_HostName)
-                .font(.custom("DMSans-Regular", size: 18))
+            ZStack{
+                Button{
+                    bShowPopUp = true
+                    //oSelectedOrgID = event.sm_HostId
+                    //OrganizationPopUp()
+                        //.offset(x: UIScreen.main.bounds.width / 2 - 450)
+                        //.transition(.move(edge: .trailing))
+                        //.animation(.easeInOut)
+                } label: {
+                    VStack{
+                        Image(uiImage: event.om_Image!)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100) // Adjust size here
+                        Text(event.sm_HostName)
+                            .font(.custom("DMSans-Regular", size: 18))
+                    }
+
+                }
+
+            }
+            
         }
         .task {
             await oDBFunctions.fnInitSessionData()
