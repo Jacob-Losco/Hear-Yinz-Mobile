@@ -86,7 +86,7 @@ struct Login: View {
                             Text("Log in")
                                 .font(.custom("DMSans-Regular", size: 36))
                                 .fontWeight(.semibold)
-                                .foregroundColor(Color("highlight"))
+                                .foregroundColor(Color.white)
                         }
                         .padding()
                     }.onAppear{
