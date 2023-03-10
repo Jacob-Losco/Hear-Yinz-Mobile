@@ -334,6 +334,7 @@ import FirebaseStorage
      Function: fnDeleteRelationshipOrganization
      
      Summary: deletes relationship from account that makes them a follower of this organization
+     also deletes the organization from aoorganizationlist
      
      Args: sOrganizationId - the doc id of the organization being unfollowed
      iRelationshipType - the type of relationship
@@ -470,6 +471,7 @@ import FirebaseStorage
      -------------------------------------------------------------------F*/
     func fnGetBlockedOrganizations() async -> Void {
         do {
+            aoOrganizationList = []
             let oSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").document(sAccountId).collection("Relationships").whereField("relationship_type", isEqualTo: 2).getDocuments()
             aoOrganizationList=[]
             for oRelationshipDocument in oSnapshot.documents {
