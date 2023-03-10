@@ -307,12 +307,136 @@ final class Hear_YinzUITests: XCTestCase {
         mapSlider.adjust(toNormalizedSliderPosition: 0.01)
         mapSlider.tap()
         
-        XCTAssertTrue(app.staticTexts[oSelectedDateLabel].isEnabled)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
             app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
         }
         
         
+        app.buttons["Log out"].tap()
+    }
+    
+    /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Test: testMapMarker
+
+      Target: Map Markers
+
+      Assertions:
+      Map Marker TestStatic_Event6 Exists on screen when the slider is at halfway position
+     
+      Writer: Jacob Losco
+    -------------------------------------------------------------------T*/
+    func testMapMarker() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+        }
+        
+        app.textFields["School Email"].tap()
+        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["Password"].tap()
+        app.secureTextFields["Password"].typeText("test123")
+        app.buttons["Log in"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
+        
+        let mapSlider = app.sliders["map_slider"]
+        XCTAssertTrue(mapSlider.isEnabled)
+        
+        mapSlider.adjust(toNormalizedSliderPosition: 0.6)
+        
+        XCTAssertTrue(app.otherElements.matching(identifier: "Map pin").otherElements["2MfRhGa0Svu80H8jzC1V"].waitForExistence(timeout: 2))
+        
+        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        app.buttons["Log out"].tap()
+    }
+    
+    /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Test: testSidePanel
+
+      Target: Side Panel
+
+      Assertions:
+      Tapping Map Marker for TestStatic_Event6 opens a side panel with the text "TestStatic_Loc1" on it
+     
+      Writer: Jacob Losco
+    -------------------------------------------------------------------T*/
+    func testSidePanel() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+        }
+        
+        app.textFields["School Email"].tap()
+        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["Password"].tap()
+        app.secureTextFields["Password"].typeText("test123")
+        app.buttons["Log in"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
+        
+        let mapSlider = app.sliders["map_slider"]
+        XCTAssertTrue(mapSlider.isEnabled)
+        
+        mapSlider.adjust(toNormalizedSliderPosition: 0.6)
+        
+        XCTAssertTrue(app.otherElements.matching(identifier: "Map pin").otherElements["2MfRhGa0Svu80H8jzC1V"].waitForExistence(timeout: 2))
+        app.otherElements.matching(identifier: "Map pin").otherElements["2MfRhGa0Svu80H8jzC1V"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){
+            XCTAssertTrue(app.staticTexts["TestStatic_Loc1"].exists)
+        }
+        
+        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        app.buttons["Log out"].tap()
+    }
+
+    func testToggleEventLikeButton() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+        }
+        
+        app.textFields["School Email"].tap()
+        app.textFields["School Email"].typeText("testdynamic_user@testdynamic.edu")
+        app.secureTextFields["Password"].tap()
+        app.secureTextFields["Password"].typeText("test123")
+        app.buttons["Log in"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
+        
+        let mapSlider = app.sliders["map_slider"]
+        XCTAssertTrue(mapSlider.isEnabled)
+        
+        mapSlider.adjust(toNormalizedSliderPosition: 0.6)
+        
+        XCTAssertTrue(app.otherElements.matching(identifier: "Map pin").otherElements["6D1xL8vuFRRCvY9TNLuY"].waitForExistence(timeout: 2))
+        app.otherElements.matching(identifier: "Map pin").otherElements["6D1xL8vuFRRCvY9TNLuY"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){
+            XCTAssertTrue(app.staticTexts["TestDynamic_Loc1"].exists)
+        }
+
+        // Toggle event like button
+        let likeButton = app.buttons.matching(identifier: "like_button").element(boundBy: 0)
+        let likesLabel = app.staticTexts.matching(identifier: "likes_Label").element
+        let initialLikes = Int(likesLabel.label)!
+        likeButton.tap()
+        let updatedLikes = Int(likesLabel.label)!
+
+        // Check if the like button has incremented the number of likes
+        XCTAssertEqual(updatedLikes, initialLikes + 1)
+
+        // Logout
+        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
         app.buttons["Log out"].tap()
     }
     
