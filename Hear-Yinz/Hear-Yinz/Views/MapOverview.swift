@@ -30,6 +30,7 @@ struct MapView: View {
     @State private var dToDateValue: Double = 0
     @State private var dMaxToDateValue: Double = 0;
     @State private var selectedEvent: EventModel? = nil
+    @State private var bShowPopUp = false
     
     var body: some View {
         Group{
@@ -46,7 +47,7 @@ struct MapView: View {
                 .edgesIgnoringSafeArea(.all)
                 
                 if let event = selectedEvent {
-                    EventDetailsView(event: event)
+                    EventDetailsView(event: event, bShowPopUp: $bShowPopUp)
                     .frame(width: 300, height: UIScreen.main.bounds.height)
                     .background(Color.white)
                     .offset(x: UIScreen.main.bounds.width / 2 - 150)
@@ -80,6 +81,9 @@ struct MapView: View {
                         .fill(Color.clear)
                         .frame(height: 10)
                         .background(Color("highlight"))
+                }
+                if bShowPopUp {
+                    OrganizationPopUp()
                 }
             }.onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight

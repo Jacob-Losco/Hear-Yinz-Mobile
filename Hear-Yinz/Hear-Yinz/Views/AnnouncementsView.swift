@@ -9,26 +9,110 @@ Exported Functions: None
 
 Contributors:
     Jacob Losco - 2/4/2023 - SP-220
+    Keaton Hollobaugh - 3/08/2023 - SP-246/247
 
 ===================================================================+*/
 
 import SwiftUI
 
 struct AnnouncementsView: View {
+    
+    @State var aoAnnouncementList: [AnnouncementModel] = []
+    @StateObject var oDBFunctions = DBFunctions()
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
     var body: some View {
-        VStack{
-            Text("Announcements Page")
+        VStack(spacing: 10) {
             Spacer()
-            Rectangle() //Adds custom color background to tab bar.
-                .fill(Color.clear)
-                .frame(height: 10)
-                .background(Color("highlight"))
+            Text("Announcements")
+                .font(.custom("DMSans-Regular", size: 18))
+            Spacer()
+            if aoAnnouncementList.isEmpty {
+                Text("No announcements found")
+            } else {
+                ScrollView {
+                    VStack(spacing: 10) {
+                        ForEach(aoAnnouncementList, id: \.sm_Id) { oAnnouncement in
+                            AnnouncementView(oAnnouncement: oAnnouncement, dateFormatter: dateFormatter)
+                        }
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 10)
+                }
+            }
+            Spacer()
+        }
+        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+        .onAppear {
+            Task {
+                await oDBFunctions.fnInitSessionData()
+                await oDBFunctions.fnGetInstitutionAnnouncements()
+                aoAnnouncementList = oDBFunctions.aoAnnouncementList
+            }
         }
     }
 }
 
-struct AnnouncementsView_Previews: PreviewProvider {
-    static var previews: some View {
-        AnnouncementsView()
+struct AnnouncementView: View {
+    
+    let oAnnouncement: AnnouncementModel
+    let dateFormatter: DateFormatter
+    
+    @State private var isExpanded = false
+    
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 30)
+                .fill(Color("highlight"))
+                .frame(maxWidth: .infinity, maxHeight: isExpanded ? nil : 100)
+                .padding(.horizontal, 10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 30)
+                        .stroke(Color.black, lineWidth: 2)
+                )
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(spacing: 10) {
+                    if let oImage = oAnnouncement.om_Image {
+                        Image(uiImage: oImage)
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                    } else {
+                        Circle()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.gray)
+                    }
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack {
+                            Text(oAnnouncement.sm_HostName)
+                                .font(.custom("DMSans-Regular", size: 18))
+                            Spacer()
+                            Text(dateFormatter.string(from: oAnnouncement.om_DateEvent))
+                                .font(.footnote)
+                        }
+                        Text(oAnnouncement.sm_Description)
+                            .font(.custom("DMSans-Regular", size: 18))
+                            .lineLimit(isExpanded ? nil : 2)
+                    }
+                }
+                .padding(.vertical, 10)
+                .padding(.horizontal, 20)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    withAnimation {
+                        isExpanded.toggle()
+                    }
+                }
+                .background(Color.clear)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 10)
+        }
     }
 }

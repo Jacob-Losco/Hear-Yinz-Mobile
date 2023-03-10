@@ -19,6 +19,7 @@ struct EventDetailsView: View {
     @StateObject var oDBFunctions = DBFunctions()
     @State private var isButtonDisabled = false // Reactive state variable for button disabled state
     var event: EventModel
+    @Binding var bShowPopUp: Bool
 
     @State var oSelectedOrg: OrganizationModel? = nil
 
@@ -57,26 +58,30 @@ struct EventDetailsView: View {
                 .font(.custom("DMSans-Regular", size: 18))
             Text(event.sm_Description)
                 .font(.custom("DMSans-Regular", size: 18))
-            Button{
-                OrganizationPopUp(sSelectedOrgID: event.sm_HostName)
-                    .frame(width: .infinity, height: .infinity)
-                    .background(Color.red)
-                    //.offset(x: UIScreen.main.bounds.width / 2 - 150)
-                    .transition(.move(edge: .trailing))
-                    .animation(.easeInOut)
-                    .font(.custom("DMSans-Regular", size: 18))
-                //try await oDBFunctions.fnGetOrganization(sOrganizationName: event.sm_HostName, hCompletionHandler: <#T##(Bool) -> Void#>)
-                //oSelectedOrg = oDBFunctions.oOrganization
-            } label: {
-                VStack{
-                    Image(uiImage: event.om_Image!)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100) // Adjust size here
-                    Text(event.sm_HostName)
-                        .font(.custom("DMSans-Regular", size: 18))
+
+            ZStack{
+                Button{
+                    bShowPopUp = true
+                    //oSelectedOrgID = event.sm_HostId
+                    //OrganizationPopUp()
+                        //.offset(x: UIScreen.main.bounds.width / 2 - 450)
+                        //.transition(.move(edge: .trailing))
+                        //.animation(.easeInOut)
+                } label: {
+                    VStack{
+                        Image(uiImage: event.om_Image!)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100) // Adjust size here
+                        Text(event.sm_HostName)
+                            .font(.custom("DMSans-Regular", size: 18))
+                    }
+                    //if let org... goes here (I will delete this comment before I merge the finished control into main)
+
                 }
-                //if let org... goes here (I will delete this comment before I merge the finished control into main)
+                //if (bShowPopUp){
+                    //OrganizationPopUp()
+                //}
             }
             
         }
