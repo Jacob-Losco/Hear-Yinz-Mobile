@@ -8,10 +8,10 @@ Exported Data Structures: MapView - the view itself
 Exported Functions: none
 
 Contributors:
-    Sarah Kudrick - 2/25/23 - added dm sans font at line 49
     Keaton Hollobaugh - 02/08/2023 - SP-227
     Jacob Losco - 2/4/2023 - SP-220
     Keaton Hollobaugh - 02/26/2023 - SP-229/230
+    Sarah Kudrick - 03/10/2023 - SP-449
 ===================================================================+*/
 
 import SwiftUI
@@ -83,7 +83,7 @@ struct MapView: View {
                         .background(Color("highlight"))
                 }
                 if bShowPopUp {
-                    OrganizationPopUp()
+                    OrganizationPopUp(bShowPopUp: $bShowPopUp)
                 }
             }.onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight

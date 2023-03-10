@@ -9,6 +9,7 @@ Exported Functions: none
 
 Contributors:
     Keaton Hollobaugh - 02/26/2023 - SP229/230
+    Sarah Kudrick - 03/10/2023 - SP-449
 ===================================================================+*/
 
 import SwiftUI
@@ -74,11 +75,9 @@ struct EventDetailsView: View {
                         Text(event.sm_HostName)
                             .font(.custom("DMSans-Regular", size: 18))
                     }
-                    //if let org... goes here (I will delete this comment before I merge the finished control into main)
+
                 }
-                //if (bShowPopUp){
-                    //OrganizationPopUp()
-                //}
+
             }
             
         }

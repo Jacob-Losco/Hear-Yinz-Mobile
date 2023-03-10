@@ -1,9 +1,15 @@
-//
-//  OrganizationPopUp.swift
-//  Hear-Yinz
-//
-//  Created by Sarah Kudrick on 3/8/23.
-//
+/*+===================================================================
+File: OrganizationPopUp.swift
+
+Summary: Opens a new view when clicking an organization image to display organization information.
+
+Exported Data Structures:
+
+Exported Functions: none
+
+Contributors:
+    Sarah Kudrick - 03/10/2023 - SP-449
+===================================================================+*/
 
 import SwiftUI
 
@@ -12,6 +18,7 @@ struct OrganizationPopUp: View {
     
     //var org: OrganizationModel
     //@State var oSelectedOrgID: String? = nil
+    @Binding var bShowPopUp: Bool
     
     var body: some View {
         VStack(spacing: 10){
@@ -27,7 +34,7 @@ struct OrganizationPopUp: View {
                 .frame(width: 200, alignment: .leading)
                 .padding([.leading, .trailing])
             Button{
-                
+                bShowPopUp = false
             } label: {
                 Image(systemName: "chevron.backward.circle")
             }
@@ -39,9 +46,5 @@ struct OrganizationPopUp: View {
     
     
     
-    struct OrganizationPopUp_Previews: PreviewProvider {
-        static var previews: some View {
-            OrganizationPopUp()
-        }
-    }
+
 }
