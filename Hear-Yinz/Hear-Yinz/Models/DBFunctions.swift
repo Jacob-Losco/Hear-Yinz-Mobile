@@ -21,6 +21,7 @@ Exported Functions: fnInitSessionData - sets necessary variables to use other da
 
 Contributors:
     Jacob Losco - 2/14/2023 - SP-361
+    Sarah Kudrick - 3/10/2023 - SP-256
 
 ===================================================================+*/
 
@@ -490,3 +491,4 @@ import FirebaseStorage
         }
     }
 }
+
