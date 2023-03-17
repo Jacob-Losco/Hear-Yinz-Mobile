@@ -9,8 +9,7 @@ Exported Functions: none
 
 Contributors:
     Sarah Kudrick - 2/25/23 - added dm sans font at line 49
-    Keaton Hollobaugh - 02/08/2023 - SP-227
-    Jacob Losco - 2/4/2023 - SP-220
+    Jacob Losco - 3/16/2023 - SP-489
     Keaton Hollobaugh - 02/26/2023 - SP-229/230
 ===================================================================+*/
 
@@ -29,7 +28,9 @@ struct MapView: View {
     @State private var dFromDateValue: Double = Double(Date.now.timeIntervalSinceNow)
     @State private var dToDateValue: Double = 0
     @State private var dMaxToDateValue: Double = 0;
+    @State private var bSliderTypeIsDay: Bool = true
     @State private var selectedEvent: EventModel? = nil
+    let dateFormatter = DateFormatter()
     
     var body: some View {
         Group{
@@ -58,24 +59,37 @@ struct MapView: View {
                 VStack{
                     Spacer()
                     VStack {
-                        Text("\(sSliderDateLabel)")
+                        HStack{
+                            Spacer()
+                            Text("\(bSliderTypeIsDay ? "Day" : "Range")")
+                                .offset(x: -10)
+                                .font(.custom("DMSans-Regular", size: 18))
+                        }
+                        Text("\(bSliderTypeIsDay ? sToDateLabel : sFromDateLabel + " - " + sToDateLabel)")
                             .font(.custom("DMSans-Regular", size: 18))
                         Slider(value: $dToDateValue, in: dFromDateValue...dMaxToDateValue)
                             .accessibility(identifier: "map_slider")
-                            .frame(width: 300, height: 20)
+                            .frame(width: 300, height: 5)
                             .onChange(of: dToDateValue) { value in
                                 oToDate = Date(timeIntervalSinceNow: TimeInterval(dToDateValue))
-                                aoEventList = oMapData.fnFilterEventsList(oToDate: oToDate, bJustDate: false)
-                                sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
-                                sSliderDateLabel = sFromDateLabel + "-" + sToDateLabel
+                                aoEventList = oMapData.fnFilterEventsList(oToDate: oToDate, bJustDate: bSliderTypeIsDay)
+                                sToDateLabel = dateFormatter.string(from: oToDate)
                             }
+                            .colorInvert()
+                            .tint(Color.white)
                     }
+                    .frame(width: 350, height: 80)
+                    .background(Color("highlight").opacity(0.75))
+                    .cornerRadius(20)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(.black, lineWidth: 1)
+                    )
                     .onTapGesture {
-                        aoEventList = oMapData.fnFilterEventsList(oToDate: oToDate, bJustDate: true)
-                        sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
-                        sSliderDateLabel = sToDateLabel
+                        bSliderTypeIsDay = !bSliderTypeIsDay
+                        aoEventList = oMapData.fnFilterEventsList(oToDate: oToDate, bJustDate: bSliderTypeIsDay)
+                        sToDateLabel = dateFormatter.string(from: oToDate)
                     }
-                    .cornerRadius(15)
                     Rectangle() //Adds custom color background to tab bar.
                         .fill(Color.clear)
                         .frame(height: 10)
@@ -95,12 +109,12 @@ struct MapView: View {
                 }
             }
             .task {
+                dateFormatter.dateFormat = "MM/dd/yyyy"
                 aoEventList = oMapData.fnFilterEventsList(oToDate: Date.now, bJustDate: true)
-                sFromDateLabel = oFromDate.formatted(.dateTime.day().month().year())
-                sToDateLabel = oToDate.formatted(.dateTime.day().month().year())
-                sSliderDateLabel = sFromDateLabel + "-" + sToDateLabel
+                sFromDateLabel = dateFormatter.string(from: oFromDate)
+                sToDateLabel = dateFormatter.string(from: oToDate)
                 var oDateComponent = DateComponents()
-                oDateComponent.year = 1
+                oDateComponent.month = 5
                 let oMaxToDate = Calendar.current.date(byAdding: oDateComponent, to: oFromDate) ?? Date.now
                 dMaxToDateValue = oMaxToDate.timeIntervalSinceNow
             }
