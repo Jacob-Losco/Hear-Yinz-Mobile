@@ -50,69 +50,72 @@ struct AnnouncementsView: View {
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
         .onAppear {
-            Task {
-                await oDBFunctions.fnInitSessionData()
-                await oDBFunctions.fnGetInstitutionAnnouncements()
-                aoAnnouncementList = oDBFunctions.aoAnnouncementList
+            if aoAnnouncementList.isEmpty {
+                Task {
+                    await oDBFunctions.fnInitSessionData()
+                    await oDBFunctions.fnGetInstitutionAnnouncements()
+                    aoAnnouncementList = oDBFunctions.aoAnnouncementList
+                }
             }
         }
     }
-}
-
-struct AnnouncementView: View {
     
-    let oAnnouncement: AnnouncementModel
-    let dateFormatter: DateFormatter
-    
-    @State private var isExpanded = false
-    
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 30)
-                .fill(Color("highlight"))
-                .frame(maxWidth: .infinity, maxHeight: isExpanded ? nil : 100)
-                .padding(.horizontal, 10)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 30)
-                        .stroke(Color.black, lineWidth: 2)
-                )
-            VStack(alignment: .leading, spacing: 5) {
-                HStack(spacing: 10) {
-                    if let oImage = oAnnouncement.om_Image {
-                        Image(uiImage: oImage)
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                    } else {
-                        Circle()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading, spacing: 5) {
-                        HStack {
-                            Text(oAnnouncement.sm_HostName)
-                                .font(.custom("DMSans-Regular", size: 18))
-                            Spacer()
-                            Text(dateFormatter.string(from: oAnnouncement.om_DateEvent))
-                                .font(.footnote)
+    struct AnnouncementView: View {
+        
+        let oAnnouncement: AnnouncementModel
+        let dateFormatter: DateFormatter
+        
+        @State private var isExpanded = false
+        
+        var body: some View {
+            ZStack {
+                RoundedRectangle(cornerRadius: 30)
+                    .fill(Color("highlight"))
+                    .frame(maxWidth: .infinity, maxHeight: isExpanded ? nil : 100)
+                    .padding(.horizontal, 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 30)
+                            .stroke(Color.black, lineWidth: 2)
+                            .accessibilityIdentifier("Announcement Cell")
+                    )
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack(spacing: 10) {
+                        if let oImage = oAnnouncement.om_Image {
+                            Image(uiImage: oImage)
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .clipShape(Circle())
+                        } else {
+                            Circle()
+                                .frame(width: 50, height: 50)
+                                .foregroundColor(.gray)
                         }
-                        Text(oAnnouncement.sm_Description)
-                            .font(.custom("DMSans-Regular", size: 18))
-                            .lineLimit(isExpanded ? nil : 2)
+                        VStack(alignment: .leading, spacing: 5) {
+                            HStack {
+                                Text(oAnnouncement.sm_HostName)
+                                    .font(.custom("DMSans-Regular", size: 18))
+                                Spacer()
+                                Text(dateFormatter.string(from: oAnnouncement.om_DateEvent))
+                                    .font(.footnote)
+                            }
+                            Text(oAnnouncement.sm_Description)
+                                .font(.custom("DMSans-Regular", size: 18))
+                                .lineLimit(isExpanded ? nil : 2)
+                        }
                     }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 20)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        withAnimation {
+                            isExpanded.toggle()
+                        }
+                    }
+                    .background(Color.clear)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 10)
-                .padding(.horizontal, 20)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    withAnimation {
-                        isExpanded.toggle()
-                    }
-                }
-                .background(Color.clear)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.vertical, 10)
         }
     }
 }

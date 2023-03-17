@@ -48,7 +48,7 @@ struct MapView: View {
                 if let event = selectedEvent {
                     EventDetailsView(event: event, bShowPopUp: $bShowPopUp)
                     .frame(width: 300, height: UIScreen.main.bounds.height)
-                    .background(Color.white)
+                    .background(Color("highlight"))
                     .offset(x: UIScreen.main.bounds.width / 2 - 150)
                     .transition(.move(edge: .trailing))
                     .animation(.easeInOut)
