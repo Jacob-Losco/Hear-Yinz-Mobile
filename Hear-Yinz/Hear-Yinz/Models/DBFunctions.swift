@@ -236,8 +236,12 @@ import FirebaseStorage
         do {
             let oOrganizationSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Organizations").getDocuments()
             for oOrganizationDocument in oOrganizationSnapshot.documents {
-                let oOrganizationData = oOrganizationDocument.data()
-                await fnGetOrganizationAnnouncements(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String)
+                let oRelationshipSnapshot = try await oDatabase.collection("Institutions").document(sInstitutionId).collection("Accounts").document(sAccountId).collection("Relationships").whereField("relationship_org", isEqualTo: oOrganizationDocument.reference).whereField("relationship_type", isEqualTo: 2).getDocuments()
+                if(oRelationshipSnapshot.documents.count == 0) {
+                    let oOrganizationData = oOrganizationDocument.data()
+                    await fnGetOrganizationAnnouncements(oOrganization: oOrganizationDocument.reference, sOrganizationName: oOrganizationData["organization_name"] as! String, sOrganizationDescription: oOrganizationData["organization_description"] as! String)
+                    
+                }
             }
         } catch {
             print(error)
