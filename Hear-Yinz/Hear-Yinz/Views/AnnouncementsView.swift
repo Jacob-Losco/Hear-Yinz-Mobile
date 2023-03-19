@@ -18,7 +18,9 @@ import SwiftUI
 struct AnnouncementsView: View {
     
     @State var aoAnnouncementList: [AnnouncementModel] = []
+    @State var isGeneralSelected = true
     @StateObject var oDBFunctions = DBFunctions()
+    @State var followedAnnouncements: [AnnouncementModel] = []
     
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -33,15 +35,44 @@ struct AnnouncementsView: View {
             Text("Announcements")
                 .font(.custom("DMSans-Regular", size: 18))
             Spacer()
-                ScrollView {
-                    VStack(spacing: 10) {
-                        ForEach(aoAnnouncementList, id: \.sm_Id) { oAnnouncement in
-                            AnnouncementView(oAnnouncement: oAnnouncement, dateFormatter: dateFormatter)
-                        }
+            
+            HStack {
+                Button(action: {
+                    isGeneralSelected = true
+                    Task {
+                        await oDBFunctions.fnInitSessionData()
+                        await oDBFunctions.fnGetInstitutionAnnouncements()
+                        aoAnnouncementList = oDBFunctions.aoAnnouncementList
+                        followedAnnouncements = aoAnnouncementList.filter { $0.bm_Followed }
                     }
-                    .padding(.horizontal, 10)
-                    .padding(.bottom, 10)
+                }) {
+                    Text("General")
+                        .font(.custom("DMSans-Regular", size: 16))
+                        .foregroundColor(isGeneralSelected ? .black : .blue)
                 }
+                
+                Button(action: {
+                    isGeneralSelected = false
+                    followedAnnouncements = aoAnnouncementList.filter { $0.bm_Followed }
+                }) {
+                    Text("Following")
+                        .font(.custom("DMSans-Regular", size: 16))
+                        .foregroundColor(isGeneralSelected ? .blue : .black)
+                }
+            }
+            
+            Spacer()
+            
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(isGeneralSelected ? aoAnnouncementList : followedAnnouncements, id: \.sm_Id) { oAnnouncement in
+                        AnnouncementView(oAnnouncement: oAnnouncement, dateFormatter: dateFormatter)
+                    }
+                }
+                .padding(.horizontal, 10)
+                .padding(.bottom, 10)
+            }
+            
             Spacer()
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
@@ -57,7 +88,7 @@ struct AnnouncementsView: View {
     }
     
     struct AnnouncementView: View {
-        
+            
         let oAnnouncement: AnnouncementModel
         let dateFormatter: DateFormatter
         
@@ -109,6 +140,13 @@ struct AnnouncementsView: View {
                         }
                     }
                     .background(Color.clear)
+                    
+                    if oAnnouncement.bm_Followed {
+                        Divider()
+                        Text("Followers Only")
+                            .font(.footnote)
+                            .foregroundColor(.red)
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 10)
