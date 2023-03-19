@@ -33,9 +33,6 @@ struct AnnouncementsView: View {
             Text("Announcements")
                 .font(.custom("DMSans-Regular", size: 18))
             Spacer()
-            if aoAnnouncementList.isEmpty {
-                Text("No announcements found")
-            } else {
                 ScrollView {
                     VStack(spacing: 10) {
                         ForEach(aoAnnouncementList, id: \.sm_Id) { oAnnouncement in
@@ -45,7 +42,6 @@ struct AnnouncementsView: View {
                     .padding(.horizontal, 10)
                     .padding(.bottom, 10)
                 }
-            }
             Spacer()
         }
         .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
@@ -71,13 +67,14 @@ struct AnnouncementsView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 30)
                     .fill(Color("highlight"))
-                    .frame(maxWidth: .infinity, maxHeight: isExpanded ? nil : 100)
+                    .frame(maxWidth: .infinity, maxHeight: isExpanded ? nil : 150)
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 30)
                             .stroke(Color.black, lineWidth: 2)
-                            .accessibilityIdentifier("Announcement Cell")
                     )
+                    .accessibilityIdentifier("AnnouncementCell")
+                    .accessibilityIdentifier("AnnouncementView_\(oAnnouncement.sm_Id)")
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 10) {
                         if let oImage = oAnnouncement.om_Image {

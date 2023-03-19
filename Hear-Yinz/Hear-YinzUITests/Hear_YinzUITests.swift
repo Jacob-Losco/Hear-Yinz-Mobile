@@ -440,6 +440,45 @@ final class Hear_YinzUITests: XCTestCase {
         app.buttons["Log out"].tap()
     }
     
+    func testAnnouncementView() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+        }
+        
+        app.textFields["School Email"].tap()
+        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["Password"].tap()
+        app.secureTextFields["Password"].typeText("test123")
+        app.buttons["Log in"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
+        
+        app.tabBars["Tab Bar"].buttons["megaphone.fill"].tap()
+        
+        let announcementsPageStaticText = app.staticTexts["Announcements"]
+        XCTAssert(announcementsPageStaticText.exists)
+        
+        // Wait for the announcement list to load
+        XCTAssertTrue(app.otherElements["AnnouncementView_\("bXJrAESE7VDtm0UjOH7D")"].waitForExistence(timeout: 5))
+
+            // Tap the first announcement cell
+            let firstCell = app.otherElements.matching(identifier: "AnnouncementView_\("bXJrAESE7VDtm0UjOH7D")").firstMatch
+            XCTAssertTrue(firstCell.waitForExistence(timeout: 5))
+            let isExpandedBeforeTap = firstCell.frame.height > 120 // Check if cell is initially expanded or not
+            firstCell.tap()
+
+            // Check if the cell has expanded
+            let isExpandedAfterTap = firstCell.frame.height > 120
+            XCTAssertNotEqual(isExpandedBeforeTap, isExpandedAfterTap)
+        
+        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        app.buttons["Log out"].tap()
+    }
+    
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
             // This measures how long it takes to launch your application.
