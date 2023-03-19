@@ -8,9 +8,9 @@ Exported Data Structures: MapView - the view itself
 Exported Functions: none
 
 Contributors:
-    Sarah Kudrick - 2/25/23 - added dm sans font at line 49
+    Keaton Hollobaugh - 2/26/2023 - SP-229/230
+    Sarah Kudrick - 3/10/23 - SP-450
     Jacob Losco - 3/16/2023 - SP-489
-    Keaton Hollobaugh - 02/26/2023 - SP-229/230
 ===================================================================+*/
 
 import SwiftUI
@@ -30,6 +30,7 @@ struct MapView: View {
     @State private var dMaxToDateValue: Double = 0;
     @State private var bSliderTypeIsDay: Bool = true
     @State private var selectedEvent: EventModel? = nil
+    @State private var bShowPopUp = false
     let dateFormatter = DateFormatter()
     
     var body: some View {
@@ -47,7 +48,7 @@ struct MapView: View {
                 .edgesIgnoringSafeArea(.all)
                 
                 if let event = selectedEvent {
-                    EventDetailsView(event: event)
+                    EventDetailsView(event: event, bShowPopUp: $bShowPopUp)
                     .frame(width: 300, height: UIScreen.main.bounds.height)
                     .background(Color("highlight"))
                     .offset(x: UIScreen.main.bounds.width / 2 - 150)
@@ -93,6 +94,10 @@ struct MapView: View {
                     Rectangle() //Adds custom color background to tab bar.
                         .fill(Color.clear)
                         .frame(height: 10)
+                        .background(Color("highlight"))
+                }
+                if bShowPopUp {
+                    OrganizationPopUp(event: selectedEvent!, bShowPopUp: $bShowPopUp)
                         .background(Color("highlight"))
                 }
             }.onAppear {
