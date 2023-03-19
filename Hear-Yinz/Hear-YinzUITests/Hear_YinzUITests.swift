@@ -455,9 +455,7 @@ final class Hear_YinzUITests: XCTestCase {
         app.secureTextFields["Password"].typeText("test123")
         app.buttons["Log in"].tap()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){
-            app.tabBars["Tab Bar"].buttons["megaphone.fill"].tap()
-        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
         
         app.tabBars["Tab Bar"].buttons["megaphone.fill"].tap()
         
