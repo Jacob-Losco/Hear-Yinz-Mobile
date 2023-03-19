@@ -8,7 +8,7 @@ Exported Data Structures: oLocationRegion - the MkCoordinateRegion for the map
 Exported Functions: fnFilterEventsList - returns the list of events to display to the map filtered by date
 
 Contributors:
-    Jacob Losco - 2/22/2023 - SP-220
+    Jacob Losco - 3/16/2023 - SP-220
 ===================================================================+*/
 
 import SwiftUI
