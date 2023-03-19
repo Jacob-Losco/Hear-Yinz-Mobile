@@ -34,6 +34,45 @@ struct OrganizationPopUp: View {
                 .font(.custom("DMSans-Regular", size: 18))
                 .frame(width: 200, alignment: .leading)
                 .padding([.leading, .trailing])
+            HStack{
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color("button1"))
+                            .frame(width: 60, height: 20)
+                        Text("Unfollow")
+                            .font(.custom("DMSans-Regular", size: 12))
+                            .foregroundColor(Color.white)
+                    }
+                }
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color("button2"))
+                            .frame(width: 60, height: 20)
+                        Text("Report")
+                            .font(.custom("DMSans-Regular", size: 12))
+                            .foregroundColor(Color.white)
+                    }
+                }
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color("button3"))
+                            .frame(width: 60, height: 20)
+                        //.fill(Color("button3"))
+                        Text("Block")
+                            .font(.custom("DMSans-Regular", size: 12))
+                            .foregroundColor(Color.white)
+                    }
+                }
+            }
             Button{
                 bShowPopUp = false
             } label: {
