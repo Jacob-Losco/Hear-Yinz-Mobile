@@ -8,7 +8,7 @@ Exported Data Structures:
 Exported Functions: none
 
 Contributors:
-    Sarah Kudrick - 3/8/2023 - SP-450
+    Sarah Kudrick - 3/21/2023 - SP 235, 238, 241
 ===================================================================+*/
 import SwiftUI
 
@@ -17,8 +17,14 @@ struct OrganizationPopUp: View {
     
     @State var org: OrganizationModel!
     @StateObject var oDBFunctions = DBFunctions()
+    @State var aoBlockedList: [OrganizationModel] = []
     var event: EventModel
     @Binding var bShowPopUp: Bool
+    @Binding var bIsFollowing: Bool
+    @State var bWasReported: Bool = false
+    @State var bWasBlocked: Bool = false
+
+
     
     var body: some View {
         VStack(spacing: 10){
@@ -35,43 +41,90 @@ struct OrganizationPopUp: View {
                 .frame(width: 200, alignment: .leading)
                 .padding([.leading, .trailing])
             HStack{
-                Button{
-                    
+
+                Button{ //follow/unfollow button
+                    if bIsFollowing{
+                        oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: event.sm_HostId, iRelationshipType: 1) { success in
+                            if success {
+                                bIsFollowing = false
+
+                            } else {
+                                print("Error at fnDeleteRelationshipOrganization in OrganizationPopUp; unfollow org")
+                            }
+                        }
+                    } else {
+                        oDBFunctions.fnCreateRelationshipOrganization(sOrganizationId: event.sm_HostId, iRelationshipType: 1) { success in
+                            if success {
+                                bIsFollowing = true
+
+                            } else {
+                                print("Error at fnCreateRelationshipOrganization in OrganizationPopUp; follow org")
+                            }
+                        }
+                    }
                 } label: {
                     ZStack{
                         RoundedRectangle(cornerRadius: 25)
                             .fill(Color("button1"))
                             .frame(width: 60, height: 20)
-                        Text("Unfollow")
+                        Text((bIsFollowing ? "Unfollow" : "Follow"))
                             .font(.custom("DMSans-Regular", size: 12))
                             .foregroundColor(Color.white)
                     }
                 }
-                Button{
-                    
+                Button{ //report button
+                    oDBFunctions.fnUpdateEventReports(sEvent: event) { success in
+                        if success {
+                            bWasReported = true
+
+                        } else {
+                            print("Error at fnUpdateEventReports in OrganizationPopUp")
+                        }
+                    }
                 } label: {
                     ZStack{
                         RoundedRectangle(cornerRadius: 25)
                             .fill(Color("button2"))
                             .frame(width: 60, height: 20)
-                        Text("Report")
+                        Text(bWasReported ? "Reported" : "Report")
                             .font(.custom("DMSans-Regular", size: 12))
                             .foregroundColor(Color.white)
                     }
-                }
-                Button{
+                }.disabled(bWasReported)
+                
+                Button{ //block button
+                    //unfollow org
+                    if (bIsFollowing){
+                        oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: event.sm_HostId, iRelationshipType: 1) { success in
+                            if success {
+                                bIsFollowing = false
+
+                            } else {
+                                print("Error at fnDeleteRelationshipOrganization in OrganizationPopUp; unfollow before blocking org")
+                            }
+                        }
+                    }
+                    //block org
+                    oDBFunctions.fnCreateRelationshipOrganization(sOrganizationId: event.sm_HostId, iRelationshipType: 2) { success in
+                        if success {
+                            bWasBlocked = true
+
+                        } else {
+                            print("Error at fnCreateRelationshipOrganization in OrganizationPopUp; block org")
+                        }
+                    }
                     
                 } label: {
                     ZStack{
                         RoundedRectangle(cornerRadius: 25)
                             .fill(Color("button3"))
                             .frame(width: 60, height: 20)
-                        //.fill(Color("button3"))
-                        Text("Block")
+
+                        Text(aoBlockedList.contains(where: { $0.sm_Id == event.sm_HostId })||bWasBlocked ? "Blocked" : "Block")
                             .font(.custom("DMSans-Regular", size: 12))
                             .foregroundColor(Color.white)
                     }
-                }
+                }.disabled(bWasBlocked)
             }
             Button{
                 bShowPopUp = false
@@ -79,7 +132,12 @@ struct OrganizationPopUp: View {
                 Image(systemName: "chevron.backward.circle")
             }
             
-        }
+        }.task{
+            await oDBFunctions.fnInitSessionData()
+            await oDBFunctions.fnGetBlockedOrganizations()
+            aoBlockedList = oDBFunctions.aoOrganizationList
+            bWasBlocked = aoBlockedList.contains(where: { $0.sm_Id == event.sm_HostId })
+            }
         .background(Color("highlight"))
 
         
