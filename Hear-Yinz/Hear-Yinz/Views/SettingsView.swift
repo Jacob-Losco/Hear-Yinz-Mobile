@@ -74,7 +74,7 @@ struct SettingsView: View {
                     } label: {
                         ZStack{
                             RoundedRectangle(cornerRadius: 10)
-                                .fill(Color("button"))
+                                .fill(Color("button1"))
                                 .frame(height: 40)
                                 .padding(.trailing)
                             Text("Unblock")
