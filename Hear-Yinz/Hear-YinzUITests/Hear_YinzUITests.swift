@@ -11,7 +11,27 @@ final class Hear_YinzUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-
+        let app = XCUIApplication()
+        app.launch()
+        
+        if !(app.buttons["Log in"].exists) {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+            print("if statement setup")
+        } else {
+            print("else statement setup")
+        }
+        var deleteString = String()
+        for _ in "thisisfiftycharacterslongthisisfiftycharacterslong" {
+            deleteString += XCUIKeyboardKey.delete.rawValue
+        }
+        UIPasteboard.general.string = deleteString
+        app.textFields["EmailTextField"].press(forDuration: 1.1)
+        app.menuItems["Paste"].tap()
+        //app.textFields["EmailTextField"].typeText(deleteString)
+        app.secureTextFields["PasswordSecureField"].press(forDuration: 1.1)
+        app.menuItems["Paste"].tap()
+        //app.secureTextFields["PasswordSecureField"].typeText(deleteString)
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
 
@@ -20,6 +40,24 @@ final class Hear_YinzUITests: XCTestCase {
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        //LoginFunctions().fnLogout()
+//        app.textFields["EmailTextField"].tap()
+//        app.textFields["EmailTextField"].typeText(deleteString)
+//        app.secureTextFields["PasswordSecureField"].tap()
+//        app.secureTextFields["PasswordSecureField"].typeText(deleteString)
+        
+        
+        
+        
+//        let app = XCUIApplication()
+//        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//        app.buttons["Log out"].tap()
+//        var deleteString = String()
+//                for _ in "thisisfiftycharacterslongthisisfiftycharacterslong" {
+//                    deleteString += XCUIKeyboardKey.delete.rawValue
+//                }
+//        app.secureTextFields["EmailTextField"].typeText(deleteString)
+//        app.secureTextFields["PasswordSecureField"].typeText(deleteString)
     }
     
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -33,29 +71,30 @@ final class Hear_YinzUITests: XCTestCase {
 
       Writer: Sarah Kudrick
     -------------------------------------------------------------------T*/
-    func testLogin(){
+    func testLogin() throws {
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement login")
+//        }
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("teststatic_officer@teststatic.edu")
         app.buttons["Log in"].tap()
         XCTAssert(app.staticTexts["Log in below"].exists)
         //tests form validation
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("test123")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
         
         app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
         XCTAssert(app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists)
         //tests correct login opens up access to map and other views
-        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-        app.buttons["Log out"].tap()
+//        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//        app.buttons["Log out"].tap()
         
     }
     
@@ -70,21 +109,22 @@ final class Hear_YinzUITests: XCTestCase {
 
       Writer: Sarah Kudrick
     -------------------------------------------------------------------T*/
-    func testIncorrectLogin(){
+    func testIncorrectLogin() throws {
 
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement incorrectlogin")
+//        }
 
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("wrong")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("wrong")
         app.buttons["Log in"].tap()
         XCTAssert(app.buttons["Log in"].exists)
         app.staticTexts["Incorrect login"].tap()
@@ -94,8 +134,8 @@ final class Hear_YinzUITests: XCTestCase {
                 for _ in "wrong" {
                     deleteString += XCUIKeyboardKey.delete.rawValue
                 }
-        app.secureTextFields["Password"].typeText(deleteString)
-        app.secureTextFields["Password"].typeText("test123")
+        app.secureTextFields["PasswordSecureField"].typeText(deleteString)
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
 
 
@@ -103,8 +143,8 @@ final class Hear_YinzUITests: XCTestCase {
         app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
         XCTAssert(app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists)
         //tests correct login opens up access to map and other views
-        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-        app.buttons["Log out"].tap()
+//        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//        app.buttons["Log out"].tap()
         
     }
     
@@ -117,19 +157,20 @@ final class Hear_YinzUITests: XCTestCase {
 
       Writer: Sarah Kudrick
     -------------------------------------------------------------------T*/
-    func testNavToAnnouncements(){
+    func testNavToAnnouncements() throws {
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement navtoAnn")
+//        }
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("test123")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
             app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
@@ -140,8 +181,8 @@ final class Hear_YinzUITests: XCTestCase {
         let announcementsPageStaticText = app.staticTexts["Announcements Page"]
         
         XCTAssert(announcementsPageStaticText.exists)
-        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-        app.buttons["Log out"].tap()
+//        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//        app.buttons["Log out"].tap()
     }
     
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -153,20 +194,21 @@ final class Hear_YinzUITests: XCTestCase {
 
       Writer: Sarah Kudrick
     -------------------------------------------------------------------T*/
-    func testNavToSettings(){
+    func testNavToSettings() throws {
 
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement navtosett")
+//        }
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("test123")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
             app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
@@ -178,8 +220,8 @@ final class Hear_YinzUITests: XCTestCase {
         let settingsPageStaticText = app.staticTexts["Settings Page"]
         
         XCTAssert(settingsPageStaticText.exists)
-        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-        app.buttons["Log out"].tap()
+//        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//        app.buttons["Log out"].tap()
     }
     
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -191,20 +233,21 @@ final class Hear_YinzUITests: XCTestCase {
 
       Writer: Sarah Kudrick
     -------------------------------------------------------------------T*/
-    func testNavToMap(){
+    func testNavToMap() throws {
         
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement navtomap")
+//        }
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("test123")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
             app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
@@ -219,8 +262,8 @@ final class Hear_YinzUITests: XCTestCase {
         let map = app.windows.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .map).element
         
         XCTAssert(map.exists)
-        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-        app.buttons["Log out"].tap()
+//        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//        app.buttons["Log out"].tap()
 
     }
     
@@ -235,20 +278,21 @@ final class Hear_YinzUITests: XCTestCase {
 
       Writer: Sarah Kudrick
     -------------------------------------------------------------------T*/
-    func testLogout(){
+    func testLogout() throws {
 
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement logout")
+//        }
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("test123")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
             app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
@@ -263,7 +307,7 @@ final class Hear_YinzUITests: XCTestCase {
         app.buttons["Log out"].tap()
         XCTAssertFalse(LoginFunctions().bm_SignedIn)
         //tests if user was logged out in firebase
-        XCTAssert(app.textFields["School Email"].exists)
+        XCTAssert(app.textFields["EmailTextField"].exists)
         //tests if app is displaying login view
     }
     
@@ -278,20 +322,21 @@ final class Hear_YinzUITests: XCTestCase {
 
       Writer: Jacob Losco
     -------------------------------------------------------------------T*/
-    func testSlider() {
+    func testSlider() throws {
         
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement slider")
+//        }
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("test123")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
@@ -312,7 +357,7 @@ final class Hear_YinzUITests: XCTestCase {
         }
         
         
-        app.buttons["Log out"].tap()
+        //app.buttons["Log out"].tap()
     }
     
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -325,19 +370,20 @@ final class Hear_YinzUITests: XCTestCase {
      
       Writer: Jacob Losco
     -------------------------------------------------------------------T*/
-    func testMapMarker() {
+    func testMapMarker() throws {
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement mapmarker")
+//        }
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("test123")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
@@ -349,8 +395,8 @@ final class Hear_YinzUITests: XCTestCase {
         
         XCTAssertTrue(app.otherElements.matching(identifier: "Map pin").otherElements["2MfRhGa0Svu80H8jzC1V"].waitForExistence(timeout: 2))
         
-        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-        app.buttons["Log out"].tap()
+//        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//        app.buttons["Log out"].tap()
     }
     
     /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -365,19 +411,20 @@ final class Hear_YinzUITests: XCTestCase {
      
       Writer: Jacob Losco, Sarah Kudrick
     -------------------------------------------------------------------T*/
-    func testSidePanel() {
+    func testSidePanel() throws {
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement sidepanel")
+//        }
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("test123")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
@@ -401,24 +448,25 @@ final class Hear_YinzUITests: XCTestCase {
         XCTAssertFalse(app.buttons["chevron.backward.circle"].exists)
         
         
-        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-        app.buttons["Log out"].tap()
+        //app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        //app.buttons["Log out"].tap()
     }
     
 
-    func testToggleEventLikeButton() {
+    func testToggleEventLikeButton() throws  {
         let app = XCUIApplication()
         app.launch()
         
-        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
-            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-            app.buttons["Log out"].tap()
-        }
+//        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+//            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//            app.buttons["Log out"].tap()
+//            print("if statement likebutton")
+//        }
         
-        app.textFields["School Email"].tap()
-        app.textFields["School Email"].typeText("testdynamic_user@testdynamic.edu")
-        app.secureTextFields["Password"].tap()
-        app.secureTextFields["Password"].typeText("test123")
+        app.textFields["EmailTextField"].tap()
+        app.textFields["EmailTextField"].typeText("testdynamic_user@testdynamic.edu")
+        app.secureTextFields["PasswordSecureField"].tap()
+        app.secureTextFields["PasswordSecureField"].typeText("test123")
         app.buttons["Log in"].tap()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
@@ -446,8 +494,8 @@ final class Hear_YinzUITests: XCTestCase {
         XCTAssertEqual(updatedLikes, initialLikes + 1)
 
         // Logout
-        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
-        app.buttons["Log out"].tap()
+//        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+//        app.buttons["Log out"].tap()
     }
     
     func testLaunchPerformance() throws {

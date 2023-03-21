@@ -56,9 +56,11 @@ struct Login: View {
                         .background(Color("highlight"))
                         .autocorrectionDisabled(true)
                         .autocapitalization(.none)
+                        .accessibilityIdentifier("EmailTextField")
                     SecureField("Password", text: $sPasswordEntry)
                         .padding()
                         .background(Color("highlight"))
+                        .accessibilityIdentifier("PasswordSecureField")
                     Button{
                         if oNetworkManager.isConnected {
                             oLoginFunctions.fnLogin(sEmail: sEmailEntry, sPassword: sPasswordEntry)
