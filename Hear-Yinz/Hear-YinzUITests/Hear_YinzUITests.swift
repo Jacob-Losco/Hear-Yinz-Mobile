@@ -360,12 +360,56 @@ final class Hear_YinzUITests: XCTestCase {
 
       Assertions:
       Tapping Map Marker for TestStatic_Event6 opens a side panel with the text "TestStatic_Loc1" on it
+     
+      Writer: Jacob Losco
+    -------------------------------------------------------------------T*/
+    func testSidePanel() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+        }
+        
+        app.textFields["School Email"].tap()
+        app.textFields["School Email"].typeText("teststatic_officer@teststatic.edu")
+        app.secureTextFields["Password"].tap()
+        app.secureTextFields["Password"].typeText("test123")
+        app.buttons["Log in"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
+        
+        let mapSlider = app.sliders["map_slider"]
+        XCTAssertTrue(mapSlider.isEnabled)
+        
+        mapSlider.adjust(toNormalizedSliderPosition: 0.6)
+        
+        XCTAssertTrue(app.otherElements.matching(identifier: "Map pin").otherElements["2MfRhGa0Svu80H8jzC1V"].waitForExistence(timeout: 2))
+        app.otherElements.matching(identifier: "Map pin").otherElements["2MfRhGa0Svu80H8jzC1V"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){
+            XCTAssertTrue(app.staticTexts["TestStatic_Loc1"].exists)
+        }
+
+        
+        
+        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        app.buttons["Log out"].tap()
+    }
+    
+    /*T+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Test: testOrgPopup
+
+      Target: organization popup
+
+      Assertions:
      tapping organization name opens a popup with a back button
      tapping the back button makes the popup and the back button disappear
      
       Writer: Jacob Losco, Sarah Kudrick
     -------------------------------------------------------------------T*/
-    func testSidePanel() {
+    func testOrgPopup() {
         let app = XCUIApplication()
         app.launch()
         
