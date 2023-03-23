@@ -49,17 +49,19 @@ struct AnnouncementsView: View {
                     }
                 }) {
                     Text("General")
-                        .font(.custom("DMSans-Regular", size: 16))
-                        .foregroundColor(oisGeneralSelected ? .black : .blue)
+                        .font(.custom("DMSans-Regular", size: 20))
+                        .fontWeight(.bold)
+                        .foregroundColor(.black)
                 }
-                
+                Spacer().frame(width: 20)
                 Button(action: {
                     oisGeneralSelected = false
                     ofollowedAnnouncements = aoAnnouncementList.filter { $0.bm_Followed }
                 }) {
                     Text("Following")
-                        .font(.custom("DMSans-Regular", size: 16))
-                        .foregroundColor(oisGeneralSelected ? .blue : .black)
+                        .font(.custom("DMSans-Regular", size: 20))
+                        .fontWeight(.bold)
+                        .foregroundColor(.black)
                 }
             }
             
