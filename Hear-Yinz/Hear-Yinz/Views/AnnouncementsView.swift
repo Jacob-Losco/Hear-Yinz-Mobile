@@ -18,9 +18,9 @@ import SwiftUI
 struct AnnouncementsView: View {
     
     @State var aoAnnouncementList: [AnnouncementModel] = []
-    @State var isGeneralSelected = true
+    @State var oisGeneralSelected = true
     @StateObject var oDBFunctions = DBFunctions()
-    @State var followedAnnouncements: [AnnouncementModel] = []
+    @State var ofollowedAnnouncements: [AnnouncementModel] = []
     
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -38,26 +38,30 @@ struct AnnouncementsView: View {
             
             HStack {
                 Button(action: {
-                    isGeneralSelected = true
-                    Task {
-                        await oDBFunctions.fnInitSessionData()
-                        await oDBFunctions.fnGetInstitutionAnnouncements()
-                        aoAnnouncementList = oDBFunctions.aoAnnouncementList
-                        followedAnnouncements = aoAnnouncementList.filter { $0.bm_Followed }
+                    oisGeneralSelected = true
+                    if aoAnnouncementList.isEmpty {
+                        Task {
+                            await oDBFunctions.fnInitSessionData()
+                            await oDBFunctions.fnGetInstitutionAnnouncements()
+                            aoAnnouncementList = oDBFunctions.aoAnnouncementList
+                            ofollowedAnnouncements = aoAnnouncementList.filter { $0.bm_Followed }
+                        }
                     }
                 }) {
                     Text("General")
-                        .font(.custom("DMSans-Regular", size: 16))
-                        .foregroundColor(isGeneralSelected ? .black : .blue)
+                        .font(.custom("DMSans-Regular", size: 20))
+                        .fontWeight(.bold)
+                        .foregroundColor(.black)
                 }
-                
+                Spacer().frame(width: 20)
                 Button(action: {
-                    isGeneralSelected = false
-                    followedAnnouncements = aoAnnouncementList.filter { $0.bm_Followed }
+                    oisGeneralSelected = false
+                    ofollowedAnnouncements = aoAnnouncementList.filter { $0.bm_Followed }
                 }) {
                     Text("Following")
-                        .font(.custom("DMSans-Regular", size: 16))
-                        .foregroundColor(isGeneralSelected ? .blue : .black)
+                        .font(.custom("DMSans-Regular", size: 20))
+                        .fontWeight(.bold)
+                        .foregroundColor(.black)
                 }
             }
             
@@ -65,7 +69,7 @@ struct AnnouncementsView: View {
             
             ScrollView {
                 VStack(spacing: 10) {
-                    ForEach(isGeneralSelected ? aoAnnouncementList : followedAnnouncements, id: \.sm_Id) { oAnnouncement in
+                    ForEach(oisGeneralSelected ? aoAnnouncementList : ofollowedAnnouncements, id: \.sm_Id) { oAnnouncement in
                         AnnouncementView(oAnnouncement: oAnnouncement, dateFormatter: dateFormatter)
                     }
                 }
@@ -82,6 +86,7 @@ struct AnnouncementsView: View {
                     await oDBFunctions.fnInitSessionData()
                     await oDBFunctions.fnGetInstitutionAnnouncements()
                     aoAnnouncementList = oDBFunctions.aoAnnouncementList
+                    ofollowedAnnouncements = aoAnnouncementList.filter { $0.bm_Followed }
                 }
             }
         }
@@ -140,13 +145,6 @@ struct AnnouncementsView: View {
                         }
                     }
                     .background(Color.clear)
-                    
-                    if oAnnouncement.bm_Followed {
-                        Divider()
-                        Text("Followers Only")
-                            .font(.footnote)
-                            .foregroundColor(.red)
-                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 10)
