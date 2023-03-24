@@ -31,6 +31,8 @@ struct MapView: View {
     @State private var bSliderTypeIsDay: Bool = true
     @State private var selectedEvent: EventModel? = nil
     @State private var bShowPopUp = false
+    @State private var bIsFollowing: Bool = true
+    //@State var sFollowing: String
     let dateFormatter = DateFormatter()
     
     var body: some View {
@@ -42,13 +44,14 @@ struct MapView: View {
                             .accessibility(identifier: event.sm_Id)
                             .onTapGesture {
                                 selectedEvent = event
+                                bIsFollowing = event.bm_Followed
                             }
                         }
                     })
                 .edgesIgnoringSafeArea(.all)
                 
                 if let event = selectedEvent {
-                    EventDetailsView(event: event, bShowPopUp: $bShowPopUp)
+                    EventDetailsView(event: event, bShowPopUp: $bShowPopUp, bIsFollowing: $bIsFollowing)
                     .frame(width: 300, height: UIScreen.main.bounds.height)
                     .background(Color("highlight"))
                     .offset(x: UIScreen.main.bounds.width / 2 - 150)
@@ -97,7 +100,7 @@ struct MapView: View {
                         .background(Color("highlight"))
                 }
                 if bShowPopUp {
-                    OrganizationPopUp(event: selectedEvent!, bShowPopUp: $bShowPopUp)
+                    OrganizationPopUp(event: selectedEvent!, bShowPopUp: $bShowPopUp, bIsFollowing: $bIsFollowing)
                         .background(Color("highlight"))
                 }
             }.onAppear {
