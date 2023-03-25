@@ -28,7 +28,7 @@ struct MapView: View {
     @State private var dFromDateValue: Double = Double(Date.now.timeIntervalSinceNow)
     @State private var dToDateValue: Double = 0
     @State private var dMaxToDateValue: Double = 0;
-    @State private var bSliderTypeIsDay: Bool = true
+    @State private var bSliderTypeIsDay: Bool = false
     @State private var selectedEvent: EventModel? = nil
     @State private var bShowPopUp = false
     @State private var bIsFollowing: Bool = true
