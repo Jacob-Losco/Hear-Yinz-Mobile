@@ -533,6 +533,42 @@ final class Hear_YinzUITests: XCTestCase {
         app.buttons["Log out"].tap()
     }
     
+    func testAnnouncementViewFilter() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        if app.tabBars["Tab Bar"].buttons["gearshape.fill"].exists {
+            app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+            app.buttons["Log out"].tap()
+        }
+        
+        app.textFields["School Email"].tap()
+        app.textFields["School Email"].typeText("testdynamic_user@testdynamic.edu")
+        app.secureTextFields["Password"].tap()
+        app.secureTextFields["Password"].typeText("test123")
+        app.buttons["Log in"].tap()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0){}
+        
+        app.tabBars["Tab Bar"].buttons["megaphone.fill"].tap()
+        
+        let announcementsPageStaticText = app.staticTexts["Announcements"]
+        XCTAssert(announcementsPageStaticText.exists)
+        
+        let generalButton = app.buttons["General"]
+        let followingButton = app.buttons["Following"]
+        XCTAssertTrue(generalButton.exists)
+        XCTAssertTrue(followingButton.exists)
+                
+        followingButton.tap()
+        sleep(1)
+        generalButton.tap()
+        sleep(1)
+        
+        app.tabBars["Tab Bar"].buttons["gearshape.fill"].tap()
+        app.buttons["Log out"].tap()
+    }
+    
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
             // This measures how long it takes to launch your application.
