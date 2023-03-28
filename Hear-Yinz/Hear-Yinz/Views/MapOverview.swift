@@ -40,13 +40,13 @@ struct MapView: View {
             ZStack {
                 Map(coordinateRegion: $oMapData.oLocationRegion, annotationItems: aoEventList, annotationContent: { event in
                     MapAnnotation(coordinate: event.om_LocationCoordinate) {
-                        MapMarkerView(id: event.sm_Id, mapText: event.sm_Name, image: event.om_Image)
-                            .accessibility(identifier: event.sm_Id)
+                        MapMarkerView(id: event.sm_Id, mapText: event.sm_Name, eventModel: event)
+                            .accessibilityIdentifier(event.sm_Id)
                             .onTapGesture {
                                 selectedEvent = event
                                 bIsFollowing = event.bm_Followed
                             }
-                        }
+                    }
                     })
                 .edgesIgnoringSafeArea(.all)
                 

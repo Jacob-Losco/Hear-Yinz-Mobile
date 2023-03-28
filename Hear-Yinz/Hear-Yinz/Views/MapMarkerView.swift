@@ -10,25 +10,36 @@ import SwiftUI
 struct MapMarkerView: View {
     var sid: String
     var smapText: String
-    var omImage: UIImage?
+    var eventModel: EventModel?
     
     var body: some View {
         ZStack {
-            Circle().fill(Color.red).frame(width: 30, height: 30)
+            Circle().fill(eventModel?.bm_Followed ?? false ? Color.blue : Color.red)
+                .frame(width: 30, height: 30)
+                .overlay(
+                    Image(uiImage: eventModel?.om_Image ?? UIImage(systemName: "questionmark.circle")!)
+                        .resizable()
+                        .scaledToFit()
+                )
+                .overlay(
+                    Circle()
+                        .stroke(lineWidth: 2)
+                        .foregroundColor(eventModel?.bm_Followed ?? false ? Color.blue : Color.red)
+                )
         }
         .offset(x: 0, y: -10)
         .accessibilityIdentifier(sid)
     }
     
-    init(id: String, mapText: String, image: UIImage?) {
+    init(id: String, mapText: String, eventModel: EventModel? = nil) {
         self.sid = id
         self.smapText = mapText
-        self.omImage = image
+        self.eventModel = eventModel
     }
     
     struct MapMarkView_Preview: PreviewProvider {
         static var previews: some View {
-            MapMarkerView(id: "test", mapText: "Test", image: nil)
+            MapMarkerView(id: "test", mapText: "Test")
         }
     }
 }
