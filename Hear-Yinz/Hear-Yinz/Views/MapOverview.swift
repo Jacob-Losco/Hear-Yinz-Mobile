@@ -65,9 +65,25 @@ struct MapView: View {
                     VStack {
                         HStack{
                             Spacer()
-                            Text("\(bSliderTypeIsDay ? "Day" : "Range")")
-                                .offset(x: -10)
-                                .font(.custom("DMSans-Regular", size: 18))
+                            if bSliderTypeIsDay {
+                                Text("Day")
+                                    .offset(x: -10)
+                                    .font(.custom("DMSans-Regular", size: 16))
+                                    .foregroundColor(Color("button1"))
+                                Text("Range")
+                                    .offset(x: -10)
+                                    .font(.custom("DMSans-Regular", size: 14))
+                                    
+                            } else {
+                                Text("Day")
+                                    .offset(x: -10)
+                                    .font(.custom("DMSans-Regular", size: 16))
+                                Text("Range")
+                                    .offset(x: -10)
+                                    .font(.custom("DMSans-Regular", size: 14))
+                                    .foregroundColor(Color("button1"))
+                            }
+                                
                         }
                         Text("\(bSliderTypeIsDay ? sToDateLabel : sFromDateLabel + " - " + sToDateLabel)")
                             .font(.custom("DMSans-Regular", size: 18))
