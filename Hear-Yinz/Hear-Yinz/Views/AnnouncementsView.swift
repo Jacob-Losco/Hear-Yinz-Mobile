@@ -51,7 +51,7 @@ struct AnnouncementsView: View {
                     Text("General")
                         .font(.custom("DMSans-Regular", size: 20))
                         .fontWeight(.bold)
-                        .foregroundColor(.black)
+                        .foregroundColor(oisGeneralSelected ? .black : .gray)
                 }
                 Spacer().frame(width: 20)
                 Button(action: {
@@ -61,7 +61,7 @@ struct AnnouncementsView: View {
                     Text("Following")
                         .font(.custom("DMSans-Regular", size: 20))
                         .fontWeight(.bold)
-                        .foregroundColor(.black)
+                        .foregroundColor(oisGeneralSelected ? .gray : .black)
                 }
             }
             
