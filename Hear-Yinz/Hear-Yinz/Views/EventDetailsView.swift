@@ -21,11 +21,19 @@ struct EventDetailsView: View {
     var event: EventModel
     @Binding var bShowPopUp: Bool
     @Binding var bIsFollowing: Bool
-
     @State var oSelectedOrg: OrganizationModel? = nil
 
     var body: some View {
         VStack(spacing: 10) {
+            HStack {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "xmark")
+                        .foregroundColor(.black)
+                }
+                Spacer()
+            }
             Text(event.sm_Name)
                 .font(.title)
                 .font(.custom("DMSans-Regular", size: 18))
@@ -82,13 +90,5 @@ struct EventDetailsView: View {
         .task {
             await oDBFunctions.fnInitSessionData()
         }
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    if value.translation.width > 100 {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
-        )
     }
 }
