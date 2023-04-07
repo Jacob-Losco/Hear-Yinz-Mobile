@@ -20,6 +20,7 @@ struct EventDetailsView: View {
     @State private var isButtonDisabled = false // Reactive state variable for button disabled state
     var event: EventModel
     @Binding var bShowPopUp: Bool
+    @Binding var bShowPanel: Bool
     @Binding var bIsFollowing: Bool
     @State var oSelectedOrg: OrganizationModel? = nil
 
@@ -27,7 +28,7 @@ struct EventDetailsView: View {
         VStack(spacing: 10) {
             HStack {
                 Button(action: {
-                    presentationMode.wrappedValue.dismiss()
+                    bShowPanel = false
                 }) {
                     Image(systemName: "xmark")
                         .foregroundColor(.black)

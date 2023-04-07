@@ -30,6 +30,7 @@ struct MapView: View {
     @State private var dMaxToDateValue: Double = 0;
     @State private var bSliderTypeIsDay: Bool = false
     @State private var selectedEvent: EventModel? = nil
+    @State private var bShowPanel = false
     @State private var bShowPopUp = false
     @State private var bIsFollowing: Bool = true
     //@State var sFollowing: String
@@ -43,6 +44,7 @@ struct MapView: View {
                         MapMarkerView(id: event.sm_Id, mapText: event.sm_Name, eventModel: event)
                             .accessibilityIdentifier(event.sm_Id)
                             .onTapGesture {
+                                bShowPanel = true
                                 selectedEvent = event
                                 bIsFollowing = event.bm_Followed
                             }
@@ -50,8 +52,8 @@ struct MapView: View {
                     })
                 .edgesIgnoringSafeArea(.all)
                 
-                if let event = selectedEvent {
-                    EventDetailsView(event: event, bShowPopUp: $bShowPopUp, bIsFollowing: $bIsFollowing)
+                if bShowPanel {
+                    EventDetailsView(event: selectedEvent!, bShowPopUp: $bShowPopUp, bShowPanel: $bShowPanel, bIsFollowing: $bIsFollowing)
                     .frame(width: 300, height: UIScreen.main.bounds.height)
                     .background(Color("highlight"))
                     .offset(x: UIScreen.main.bounds.width / 2 - 150)
