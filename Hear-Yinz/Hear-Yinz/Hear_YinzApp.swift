@@ -18,6 +18,8 @@ import FirebaseCore
 @main
 struct Hear_YinzApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @Environment(\.scenePhase) var scenePhase
+    @ObservedObject var oLoginFunctions = LoginFunctions() //contains login functions
     
     init() {
         FirebaseApp.configure()
@@ -26,6 +28,7 @@ struct Hear_YinzApp: App {
     var body: some Scene {
         WindowGroup {
             Login()
+
         }
     }
 }

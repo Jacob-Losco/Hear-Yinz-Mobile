@@ -55,7 +55,7 @@ struct MapView: View {
                 if bShowPanel {
                     EventDetailsView(event: selectedEvent!, bShowPopUp: $bShowPopUp, bShowPanel: $bShowPanel, bIsFollowing: $bIsFollowing)
                     .frame(width: 300, height: UIScreen.main.bounds.height)
-                    .background(Color("highlight"))
+                    .background(Color("highlight2"))
                     .offset(x: UIScreen.main.bounds.width / 2 - 150)
                     .transition(.move(edge: .trailing))
                     .animation(.easeInOut)
@@ -112,14 +112,15 @@ struct MapView: View {
                         aoEventList = oMapData.fnFilterEventsList(oToDate: oToDate, bJustDate: bSliderTypeIsDay)
                         sToDateLabel = dateFormatter.string(from: oToDate)
                     }
-                    Rectangle() //Adds custom color background to tab bar.
-                        .fill(Color.clear)
-                        .frame(height: 10)
-                        .background(Color("highlight"))
+//                    Rectangle() //Adds custom color background to tab bar.
+//                        .fill(Color.clear)
+//                        .frame(height: 10)
+//                        .background(Color("highlight"))
                 }
                 if bShowPopUp {
                     OrganizationPopUp(event: selectedEvent!, bShowPopUp: $bShowPopUp, bIsFollowing: $bIsFollowing)
-                        .background(Color("highlight"))
+                        .background(Color("highlight2"))
+                        .border(Color("iconColor"), width: 4)
                 }
             }.onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.landscapeRight

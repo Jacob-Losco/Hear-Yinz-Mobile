@@ -28,11 +28,21 @@ struct OrganizationPopUp: View {
     
     var body: some View {
         VStack(spacing: 10){
+            HStack(alignment: .top){
+                Button{
+                    bShowPopUp = false
+                } label: {
+                    Image(systemName: "xmark")
+                        .foregroundColor(.black)
+                }.frame(alignment: .trailing)
+                    .padding(.all)
+                Image(uiImage: event.om_Image!)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 175, height: 100, alignment: .leading) // Adjust size here
+            }.padding(.top)
             
-            Image(uiImage: event.om_Image!)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100) // Adjust size here
+            
             Text(event.sm_HostName) //org.sm_Name
                 .font(.custom("DMSans-Regular", size: 24))
                 .padding([.leading, .trailing, .bottom])
@@ -125,12 +135,8 @@ struct OrganizationPopUp: View {
                             .foregroundColor(Color.white)
                     }
                 }.disabled(bWasBlocked)
-            }
-            Button{
-                bShowPopUp = false
-            } label: {
-                Image(systemName: "chevron.backward.circle")
-            }
+            }.padding(.bottom)
+            
             
         }.task{
             await oDBFunctions.fnInitSessionData()
@@ -138,7 +144,7 @@ struct OrganizationPopUp: View {
             aoBlockedList = oDBFunctions.aoOrganizationList
             bWasBlocked = aoBlockedList.contains(where: { $0.sm_Id == event.sm_HostId })
             }
-        .background(Color("highlight"))
+        .background(Color("highlight2"))
 
         
     }

@@ -20,6 +20,7 @@ struct MapMarkerView: View {
                     Image(uiImage: eventModel?.om_Image ?? UIImage(systemName: "questionmark.circle")!)
                         .resizable()
                         .scaledToFit()
+                        .clipShape(Circle())
                 )
                 .overlay(
                     Circle()

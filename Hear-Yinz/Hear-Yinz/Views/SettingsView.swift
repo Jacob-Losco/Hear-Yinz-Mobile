@@ -32,7 +32,10 @@ struct SettingsView: View {
 
     var body: some View {
         VStack{
-
+            Text("Settings")
+                .font(.custom("DMSans-Regular", size: 36))
+                .multilineTextAlignment(.center)
+                .padding()
             Button {
                 oLoginFunctions.fnLogout()
             } label: {
@@ -89,12 +92,12 @@ struct SettingsView: View {
 
             }
             
-            Spacer()
+            //Spacer()
           
-            Rectangle() //Adds custom color background to tab bar.
-                .fill(Color.clear)
-                .frame(height: 10)
-                .background(Color("highlight"))
+//            Rectangle() //Adds custom color background to tab bar.
+//                .fill(Color.clear)
+//                .frame(height: 10)
+//                .background(Color("highlight"))
 
 
         }.task{

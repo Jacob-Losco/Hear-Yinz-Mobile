@@ -16,6 +16,8 @@ Contributors:
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var oLoginFunctions = LoginFunctions() //contains login functions
+    @Environment(\.scenePhase) var scenePhase
     @State var iCurrentTab: Int = 1
     var body: some View {
             TabView(selection: $iCurrentTab){
@@ -36,6 +38,13 @@ struct ContentView: View {
                     .tag(2)
             }
             .accentColor(Color("iconColor"))
+//            .onChange(of: scenePhase) { newPhase in
+//                            if newPhase == .background {
+//                                //destroy authentication token
+//                                oLoginFunctions.fnLogout()
+//                                //NSApplication.shared.terminate(self)
+//                            }
+//                        }
     }
 }
 
