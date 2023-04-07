@@ -31,7 +31,7 @@ struct EventDetailsView: View {
                     bShowPanel = false
                 }) {
                     Image(systemName: "xmark")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("text"))
                 }
                 Spacer()
             }

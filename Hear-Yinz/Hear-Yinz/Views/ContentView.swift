@@ -36,6 +36,14 @@ struct ContentView: View {
                     .tag(2)
             }
             .accentColor(Color("iconColor"))
+//            .onChange(of: scenePhase) { newPhase in
+//                            if newPhase == .background {
+//                                //destroy authentication token
+//                                oLoginFunctions.fnLogout()
+//                                //NSApplication.shared.terminate(self)
+//                            }
+//                        }
+
     }
 }
 
