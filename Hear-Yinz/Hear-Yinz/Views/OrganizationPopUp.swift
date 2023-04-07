@@ -1,17 +1,12 @@
 /*+===================================================================
 File: OrganizationPopUp.swift
-
 Summary: Opens a panel when organization image on EventDetailsView is clicked. displays organization information.
-
 Exported Data Structures:
-
 Exported Functions: none
-
 Contributors:
-    Sarah Kudrick - 3/21/2023 - SP 235, 238, 241
+    Sarah Kudrick - 4/7/2023 - SP 492
 ===================================================================+*/
 import SwiftUI
-
 struct OrganizationPopUp: View {
     @Environment(\.presentationMode) var presentationMode
     
@@ -23,16 +18,24 @@ struct OrganizationPopUp: View {
     @Binding var bIsFollowing: Bool
     @State var bWasReported: Bool = false
     @State var bWasBlocked: Bool = false
-
-
     
     var body: some View {
         VStack(spacing: 10){
+            HStack(alignment: .top){
+                Button{
+                    bShowPopUp = false
+                } label: {
+                    Image(systemName: "xmark")
+                        .foregroundColor(Color("text"))
+                }.frame(alignment: .trailing)
+                    .padding(.all)
+                Image(uiImage: event.om_Image!)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 175, height: 100, alignment: .leading) // Adjust size here
+            }.padding(.top)
             
-            Image(uiImage: event.om_Image!)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100) // Adjust size here
+            
             Text(event.sm_HostName) //org.sm_Name
                 .font(.custom("DMSans-Regular", size: 24))
                 .padding([.leading, .trailing, .bottom])
@@ -41,13 +44,11 @@ struct OrganizationPopUp: View {
                 .frame(width: 200, alignment: .leading)
                 .padding([.leading, .trailing])
             HStack{
-
                 Button{ //follow/unfollow button
                     if bIsFollowing{
                         oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: event.sm_HostId, iRelationshipType: 1) { success in
                             if success {
                                 bIsFollowing = false
-
                             } else {
                                 print("Error at fnDeleteRelationshipOrganization in OrganizationPopUp; unfollow org")
                             }
@@ -56,7 +57,6 @@ struct OrganizationPopUp: View {
                         oDBFunctions.fnCreateRelationshipOrganization(sOrganizationId: event.sm_HostId, iRelationshipType: 1) { success in
                             if success {
                                 bIsFollowing = true
-
                             } else {
                                 print("Error at fnCreateRelationshipOrganization in OrganizationPopUp; follow org")
                             }
@@ -76,7 +76,6 @@ struct OrganizationPopUp: View {
                     oDBFunctions.fnUpdateEventReports(sEvent: event) { success in
                         if success {
                             bWasReported = true
-
                         } else {
                             print("Error at fnUpdateEventReports in OrganizationPopUp")
                         }
@@ -98,7 +97,6 @@ struct OrganizationPopUp: View {
                         oDBFunctions.fnDeleteRelationshipOrganization(sOrganizationId: event.sm_HostId, iRelationshipType: 1) { success in
                             if success {
                                 bIsFollowing = false
-
                             } else {
                                 print("Error at fnDeleteRelationshipOrganization in OrganizationPopUp; unfollow before blocking org")
                             }
@@ -108,7 +106,6 @@ struct OrganizationPopUp: View {
                     oDBFunctions.fnCreateRelationshipOrganization(sOrganizationId: event.sm_HostId, iRelationshipType: 2) { success in
                         if success {
                             bWasBlocked = true
-
                         } else {
                             print("Error at fnCreateRelationshipOrganization in OrganizationPopUp; block org")
                         }
@@ -119,18 +116,13 @@ struct OrganizationPopUp: View {
                         RoundedRectangle(cornerRadius: 25)
                             .fill(Color("button3"))
                             .frame(width: 60, height: 20)
-
                         Text(aoBlockedList.contains(where: { $0.sm_Id == event.sm_HostId })||bWasBlocked ? "Blocked" : "Block")
                             .font(.custom("DMSans-Regular", size: 12))
                             .foregroundColor(Color.white)
                     }
                 }.disabled(bWasBlocked)
-            }
-            Button{
-                bShowPopUp = false
-            } label: {
-                Image(systemName: "chevron.backward.circle")
-            }
+            }.padding(.bottom)
+            
             
         }.task{
             await oDBFunctions.fnInitSessionData()
@@ -138,8 +130,7 @@ struct OrganizationPopUp: View {
             aoBlockedList = oDBFunctions.aoOrganizationList
             bWasBlocked = aoBlockedList.contains(where: { $0.sm_Id == event.sm_HostId })
             }
-        .background(Color("highlight"))
-
+        .background(Color("highlight2"))
         
     }
     
